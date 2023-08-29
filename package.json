@@ -11,6 +11,7 @@
     "generate-types": "npx supabase gen types typescript --project-id YOUR_PROJECT_ID --schema public > types_db.ts"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.1.12",
     "@stripe/stripe-js": "^1.53.0",
     "@supabase/auth-helpers-nextjs": "^0.7.0",
     "@supabase/auth-ui-react": "^0.4.2",
@@ -18,6 +19,7 @@
     "@supabase/supabase-js": "^2.23.0",
     "classnames": "^2.3.2",
     "next": "^13.4.19",
+    "ra-input-rich-text": "^4.13.2",
     "ra-supabase": "^2.0.3",
     "ra-supabase-core": "^2.0.3",
     "react": "^18.2.0",

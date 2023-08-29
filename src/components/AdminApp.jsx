@@ -1,12 +1,18 @@
 "use client"
-import * as React from "react";
-import { Admin, CustomRoutes, Resource, ListGuesser, EditGuesser } from 'react-admin';
-import { dataProvider } from '@/utils/dataProvider';
+import { PortifolioCreate, PortifolioEdit, PortifolioList, PortifolioShow } from '@/components/react-admin/portifolio';
 import { authProvider } from "@/utils/authProvider";
-import { LoginPage, SetPasswordPage, ForgotPasswordPage } from 'ra-supabase';
+import { dataProvider } from '@/utils/dataProvider';
+import { ForgotPasswordPage, LoginPage, SetPasswordPage } from 'ra-supabase';
+import { Admin, CustomRoutes, Resource } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
 
 const AdminApp = () => (
+	// <MediaLibraryProvider
+	// 	supabase={supabaseClient}
+	// 	resource="work"
+	// 	bucket="images"
+	// 	bucketFolder="public">
 	<BrowserRouter>
 
 		<Admin dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}
@@ -21,10 +27,11 @@ const AdminApp = () => (
 					element={<ForgotPasswordPage />}
 				/>
 			</CustomRoutes>
-			<Resource name="portfolio" list={ListGuesser} edit={EditGuesser} recordRepresentation="title" />
-			<Resource name="work" list={ListGuesser} edit={EditGuesser} recordRepresentation="title" />
+			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} show={PortifolioShow} create={PortifolioCreate} recordRepresentation="title" />
+			<Resource name="work" list={WorkList} edit={WorkEdit} show={WorkShow} create={WorkCreate} recordRepresentation="title" />
 		</Admin>
 	</BrowserRouter>
+	// </MediaLibraryProvider>
 );
 
 export default AdminApp;

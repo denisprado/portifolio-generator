@@ -35,7 +35,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "components/AdminApp.jsx"  ],
+, "components/AdminApp.jsx", "src/utils/dataProvider.ts"  ],
   "exclude": [
     "node_modules"
   ]
