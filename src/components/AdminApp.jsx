@@ -8,11 +8,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
 
 const AdminApp = () => (
-	// <MediaLibraryProvider
-	// 	supabase={supabaseClient}
-	// 	resource="work"
-	// 	bucket="images"
-	// 	bucketFolder="public">
+
 	<BrowserRouter>
 
 		<Admin dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}
@@ -31,7 +27,7 @@ const AdminApp = () => (
 			<Resource name="work" list={WorkList} edit={WorkEdit} show={WorkShow} create={WorkCreate} recordRepresentation="title" />
 		</Admin>
 	</BrowserRouter>
-	// </MediaLibraryProvider>
+
 );
 
 export default AdminApp;

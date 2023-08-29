@@ -5,7 +5,7 @@ import {
 	getSubscription
 } from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
-import { Database } from '@/types_db';
+import { Database } from '../../../types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -44,7 +44,7 @@ export default async function Account() {
 		const { error } = await supabase
 			.from('users')
 			.update({ full_name: newName })
-			.eq('id', user?.id);
+			.eq('id', user?.id!);
 		if (error) {
 			console.log(error);
 		}
