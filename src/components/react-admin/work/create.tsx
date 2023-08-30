@@ -1,4 +1,3 @@
-import { MediaLibraryInput } from 'ra-supabase-media-library';
 import { Create, ImageField, ImageInput, SimpleForm, TextInput, required } from 'react-admin';
 
 export const WorkCreate = () => (
