@@ -8,6 +8,7 @@ export const createServerSupabaseClient = cache(() =>
 );
 
 export async function getSession() {
+  'use server';
   const supabase = createServerSupabaseClient();
   try {
     const {
