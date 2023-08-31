@@ -34,12 +34,12 @@ const dataProvider = withLifecycleCallbacks(
         }
 
         // Salve a URL da imagem no banco de dados
-        // const imageUrl = `${
-        //   process.env.NEXT_PUBLIC_SUPABASE_URL
-        // }/storage/v1/object/public/images/${data.path}`;
-        // const { data: newProduct, error: productError } = await supabaseClient
-        //   .from('work')
-        //   .insert([{ ...params.data, data: imageUrl }]);
+        const imageUrl = `${
+          process.env.NEXT_PUBLIC_SUPABASE_URL
+        }/storage/v1/object/public/images/${params.image_1?.title}`;
+        const { data: newProduct, error: productError } = await supabaseClient
+          .from('work')
+          .insert([{ ...params.data, data: imageUrl }]);
 
         // const newPictures = params.image_1.filter(
         //   (p: { rawFile: any }) => p.rawFile instanceof File
