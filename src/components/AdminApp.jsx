@@ -1,7 +1,7 @@
 "use client"
 import { PortifolioCreate, PortifolioEdit, PortifolioList, PortifolioShow } from '@/components/react-admin/portifolio';
 import { authProvider } from "@/utils/authProvider";
-import { dataProvider } from '@/utils/dataProvider';
+import dataProvider from '@/utils/dataProvider';
 import { ForgotPasswordPage, LoginPage, SetPasswordPage } from 'ra-supabase';
 import { Admin, CustomRoutes, Resource } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
