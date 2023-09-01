@@ -4,9 +4,9 @@ import { supabaseAuthProvider } from 'ra-supabase-core';
 export const authProvider = supabaseAuthProvider(supabaseClient, {
   getIdentity: async (user) => {
     const { data, error } = await supabaseClient
-      .from('userProfiles')
-      .select('id, first_name, last_name')
-      .match({ email: user.email })
+      .from('users')
+      .select('id, full_name')
+      .match({ id: user.id })
       .single();
 
     if (!data || error) {
@@ -15,7 +15,7 @@ export const authProvider = supabaseAuthProvider(supabaseClient, {
 
     return {
       id: data.id,
-      fullName: `${data.first_name} ${data.last_name}`
+      fullName: `${data.full_name}`
     };
   }
 });
