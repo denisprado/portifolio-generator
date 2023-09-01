@@ -1,6 +1,30 @@
 import { supabaseClient } from './supabase';
 import { supabaseDataProvider } from 'ra-supabase-core';
 import { useRecordContext, withLifecycleCallbacks } from 'react-admin';
+import { v4 as uuidv4 } from 'uuid';
+
+type ImageOriginal = {
+  rawFile: File;
+  title: string;
+};
+
+type ImageParam = {
+  imageParam: ImageOriginal;
+};
+
+type ImageObject = {
+  path: string;
+  rawFile: File;
+  imageUrl: string;
+};
+
+type ImageObjectMap = {
+  image: ImageObject;
+};
+
+type ImageObjectProps = {
+  images: ImageObjectMap[];
+};
 
 const dataProvider = withLifecycleCallbacks(
   supabaseDataProvider({
@@ -10,39 +34,34 @@ const dataProvider = withLifecycleCallbacks(
   }),
   [
     {
-      /**
-       * For posts update only, convert uploaded images to base 64 and attach them to
-       * the `picture` sent property, with `src` and `title` attributes.
-       */
       resource: 'work',
       beforeCreate: async (params: Partial<any>, dataProvider: any) => {
-        // Freshly dropped pictures are File objects and must be converted to base64 strings
-        console.log('params', params);
-
-        const { data: storageUploadData, error } = await supabaseClient.storage
-          .from('images')
-          .upload(
-            `images/${params.data.image_1.title}`,
-            params.data.image_1.rawFile,
-            {
-              cacheControl: '3600',
-              upsert: false
-            }
-          );
-
-        console.log('storageUploadData', storageUploadData);
-
-        if (error) {
-          //throw new Error(error?.message!);
-          return params;
+        if (!params || !params.data || !params.data.image_1) {
+          throw new Error('params.data.image_1 undefined');
         }
 
-        const imageUrl: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/images/${params.data.image_1.title}`;
+        const imagesArray: ImageOriginal[] = [
+          params.data.image_1,
+          params.data.image_2!
+        ];
 
-        const newParams = imageUrl
-          ? { ...params.data, image_1: imageUrl }!
-          : '';
-        console.log('newParams', newParams);
+        if (imagesArray.length < 1) {
+          throw new Error('ImagesArray undefined');
+        }
+
+        const images = imagesArray.map((imageOriginal) => {
+          console.log('imageParam', imageOriginal);
+          return imageOriginal && imageObject(imageOriginal);
+        });
+
+        uploadToStorage({ images });
+
+        const newParams = {
+          ...params.data,
+          image_1: images[0].image.imageUrl,
+          image_2: images[1].image.imageUrl!
+        }!;
+
         return dataProvider.create('work', {
           data: {
             ...newParams
@@ -54,3 +73,30 @@ const dataProvider = withLifecycleCallbacks(
 );
 
 export default dataProvider;
+
+// upload das imagens
+const uploadToStorage = async ({ images }: ImageObjectProps) => {
+  images.map(async ({ image }: ImageObjectMap) => {
+    const rawFile = image.rawFile;
+    const path = image.path;
+    const { data: storageUploadData, error: uploadError } =
+      await supabaseClient.storage.from('images').upload(path, rawFile, {
+        cacheControl: '3600',
+        upsert: false
+      });
+    return { storageUploadData, uploadError };
+  });
+  return;
+};
+
+// retorn objetos de imagem
+
+const imageObject = ({ rawFile, title }: ImageOriginal): ImageObjectMap => {
+  const imageId = uuidv4();
+
+  const path = `images/${imageId}`;
+  const imageUrl: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+
+  const image: ImageObject = { path, rawFile, imageUrl };
+  return { image };
+};
