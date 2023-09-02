@@ -1,7 +1,28 @@
-import { Edit, ImageField, ImageInput, SimpleForm, TextInput, required } from 'react-admin';
+import { MyDocument } from '@/components/pdf/work';
+import ReactPDF from '@react-pdf/renderer';
+import { Button, Edit, ImageField, ImageInput, SimpleForm, TextInput, required, useRecordContext } from 'react-admin';
+
+
+const Aside = async () => {
+	const record = useRecordContext();
+
+	async function print() {
+		await ReactPDF.render(
+			<MyDocument params={record} />, `${"download/example.pdf"}`
+		)
+	}
+
+	return (
+		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
+
+			<MyDocument params={record} />
+			<Button onClick={() => print()} label="Print"></Button>
+		</div>
+	)
+}
 
 export const WorkEdit = () => (
-	<Edit>
+	<Edit aside={<Aside />}>
 		<SimpleForm>
 			<TextInput source="title" validate={[required()]} fullWidth />
 			<ImageInput source="image_1" label="Imagem - página 1">

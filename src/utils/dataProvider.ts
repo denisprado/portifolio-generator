@@ -67,6 +67,40 @@ const dataProvider = withLifecycleCallbacks(
             ...newParams
           }
         });
+      },
+      beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
+        if (!params || !params.data || !params.data.image_1) {
+          throw new Error('params.data.image_1 undefined');
+        }
+
+        const imagesArray: ImageOriginal[] = [
+          params.data.image_1,
+          params.data.image_2!
+        ];
+
+        if (imagesArray.length < 1) {
+          throw new Error('ImagesArray undefined');
+        }
+
+        const images = imagesArray.map((imageOriginal) => {
+          console.log('imageParam', imageOriginal);
+          return imageOriginal && imageObject(imageOriginal);
+        });
+
+        uploadToStorage({ images });
+
+        const newParams = {
+          ...params.data,
+          image_1: images[0].image.imageUrl,
+          image_2: images[1].image.imageUrl!
+        }!;
+
+        return dataProvider.update('work', {
+          ...params,
+          data: {
+            ...newParams
+          }
+        });
       }
     }
   ]

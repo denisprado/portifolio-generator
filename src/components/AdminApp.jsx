@@ -3,15 +3,21 @@ import { PortifolioCreate, PortifolioEdit, PortifolioList, PortifolioShow } from
 import { authProvider } from "@/utils/authProvider";
 import dataProvider from '@/utils/dataProvider';
 import { ForgotPasswordPage, LoginPage, SetPasswordPage } from 'ra-supabase';
-import { Admin, CustomRoutes, Resource } from 'react-admin';
+import { Admin, CustomRoutes, Resource, Layout, AppBar, ToggleThemeButton } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
+
+export const MyAppBar = () => (
+	<AppBar toolbar={<ToggleThemeButton />} />
+);
+const MyLayout = (props) => <Layout {...props} appBar={MyAppBar} />;
 
 const AdminApp = () => (
 
 	<BrowserRouter>
 
-		<Admin dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}
+		<Admin layout={MyLayout}
+			dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}
 		>
 			<CustomRoutes noLayout>
 				<Route
