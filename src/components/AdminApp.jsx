@@ -6,6 +6,8 @@ import { ForgotPasswordPage, LoginPage, SetPasswordPage } from 'ra-supabase';
 import { Admin, CustomRoutes, Resource, Layout, AppBar, ToggleThemeButton } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
+import ptBrMessages from 'ra-language-pt-br';
+import polyglotI18nProvider from 'ra-i18n-polyglot';
 
 export const MyAppBar = () => (
 	<AppBar toolbar={<ToggleThemeButton />} />
