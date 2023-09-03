@@ -1,6 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from '@react-pdf/renderer';
-import { supabaseClient } from '@/utils/supabase';
+
 
 // Create styles
 const styles = StyleSheet.create({
@@ -16,16 +16,8 @@ const styles = StyleSheet.create({
 	}
 });
 
-type Record = {
-	params:
-	{
-		id: string
-		title: string
-		image_1: string
-	}
-}
-// Create Document Component
-export const MyDocument = async ({ params }: Record) => {
+
+export const MyDocument = async ({ params }: any) => {
 
 	const styles = StyleSheet.create({
 		page: {
@@ -46,7 +38,9 @@ export const MyDocument = async ({ params }: Record) => {
 
 	// const { title, image_1 } = data
 	return (
-		<PDFViewer style={{ margin: 0, height: '297mm', border: '1px solid blue', display: 'flex', width: '210mm' }}>
+
+		<PDFViewer style={{ margin: 0, height: '297mm', border: '1px solid blue', display: 'flex', width: '210mm' }
+		}>
 			<Document style={{ margin: 0 }}>
 				<Page size={"A4"} style={styles.page}>
 					<View style={styles.section}>

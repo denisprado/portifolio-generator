@@ -11,12 +11,16 @@ export const MyAppBar = () => (
 	<AppBar toolbar={<ToggleThemeButton />} />
 );
 const MyLayout = (props) => <Layout {...props} appBar={MyAppBar} />;
+const messages = {
+	'pt-br': ptBrMessages,
+};
+const i18nProvider = polyglotI18nProvider(locale => messages[locale], 'pt-br');
 
 const AdminApp = () => (
 
 	<BrowserRouter>
 
-		<Admin layout={MyLayout}
+		<Admin layout={MyLayout} i18nProvider={i18nProvider}
 			dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}
 		>
 			<CustomRoutes noLayout>

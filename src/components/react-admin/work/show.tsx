@@ -19,22 +19,19 @@ const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 const Aside = async () => {
 	const record = useRecordContext();
 
-	async function print() {
-		await ReactPDF.render(
-			<MyDocument params={record} />, `${"download/example.pdf"}`
-		)
-	}
+
 
 	return (
 		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-
+			{/* @ts-expect-error */}
 			<MyDocument params={record} />
-			<Button onClick={() => print()} label="Print"></Button>
+
 		</div>
 	)
 }
 
 export const WorkShow = (props: any) => (
+	/* @ts-expect-error */
 	<Show {...props} aside={<Aside />}>
 		<SimpleShowLayout>
 			<TextField source="title" />

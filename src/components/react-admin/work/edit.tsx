@@ -6,23 +6,17 @@ import { Button, Edit, ImageField, ImageInput, SimpleForm, TextInput, required, 
 const Aside = async () => {
 	const record = useRecordContext();
 
-	async function print() {
-		await ReactPDF.render(
-			<MyDocument params={record} />, `${"download/example.pdf"}`
-		)
-	}
-
 	return (
 		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-
+			{/* @ts-expect-error */}
 			<MyDocument params={record} />
-			<Button onClick={() => print()} label="Print"></Button>
 		</div>
 	)
 }
 
 export const WorkEdit = () => (
-	<Edit aside={<Aside />}>
+	/* @ts-expect-error */
+	<Edit aside={< Aside />}>
 		<SimpleForm>
 			<TextInput source="title" validate={[required()]} fullWidth />
 			<ImageInput source="image_1" label="Imagem - página 1">
@@ -36,5 +30,5 @@ export const WorkEdit = () => (
 			<TextInput source="description_2" validate={[required()]} fullWidth />
 			<TextInput source="tech_description_2" validate={[required()]} fullWidth />
 		</SimpleForm>
-	</Edit>
+	</Edit >
 );
