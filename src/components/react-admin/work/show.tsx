@@ -1,8 +1,6 @@
-import { MyDocument } from "@/components/pdf/work";
-import { supabaseClient } from "@/utils/supabase";
-import ReactPDF, { PDFViewer } from "@react-pdf/renderer";
+import { WorkPDF } from "@/components/pdf/work";
 import * as React from "react";
-import { Show, SimpleShowLayout, TextField, DateField, RichTextField, ReferenceArrayField, Datagrid, EditButton, NumberField, CreateButton, ShowButton, Button, Link, DeleteButton, SaveButton, Toolbar, ToolbarProps, useRecordContext, SimpleForm, ImageField } from 'react-admin';
+import { CreateButton, EditButton, ImageField, Show, ShowButton, SimpleShowLayout, TextField, Toolbar, ToolbarProps, useRecordContext } from 'react-admin';
 
 
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
@@ -18,13 +16,10 @@ const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 
 const Aside = async () => {
 	const record = useRecordContext();
-
-
-
 	return (
 		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
 			{/* @ts-expect-error */}
-			<MyDocument params={record} />
+			<WorkPDF params={record} />
 
 		</div>
 	)

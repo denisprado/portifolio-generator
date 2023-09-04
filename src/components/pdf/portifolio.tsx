@@ -17,21 +17,12 @@ const styles = StyleSheet.create({
 });
 
 
-export const WorkPDF = async ({ params }: any) => {
+export const PortifolioPDF = async ({ params }: any) => {
+
+	console.log(params)
 
 	const title = params?.title
-	const image_1 = params?.image_1
-	const image_2 = params?.image_2
-	const description_1 = params?.description_1
-	const description_2 = params?.description_2
-	const tech_description_1 = params?.tech_description_1
-	const image_1_orientation = params?.image_1_orientation
-	const image_1_order_image = params?.image_1_order_image
-	const text_1_vertical_align = params?.text_1_vertical_align
-	const image_2_orientation = params?.image_2_orientation
-	const image_2_order_image = params?.image_2_order_image
-	const text_2_vertical_align = params?.text_2_vertical_align
-	const text_1_horizontal_align = params?.text_2_horizontal_align
+
 
 	const styles = StyleSheet.create({
 		page: {
@@ -45,11 +36,7 @@ export const WorkPDF = async ({ params }: any) => {
 			marginLeft: "10mm",
 			marginRight: "10mm",
 		},
-		text: {
-			fontSize: 12,
-			textAlign: text_1_horizontal_align,
-			width: 180,
-		},
+
 		column: {
 			padding: "0",
 			width: 260,
@@ -73,7 +60,7 @@ export const WorkPDF = async ({ params }: any) => {
 		}>
 			<Document style={{ margin: 0 }}>
 				<Page size={"A4"} style={styles.page}>
-					<View style={{ display: 'flex', flexDirection: `column${image_1_order_image === 'final' ? '-reverse' : ''}` }}>
+					<View style={{ display: 'flex' }}>
 
 						<View>
 							<View style={styles.section}>
@@ -84,16 +71,6 @@ export const WorkPDF = async ({ params }: any) => {
 						<View>
 							<View style={styles.section}>
 								<Text style={{ fontWeight: 900 }}>{title}</Text>
-							</View>
-							<View style={styles.section}>
-								<View style={styles.columnSection}>
-									<View style={styles.column}>
-										<Text style={styles.text}>{description_1}</Text>
-									</View>
-									<View style={styles.column}>
-										<Text style={styles.text}>{tech_description_1}</Text>
-									</View>
-								</View>
 							</View>
 						</View>
 
