@@ -1,5 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from '@react-pdf/renderer';
+import { Html } from 'react-pdf-html';
 
 
 const styles = StyleSheet.create({
@@ -86,10 +87,10 @@ export const WorkPagePdf = ({ params }: any) => {
 						<View style={styles.section}>
 							<View style={styles.columnSection}>
 								<View style={styles.column}>
-									<Text style={styles.text}>{description_1}</Text>
+									<Text style={styles.text}><Html>{description_1}</Html></Text>
 								</View>
 								<View style={styles.column}>
-									<Text style={styles.text}>{tech_description_1}</Text>
+									<Text style={styles.text}><Html>{tech_description_1}</Html></Text>
 								</View>
 							</View>
 						</View>
