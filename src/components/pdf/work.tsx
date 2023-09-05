@@ -59,6 +59,7 @@ export const WorkPagePdf = ({ params }: any) => {
 	const description_1 = params?.description_1
 	const description_2 = params?.description_2
 	const tech_description_1 = params?.tech_description_1
+	const tech_description_2 = params?.tech_description_2
 	const image_1_orientation = params?.image_1_orientation
 	const image_1_order_image = params?.image_1_order_image
 	const text_1_vertical_align = params?.text_1_vertical_align
@@ -66,37 +67,61 @@ export const WorkPagePdf = ({ params }: any) => {
 	const image_2_order_image = params?.image_2_order_image
 	const text_2_vertical_align = params?.text_2_vertical_align
 	const text_1_horizontal_align = params?.text_2_horizontal_align
+	const text_2_horizontal_align = params?.text_2_horizontal_align
 
-	const p = image_2 ? [1, 2] : [1]
+	const pages = [
+		{
+			image: image_1,
+			description: description_1,
+			tech_description: tech_description_1,
+			image_order: image_1_order_image,
+			image_orientation: image_1_orientation,
+			text_vertical_align: text_1_vertical_align,
+			text_horizontal_align: text_1_horizontal_align
+		},
+		image_2 && {
+			image: image_2,
+			description: description_2,
+			tech_description: tech_description_2,
+			image_order: image_2_order_image,
+			image_orientation: image_2_orientation,
+			text_vertical_align: text_2_vertical_align,
+			text_horizontal_align: text_2_horizontal_align
+		},
+	]
 
 	return (
 		<>
-			<Page size={"A4"} style={styles.page}>
-				<View style={{ display: 'flex', flexDirection: `column${image_1_order_image === 'final' ? '-reverse' : ''}` }}>
-
-					<View>
-						<View style={styles.section}>
-							<Image src={params?.image_1} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
+			{pages.map((page, i) =>
+				<Page size={"A4"} style={styles.page}>
+					<View style={{ display: 'flex', flexDirection: `column${page.image_order === 'final' ? '-reverse' : ''}` }}>
+						
+						<View>
+							<View style={styles.section}>
+								<Image src={page.image} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
+							</View>
 						</View>
-					</View>
 
-					<View>
-						<View style={styles.section}>
-							<Text style={{ fontWeight: 900 }}>{title}</Text>
-						</View>
-						<View style={styles.section}>
-							<View style={styles.columnSection}>
-								<View style={styles.column}>
-									<Text style={styles.text}><Html>{description_1}</Html></Text>
-								</View>
-								<View style={styles.column}>
-									<Text style={styles.text}><Html>{tech_description_1}</Html></Text>
+						<View>
+							{i === 0 && <View style={styles.section}>
+								<Text style={{ fontWeight: 900 }}>{title}</Text>
+							</View>
+							}
+							<View style={styles.section}>
+								<View style={styles.columnSection}>
+									<View style={styles.column}>
+										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page.description}</Html></Text>
+									</View>
+									<View style={styles.column}>
+										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page.tech_description}</Html></Text>
+									</View>
 								</View>
 							</View>
 						</View>
-					</View>
 
-				</View>
-			</Page>
-		</>)
+					</View>
+				</Page>
+			)}
+		</>
+	)
 }
