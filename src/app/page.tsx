@@ -4,6 +4,7 @@ import {
 	getSubscription,
 	getActiveProductsWithPrices
 } from '@/app/supabase-server';
+import Navbar from '@/components/ui/Navbar';
 
 export default async function PricingPage() {
 	const [session, products, subscription] = await Promise.all([
@@ -13,11 +14,20 @@ export default async function PricingPage() {
 	]);
 
 	return (
-		<Pricing
-			session={session}
-			user={session?.user}
-			products={products}
-			subscription={subscription}
-		/>
+		<>
+			{/* @ts-expect-error */}
+			<Navbar />
+			<main
+				id="skip"
+				className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+			>
+				<Pricing
+					session={session}
+					user={session?.user}
+					products={products}
+					subscription={subscription}
+				/>
+			</main>
+		</>
 	);
 }
