@@ -35,8 +35,8 @@ const AdminApp = () => (
 					element={<ForgotPasswordPage />}
 				/>
 			</CustomRoutes>
-			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} show={PortifolioShow} create={PortifolioCreate} recordRepresentation="title" />
-			<Resource name="work" list={WorkList} edit={WorkEdit} show={WorkShow} create={WorkCreate} recordRepresentation="title" />
+			<Resource label={"Portifolios"} name="portfolio" list={PortifolioList} edit={PortifolioEdit} show={PortifolioShow} create={PortifolioCreate} recordRepresentation="title" />
+			<Resource label={"Trabalhos"} name="work" list={WorkList} edit={WorkEdit} show={WorkShow} create={WorkCreate} recordRepresentation="title" />
 		</Admin>
 	</BrowserRouter>
 
