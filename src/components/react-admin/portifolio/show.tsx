@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Show, SimpleShowLayout, TextField, DateField, RichTextField, ReferenceArrayField, Datagrid, EditButton, NumberField, CreateButton, ShowButton, Button, Link, DeleteButton, SaveButton, Toolbar, ToolbarProps, useRecordContext, SimpleForm } from 'react-admin';
+import { PortifolioPDF } from '@/components/pdf/portifolio';
 
 
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
@@ -15,8 +16,19 @@ const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 	);
 };
 
+const Aside = async () => {
+	const record = useRecordContext();
+	return (
+		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
+			{/* @ts-expect-error */}
+			<PortifolioPDF params={record} />
+
+		</div>
+	)
+}
+
 export const PortifolioShow = (props: any) => (
-	<Show {...props}>
+	<Show {...props} aside={<Aside />}>
 		<SimpleShowLayout>
 			<TextField source="title" />
 			<TextField source="description" />

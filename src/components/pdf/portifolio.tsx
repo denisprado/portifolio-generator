@@ -1,5 +1,8 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from '@react-pdf/renderer';
+import { supabaseClient } from '@/utils/supabase';
+import { Loading, useGetMany } from 'react-admin';
+import { WorkPDF, WorkPagePdf } from './work';
 
 
 // Create styles
@@ -19,7 +22,6 @@ const styles = StyleSheet.create({
 
 export const PortifolioPDF = async ({ params }: any) => {
 
-	console.log(params)
 
 	const title = params?.title
 
@@ -27,7 +29,6 @@ export const PortifolioPDF = async ({ params }: any) => {
 	const styles = StyleSheet.create({
 		page: {
 			flexDirection: `row`,
-			backgroundColor: '#fff',
 			flexGrow: 1,
 			margin: 0
 		},
@@ -53,6 +54,16 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 	});
 
+	if (!params || !params.work_id) {
+		return
+	}
+
+	const { data, isLoading, error } = useGetMany(
+		'work',
+		{ ids: params?.work_id }
+	);
+	if (isLoading) { return <Loading />; }
+	if (error) { return <p>ERROR</p>; }
 
 	return (
 
@@ -64,18 +75,14 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 						<View>
 							<View style={styles.section}>
-								<Image src={params?.image_1} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
+								<Text style={{ fontWeight: 900 }}>Título:{title}</Text>
 							</View>
 						</View>
 
-						<View>
-							<View style={styles.section}>
-								<Text style={{ fontWeight: 900 }}>{title}</Text>
-							</View>
-						</View>
 
 					</View>
 				</Page>
+				{data?.map(work => <WorkPagePdf params={work} />)}
 			</Document>
 		</PDFViewer >
 	)
