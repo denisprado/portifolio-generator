@@ -15,6 +15,7 @@ const Aside = async () => {
 }
 
 export const PortifolioEdit = () => (
+	/* @ts-expect-error */
 	<Edit aside={<Aside />}>
 		<SimpleForm>
 

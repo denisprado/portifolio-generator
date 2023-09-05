@@ -14,6 +14,7 @@ const Aside = async () => {
 	)
 }
 export const WorkCreate = () => (
+	/* @ts-expect-error */
 	<Create aside={<Aside />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Informações da Obra">

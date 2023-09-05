@@ -28,7 +28,8 @@ const Aside = async () => {
 }
 
 export const PortifolioShow = (props: any) => (
-	<Show {...props} aside={<Aside />}>
+	/* @ts-expect-error */
+	<Show {...props} aside={< Aside />}>
 		<SimpleShowLayout>
 			<TextField source="title" />
 			<TextField source="description" />
@@ -42,5 +43,5 @@ export const PortifolioShow = (props: any) => (
 			</ReferenceArrayField>
 
 		</SimpleShowLayout>
-	</Show >
+	</Show>
 );

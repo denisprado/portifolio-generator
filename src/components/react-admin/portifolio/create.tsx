@@ -15,6 +15,7 @@ const Aside = async () => {
 }
 
 export const PortifolioCreate = () => (
+	/* @ts-expect-error */
 	<Create aside={<Aside />}>
 		<SimpleForm>
 			<TextInput source="title" validate={[required()]} fullWidth />
