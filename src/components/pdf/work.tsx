@@ -30,20 +30,22 @@ const styles = StyleSheet.create({
 	columnSection: {
 		display: 'flex',
 		gap: "10mm",
+		width: "190mm",
 		flex: 1,
+		flexDirection: "row"
 	}
 
 });
 
 
-export const WorkPDF = async () => {
+export const WorkPDF = async ({ params }: any) => {
 
 	return (
 
 		<PDFViewer style={{ margin: 0, height: '297mm', display: 'flex', width: '210mm' }
 		}>
 			<Document style={{ margin: 0 }}>
-				<WorkPagePdf />
+				<WorkPagePdf params={params} />
 			</Document>
 		</PDFViewer >
 	)
@@ -63,32 +65,37 @@ export const WorkPagePdf = ({ params }: any) => {
 	const image_2_order_image = params?.image_2_order_image
 	const text_2_vertical_align = params?.text_2_vertical_align
 	const text_1_horizontal_align = params?.text_2_horizontal_align
-	return (<>
-		<Page size={"A4"} style={styles.page}>
-			<View style={{ display: 'flex', flexDirection: `column${image_1_order_image === 'final' ? '-reverse' : ''}` }}>
 
-				<View>
-					<View style={styles.section}>
-						<Image src={params?.image_1} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
-					</View>
-				</View>
+	const p = image_2 ? [1, 2] : [1]
 
-				<View>
-					<View style={styles.section}>
-						<Text style={{ fontWeight: 900 }}>{title}</Text>
+	return (
+		<>
+			<Page size={"A4"} style={styles.page}>
+				<View style={{ display: 'flex', flexDirection: `column${image_1_order_image === 'final' ? '-reverse' : ''}` }}>
+
+					<View>
+						<View style={styles.section}>
+							<Image src={params?.image_1} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
+						</View>
 					</View>
-					<View style={styles.section}>
-						<View style={styles.columnSection}>
-							<View style={styles.column}>
-								<Text style={styles.text}>{description_1}</Text>
-							</View>
-							<View style={styles.column}>
-								<Text style={styles.text}>{tech_description_1}</Text>
+
+					<View>
+						<View style={styles.section}>
+							<Text style={{ fontWeight: 900 }}>{title}</Text>
+						</View>
+						<View style={styles.section}>
+							<View style={styles.columnSection}>
+								<View style={styles.column}>
+									<Text style={styles.text}>{description_1}</Text>
+								</View>
+								<View style={styles.column}>
+									<Text style={styles.text}>{tech_description_1}</Text>
+								</View>
 							</View>
 						</View>
 					</View>
-				</View>
 
-			</View>
-		</Page></>)
+				</View>
+			</Page>
+		</>)
 }
