@@ -2,7 +2,7 @@ import { WorkPDF } from '@/components/pdf/work';
 import ReactPDF from '@react-pdf/renderer';
 import { Button, Edit, ImageField, ImageInput, SimpleForm, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
 import { PageFields } from './create';
-
+import { PageTitle } from '../portifolio/edit';
 
 const Aside = async () => {
 	const record = useRecordContext();
@@ -17,7 +17,7 @@ const Aside = async () => {
 
 export const WorkEdit = () => (
 	/* @ts-expect-error */
-	<Edit aside={< Aside />}>
+	<Edit aside={< Aside />} title={<PageTitle />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Informações da Obra">
 				{/* <TextInput source="id" hidden disabled /> */}

@@ -2,7 +2,7 @@ import { Create, ImageField, ImageInput, TabbedForm, TextInput, required, useRec
 import { RadioButtonGroupInput } from 'react-admin';
 import { WorkPDF } from '@/components/pdf/work';
 import { RichTextInput } from 'ra-input-rich-text';
-
+import { PageTitle } from '../portifolio/edit';
 const Aside = async () => {
 	const record = useRecordContext();
 
@@ -15,7 +15,7 @@ const Aside = async () => {
 }
 export const WorkCreate = () => (
 	/* @ts-expect-error */
-	<Create aside={<Aside />}>
+	<Create aside={<Aside />} title={<PageTitle />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Informações da Obra">
 				{/* <TextInput source="id" hidden disabled /> */}

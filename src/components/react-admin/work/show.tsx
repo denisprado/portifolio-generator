@@ -6,7 +6,6 @@ import { CreateButton, EditButton, ImageField, Show, ShowButton, SimpleShowLayou
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 	return (
 		<Toolbar {...props}>
-			<ShowButton resource={`work`} />
 			<EditButton />
 			<ShowButton />
 			<CreateButton resource="work" />

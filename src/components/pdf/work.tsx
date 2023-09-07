@@ -94,8 +94,8 @@ export const WorkPagePdf = ({ params }: any) => {
 		<>
 			{pages.map((page, i) =>
 				<Page size={"A4"} style={styles.page}>
-					<View style={{ display: 'flex', flexDirection: `column${page.image_order === 'final' ? '-reverse' : ''}` }}>
-						
+					<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page.image_order === 'final' ? '-reverse' : ''}` }}>
+
 						<View>
 							<View style={styles.section}>
 								<Image src={page.image} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />

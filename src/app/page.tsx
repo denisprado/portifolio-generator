@@ -15,7 +15,7 @@ export default async function PricingPage() {
 
 	return (
 		<>
-			{/* @ts-expect-error */}
+
 			<Navbar />
 			<main
 				id="skip"
