@@ -7,7 +7,7 @@ const Aside = async () => {
 	const record = useRecordContext();
 
 	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
+		<div style={{ minWidth: 684, margin: '1em' }}>
 			{/* @ts-expect-error */}
 			<WorkPDF params={record} />
 		</div>
@@ -44,13 +44,13 @@ export const PageFields = ({ n }: PageFieldsProps) => {
 	const validate = n === "1" ? [required()] : [];
 	return (
 		<>
-			<ImageInput source={`image_${n}`} label="Imagem" >
+			<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_${n}`} label="Imagem" >
 				<ImageField source={`src`} src={`image_${n}`} />
 			</ImageInput>
 			<ImageField source={`image_${n}`} title="title" />
 			<RichTextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
 			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
-			<div className='flex flex-row justify-start items-start gap-16'>
+			{/* <div className='flex flex-row justify-start items-start gap-16'>
 				<div className='flex flex-col justify-start items-start'>
 
 					<RadioButtonGroupInput label={"Orientação da imagem"} source={`image_${n}_orientation`} choices={[
@@ -73,7 +73,7 @@ export const PageFields = ({ n }: PageFieldsProps) => {
 						{ id: 'right', name: 'Direita' },
 					]} />
 				</div>
-			</div>
+			</div> */}
 
 		</>
 	)

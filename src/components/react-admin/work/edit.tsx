@@ -17,7 +17,7 @@ const Aside = async () => {
 
 export const WorkEdit = () => (
 	/* @ts-expect-error */
-	<Edit aside={< Aside />} title={<PageTitle />}>
+	<Edit aside={<Aside />} title={<PageTitle />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Informações da Obra">
 				{/* <TextInput source="id" hidden disabled /> */}

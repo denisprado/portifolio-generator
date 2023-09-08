@@ -3,7 +3,13 @@ import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from '@react
 import { Html } from 'react-pdf-html';
 
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
+	viewer: {
+		margin: 0,
+		height: '297mm',
+		display: 'flex',
+		width: '210mm'
+	},
 	page: {
 		flexDirection: `row`,
 		backgroundColor: '#fff',
@@ -16,14 +22,12 @@ const styles = StyleSheet.create({
 		marginRight: "10mm",
 	},
 	text: {
-		fontSize: 12,
-
-		width: 180,
+		fontSize: 10,
+		// width: 180,
 	},
 	column: {
 		padding: "0",
-		width: 260,
-		border: '1px solid red',
+		width: "140mm",
 		margin: 0,
 		flexGrow: 1,
 		height: "60mm"
@@ -34,6 +38,11 @@ const styles = StyleSheet.create({
 		width: "190mm",
 		flex: 1,
 		flexDirection: "row"
+	},
+	image: {
+		width: "190mm",
+		height: "190mm",
+		objectFit: 'cover'
 	}
 
 });
@@ -42,9 +51,7 @@ const styles = StyleSheet.create({
 export const WorkPDF = async ({ params }: any) => {
 
 	return (
-
-		<PDFViewer style={{ margin: 0, height: '297mm', display: 'flex', width: '210mm' }
-		}>
+		<PDFViewer style={styles.viewer}>
 			<Document style={{ margin: 0 }}>
 				<WorkPagePdf params={params} />
 			</Document>
@@ -61,10 +68,10 @@ export const WorkPagePdf = ({ params }: any) => {
 	const tech_description_1 = params?.tech_description_1
 	const tech_description_2 = params?.tech_description_2
 	const image_1_orientation = params?.image_1_orientation
-	const image_1_order_image = params?.image_1_order_image
+	const image_1_order_image = params?.image_1_order_image ?? 'inicial'
 	const text_1_vertical_align = params?.text_1_vertical_align
 	const image_2_orientation = params?.image_2_orientation
-	const image_2_order_image = params?.image_2_order_image
+	const image_2_order_image = params?.image_2_order_image ?? 'inicial'
 	const text_2_vertical_align = params?.text_2_vertical_align
 	const text_1_horizontal_align = params?.text_2_horizontal_align
 	const text_2_horizontal_align = params?.text_2_horizontal_align
@@ -78,8 +85,12 @@ export const WorkPagePdf = ({ params }: any) => {
 			image_orientation: image_1_orientation,
 			text_vertical_align: text_1_vertical_align,
 			text_horizontal_align: text_1_horizontal_align
-		},
-		image_2 && {
+		}
+
+	]
+
+	if (image_2) {
+		pages.push({
 			image: image_2,
 			description: description_2,
 			tech_description: tech_description_2,
@@ -87,41 +98,43 @@ export const WorkPagePdf = ({ params }: any) => {
 			image_orientation: image_2_orientation,
 			text_vertical_align: text_2_vertical_align,
 			text_horizontal_align: text_2_horizontal_align
-		},
-	]
+		})
+	}
 
 	return (
-		<>
-			{pages.map((page, i) =>
-				<Page size={"A4"} style={styles.page}>
-					<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page?.image_order === 'final' ? '-reverse' : ''}` }}>
 
-						<View>
-							<View style={styles.section}>
-								<Image src={page?.image} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
-							</View>
+		pages.map((page, i) =>
+			<Page size={"A4"} style={styles.page}>
+				<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page?.image_order === 'final' ? '-reverse' : ''}` }}>
+
+
+					<View>
+						<View style={styles.section}>
+							<Image src={page.image} style={styles.image} />
 						</View>
+					</View>
 
-						<View>
-							{i === 0 && <View style={styles.section}>
-								<Text style={{ fontWeight: 900 }}>{title}</Text>
-							</View>
-							}
-							<View style={styles.section}>
-								<View style={styles.columnSection}>
-									<View style={styles.column}>
-										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page?.description}</Html></Text>
-									</View>
-									<View style={styles.column}>
-										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page?.tech_description}</Html></Text>
-									</View>
+
+					<View>
+						{i === 0 && <View style={styles.section}>
+							<Text style={{ fontWeight: 900 }}>{title}</Text>
+						</View>
+						}
+						<View style={styles.section}>
+							<View style={styles.columnSection}>
+								<View style={styles.column}>
+									<Text ><Html style={styles.text}>{page?.description}</Html></Text>
+								</View>
+								<View style={styles.column}>
+									<Text ><Html style={styles.text}>{page?.tech_description}</Html></Text>
 								</View>
 							</View>
 						</View>
-
 					</View>
-				</Page>
-			)}
-		</>
+
+				</View>
+			</Page>
+		)
+
 	)
 }

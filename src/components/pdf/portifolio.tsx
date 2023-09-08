@@ -1,34 +1,9 @@
 import { Document, Image, PDFViewer, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { Loading, useGetMany } from 'react-admin';
-import Html from 'react-pdf-html';
+import { Html } from 'react-pdf-html';
 import { WorkPagePdf } from './work';
+import { styles } from './work';
 
-const styles = StyleSheet.create({
-	page: {
-		flexDirection: `row`,
-		flexGrow: 1,
-		margin: 0
-	},
-	section: {
-		marginTop: "10mm",
-		marginLeft: "10mm",
-		marginRight: "10mm",
-	},
-
-	column: {
-		padding: "0",
-		width: 260,
-		border: '1px solid red',
-		margin: 0,
-		flexGrow: 1,
-		height: "60mm"
-	},
-	columnSection: {
-		display: 'flex',
-		gap: "10mm",
-		flex: 1,
-	}
-});
 
 export const PortifolioPDF = async ({ params }: any) => {
 
@@ -40,10 +15,6 @@ export const PortifolioPDF = async ({ params }: any) => {
 	const cv = params?.cv
 	const contact = params?.contact
 
-	if (!params || !params.work_id) {
-		return
-	}
-
 	const { data, isLoading, error } = useGetMany(
 		'work',
 		{ ids: params?.work_id }
@@ -53,60 +24,56 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 	return (
 
-		<PDFViewer style={{ margin: 0, height: '297mm', display: 'flex', width: '210mm' }}>
+		<PDFViewer style={styles.viewer}>
 			<Document style={{ margin: 0 }}>
 				<Page size={"A4"} style={styles.page}>
 					<View style={{ display: 'flex' }}>
 
-						<View>
-							<View style={styles.section}>
-								<Text style={{ fontWeight: 900 }}><Html style={{ fontSize: 24 }}>{title}</Html></Text>
-							</View>
+						<View style={styles.section}>
+							<Text>
+								<Html style={styles.text}>{title}</Html>
+							</Text>
 						</View>
 
-						<View>
-							<View style={styles.section}>
-								<Image src={image_1} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
-							</View>
+						<View style={styles.section}>
+							<Image src={image_1} style={styles.image} />
 						</View>
 
-						<View>
-							<View style={styles.section}>
-								<Text><Html style={{ fontSize: 10 }}>{description}</Html></Text>
-							</View>
+						<View style={styles.section}>
+							<Text><Html style={styles.text}>{description}</Html></Text>
 						</View>
 
 
 					</View>
 				</Page>
 				{/*Obras */}
-				{data?.map(work => <WorkPagePdf key={work?.id} params={work} />)}
+				{data && data?.map(work => work && <WorkPagePdf key={work?.id} params={work} />)}
 
 				<Page size={"A4"} style={styles.page}>
 
-					<View style={{ display: 'flex' }}>
-						<View style={styles.section}>
-							<Text><Html style={{ fontSize: 10 }}>{bio}</Html></Text>
-						</View>
-						<View style={styles.section}>
-							<Text><Html style={{ fontSize: 10 }}>{cv}</Html></Text>
-						</View>
+
+					<View style={styles.section}>
+						<Text style={styles.text}><Html>{bio}</Html></Text>
 					</View>
+					<View style={styles.section}>
+						<Text style={styles.text}><Html>{cv}</Html></Text>
+					</View>
+
 				</Page>
 				<Page size={"A4"} style={styles.page}>
 
-					<View style={{ display: 'flex' }}>
-
-						<View style={styles.section}>
-							<Image src={image_2} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
-						</View>
 
 
-						<View style={styles.section}>
-							<Text><Html style={{ fontSize: 10 }}>{contact}</Html></Text>
-						</View>
-
+					<View style={styles.section}>
+						<Image src={image_2} style={styles.image} />
 					</View>
+
+
+					<View style={styles.section}>
+						<Text style={styles.text}><Html >{contact}</Html></Text>
+					</View>
+
+
 				</Page>
 			</Document>
 		</PDFViewer >

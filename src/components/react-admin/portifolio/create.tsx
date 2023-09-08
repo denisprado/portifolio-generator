@@ -6,30 +6,28 @@ import { Card, CardContent } from '@mui/material';
 
 const Aside = async () => {
 	const record = useRecordContext();
-	if (!record) {
-		return
-	}
+
 	return (
 		<div style={{ minWidth: 684 }}>
-			{/* @ts-expect-error */}
+
 			<PortifolioPDF params={record} />
 		</div>
 	)
 }
 
 export const PortifolioCreate = () => (
-	/* @ts-expect-error */
+
 	<Create aside={<Aside />} title={<PageTitle />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Capa">
 				<TextInput source="title" validate={[required()]} fullWidth />
-				<ImageInput source={`image_1`} label="Imagem" >
+				<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_1`} label="Imagem" validate={[required()]}>
 					<ImageField source="src" title="title" />
 				</ImageInput>
 				<RichTextInput source="description" label={"Descrição"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Obras">
-				<ReferenceArrayInput reference="work" source="work_id" label={"Obras"} >
+				<ReferenceArrayInput reference="work" source="work_id" label={"Obras"} validate={[required()]}>
 					<SelectArrayInput optionText="title" />
 				</ReferenceArrayInput>
 			</TabbedForm.Tab>
@@ -38,11 +36,11 @@ export const PortifolioCreate = () => (
 				<RichTextInput source="bio" label={"Biografia"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="4ª Capa">
-				<ImageInput source={`image_2`} label="Imagem" >
+				<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_2`} label="Imagem" >
 					<ImageField source="src" title="title" />
 				</ImageInput>
 				<RichTextInput source="contact" label={"Contato"} />
 			</TabbedForm.Tab>
 		</TabbedForm>
-	</Create>
+	</Create >
 );

@@ -27,7 +27,7 @@ export const PortifolioEdit = () => (
 		<TabbedForm>
 			<TabbedForm.Tab label="Capa">
 				<TextInput source="title" validate={[required()]} fullWidth />
-				<ImageInput source={`image_1`} label="Imagem" >
+				<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_1`} label="Imagem" >
 					<ImageField source="src" title="title" />
 				</ImageInput>
 				<RichTextInput source="description" label={"Descrição"} />
@@ -40,7 +40,7 @@ export const PortifolioEdit = () => (
 				<RichTextInput source="cv" label={"Curriculum Vitae"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="4ª Capa">
-				<ImageInput source={`image_2`} label="Imagem" >
+				<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_2`} label="Imagem" >
 					<ImageField source="src" title="title" />
 				</ImageInput>
 				<RichTextInput source="contact" label={"Contato"} />

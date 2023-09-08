@@ -46,7 +46,7 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl!,
+          image_1: imageObject1?.image?.imageUrl,
           image_2: imageObject2?.image?.imageUrl!
         }!;
 
@@ -69,7 +69,7 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl!,
+          image_1: imageObject1?.image?.imageUrl,
           image_2: imageObject2?.image?.imageUrl!
         }!;
 
@@ -96,7 +96,7 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl!,
+          image_1: imageObject1?.image?.imageUrl,
           image_2: imageObject2?.image?.imageUrl!
         }!;
 
@@ -119,7 +119,7 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl!,
+          image_1: imageObject1?.image?.imageUrl,
           image_2: imageObject2?.image?.imageUrl!
         }!;
 
@@ -138,6 +138,7 @@ export default dataProvider;
 
 function imageObjectFinal(image: ImageOriginal) {
   if (!image || !image.rawFile) {
+    console.log('image', image);
     throw new Error('image.rawFile undefined');
   }
 
