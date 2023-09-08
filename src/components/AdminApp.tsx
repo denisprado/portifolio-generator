@@ -13,13 +13,13 @@ import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
 
 
 const AdminApp: React.FC = () => {
-	// const messages = {
-	// 	'pt-br': ptBrMessages,
-	// };
+	const messages: any = {
+		'pt-br': ptBrMessages,
+	};
 
-	// const i18nProvider = polyglotI18nProvider(locale => messages[locale], 'pt-br', { allowMissing: true });
+	const i18nProvider = polyglotI18nProvider(locale => messages[locale], 'pt-br', { allowMissing: true });
 	return (
-		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider}>
+		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider}>
 			{/* <CustomRoutes noLayout>
 			<Route
 				path={SetPasswordPage.path}

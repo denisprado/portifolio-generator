@@ -9,7 +9,7 @@ export const WorkList = () => {
 
 				<TextField source="title" />
 
-				<ImageField source="image_1" src="image_1" />
+				<ImageField source="image_1" src="image_1.imageUrl" />
 				<RichTextField source="description_1" />
 				<RichTextField source="tech_description_1" />
 

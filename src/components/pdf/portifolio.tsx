@@ -84,23 +84,28 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				<Page size={"A4"} style={styles.page}>
 
-					<View style={styles.section}>
-						<View style={{ display: 'flex' }}>
+					<View style={{ display: 'flex' }}>
+						<View style={styles.section}>
 							<Text><Html style={{ fontSize: 10 }}>{bio}</Html></Text>
 						</View>
-						<View style={{ display: 'flex' }}>
+						<View style={styles.section}>
 							<Text><Html style={{ fontSize: 10 }}>{cv}</Html></Text>
 						</View>
 					</View>
 				</Page>
 				<Page size={"A4"} style={styles.page}>
-					<View>
-						<View style={{ display: 'flex' }}>
-							<Text><Html style={{ fontSize: 10 }}>{contact}</Html></Text>
-						</View>
+
+					<View style={{ display: 'flex' }}>
+
 						<View style={styles.section}>
 							<Image src={image_2} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
 						</View>
+
+
+						<View style={styles.section}>
+							<Text><Html style={{ fontSize: 10 }}>{contact}</Html></Text>
+						</View>
+
 					</View>
 				</Page>
 			</Document>

@@ -94,11 +94,11 @@ export const WorkPagePdf = ({ params }: any) => {
 		<>
 			{pages.map((page, i) =>
 				<Page size={"A4"} style={styles.page}>
-					<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page.image_order === 'final' ? '-reverse' : ''}` }}>
+					<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page?.image_order === 'final' ? '-reverse' : ''}` }}>
 
 						<View>
 							<View style={styles.section}>
-								<Image src={page.image} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
+								<Image src={page?.image} style={{ width: '190mm', height: '190mm', objectFit: 'cover' }} />
 							</View>
 						</View>
 
@@ -110,10 +110,10 @@ export const WorkPagePdf = ({ params }: any) => {
 							<View style={styles.section}>
 								<View style={styles.columnSection}>
 									<View style={styles.column}>
-										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page.description}</Html></Text>
+										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page?.description}</Html></Text>
 									</View>
 									<View style={styles.column}>
-										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page.tech_description}</Html></Text>
+										<Text style={styles.text}><Html style={{ fontSize: 10 }}>{page?.tech_description}</Html></Text>
 									</View>
 								</View>
 							</View>

@@ -40,13 +40,16 @@ export const PageFields = ({ n }: PageFieldsProps) => {
 	if (!n) {
 		return <></>
 	}
+
+	const validate = n === "1" ? [required()] : [];
 	return (
 		<>
 			<ImageInput source={`image_${n}`} label="Imagem" >
-				<ImageField source="src" title="title" />
+				<ImageField source={`src`} src={`image_${n}`} />
 			</ImageInput>
-			<RichTextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={[required()]} />
-			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={[required()]} />
+			<ImageField source={`image_${n}`} title="title" />
+			<RichTextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
+			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
 			<div className='flex flex-row justify-start items-start gap-16'>
 				<div className='flex flex-col justify-start items-start'>
 

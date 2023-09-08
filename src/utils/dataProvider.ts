@@ -5,11 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 type ImageOriginal = {
   rawFile: File;
-  title: string;
-};
-
-type ImageParam = {
-  imageParam: ImageOriginal;
+  title?: string;
+  src?: string;
 };
 
 type ImageObject = {
@@ -19,6 +16,7 @@ type ImageObject = {
 };
 
 type ImageObjectMap = {
+  [x: string]: any;
   image: ImageObject;
 };
 
@@ -36,30 +34,20 @@ const dataProvider = withLifecycleCallbacks(
     {
       resource: 'work',
       beforeCreate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
+        const imageObject1 = params.data.image_1
+          ? imageObjectFinal(params.data.image_1)
+          : null;
+        imageObject1 && uploadImageToStorage(imageObject1);
 
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
+        const imageObject2 = params.data.image_2
+          ? imageObjectFinal(params.data.image_2)
+          : null;
+        imageObject2 && uploadImageToStorage(imageObject2);
 
         const newParams = {
           ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
+          image_1: imageObject1?.image?.imageUrl!,
+          image_2: imageObject2?.image?.imageUrl!
         }!;
 
         return dataProvider.create('work', {
@@ -69,30 +57,20 @@ const dataProvider = withLifecycleCallbacks(
         });
       },
       beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
+        const imageObject1 = params.data.image_1
+          ? imageObjectFinal(params.data.image_1)
+          : null;
+        imageObject1 && uploadImageToStorage(imageObject1);
 
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
+        const imageObject2 = params.data.image_2
+          ? imageObjectFinal(params.data.image_2)
+          : null;
+        imageObject2 && uploadImageToStorage(imageObject2);
 
         const newParams = {
           ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
+          image_1: imageObject1?.image?.imageUrl!,
+          image_2: imageObject2?.image?.imageUrl!
         }!;
 
         return dataProvider.update('work', {
@@ -106,30 +84,20 @@ const dataProvider = withLifecycleCallbacks(
     {
       resource: 'portfolio',
       beforeCreate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
+        const imageObject1 = params.data.image_1
+          ? imageObjectFinal(params.data.image_1)
+          : null;
+        imageObject1 && uploadImageToStorage(imageObject1);
 
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
+        const imageObject2 = params.data.image_2
+          ? imageObjectFinal(params.data.image_2)
+          : null;
+        imageObject2 && uploadImageToStorage(imageObject2);
 
         const newParams = {
           ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
+          image_1: imageObject1?.image?.imageUrl!,
+          image_2: imageObject2?.image?.imageUrl!
         }!;
 
         return dataProvider.create('portfolio', {
@@ -139,30 +107,20 @@ const dataProvider = withLifecycleCallbacks(
         });
       },
       beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
+        const imageObject1 = params.data.image_1
+          ? imageObjectFinal(params.data.image_1)
+          : null;
+        imageObject1 && uploadImageToStorage(imageObject1);
 
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
+        const imageObject2 = params.data.image_2
+          ? imageObjectFinal(params.data.image_2)
+          : null;
+        imageObject2 && uploadImageToStorage(imageObject2);
 
         const newParams = {
           ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
+          image_1: imageObject1?.image?.imageUrl!,
+          image_2: imageObject2?.image?.imageUrl!
         }!;
 
         return dataProvider.update('portfolio', {
@@ -178,24 +136,40 @@ const dataProvider = withLifecycleCallbacks(
 
 export default dataProvider;
 
-// upload das imagens
-const uploadToStorage = async ({ images }: ImageObjectProps) => {
-  images.map(async ({ image }: ImageObjectMap) => {
-    const rawFile = image.rawFile;
-    const path = image.path;
-    const { data: storageUploadData, error: uploadError } =
-      await supabaseClient.storage.from('images').upload(path, rawFile, {
-        cacheControl: '3600',
-        upsert: false
-      });
-    return { storageUploadData, uploadError };
-  });
-  return;
+function imageObjectFinal(image: ImageOriginal) {
+  if (!image || !image.rawFile) {
+    throw new Error('image.rawFile undefined');
+  }
+
+  return imageObject({ rawFile: image.rawFile });
+}
+
+const uploadImageToStorage = async ({ image }: ImageObjectMap) => {
+  const { rawFile } = image;
+  console.log(rawFile);
+  const path = image ? image.path : '';
+  if (rawFile === undefined) {
+    console.log('error');
+    return;
+  }
+
+  const { data: storageUploadData, error: uploadError } =
+    await supabaseClient.storage.from('images').upload(path, rawFile, {
+      cacheControl: '3600',
+      upsert: false
+    });
+  return { storageUploadData, uploadError };
 };
 
 // retorn objetos de imagem
 
-const imageObject = ({ rawFile, title }: ImageOriginal): ImageObjectMap => {
+const imageObject = ({
+  rawFile
+}: Pick<ImageOriginal, 'rawFile'>): ImageObjectMap => {
+  if (rawFile?.size === 0) {
+    throw new Error('rawFile ImageObject undefined');
+  }
+
   const imageId = uuidv4();
 
   const path = `images/${imageId}`;
