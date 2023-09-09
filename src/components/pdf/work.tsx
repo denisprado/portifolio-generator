@@ -1,51 +1,7 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, Text, View, Image, PDFViewer } from '@react-pdf/renderer';
 import { Html } from 'react-pdf-html';
-
-
-export const styles = StyleSheet.create({
-	viewer: {
-		margin: 0,
-		height: '297mm',
-		display: 'flex',
-		width: '210mm'
-	},
-	page: {
-		flexDirection: `row`,
-		backgroundColor: '#fff',
-		flexGrow: 1,
-		margin: 0
-	},
-	section: {
-		marginTop: "10mm",
-		marginLeft: "10mm",
-		marginRight: "10mm",
-	},
-	text: {
-		fontSize: 10,
-		// width: 180,
-	},
-	column: {
-		padding: "0",
-		width: "140mm",
-		margin: 0,
-		flexGrow: 1,
-		height: "60mm"
-	},
-	columnSection: {
-		display: 'flex',
-		gap: "10mm",
-		width: "190mm",
-		flex: 1,
-		flexDirection: "row"
-	},
-	image: {
-		width: "190mm",
-		height: "190mm",
-		objectFit: 'cover'
-	}
-
-});
+import { styles } from './styles';
 
 
 export const WorkPDF = async ({ params }: any) => {
@@ -102,39 +58,35 @@ export const WorkPagePdf = ({ params }: any) => {
 	}
 
 	return (
+		<>
+			{pages.map((page, i) =>
+				<Page size={"A4"} style={styles.page}>
+					<View style={styles.pageContent}>
 
-		pages.map((page, i) =>
-			<Page size={"A4"} style={styles.page}>
-				<View style={{ display: 'flex', border: "1px solid blue", flexDirection: `column${page?.image_order === 'final' ? '-reverse' : ''}` }}>
-
-
-					<View>
 						<View style={styles.section}>
 							<Image src={page.image} style={styles.image} />
+							<Html style={styles.text}>
+								{page?.tech_description}
+							</Html>
 						</View>
-					</View>
 
-
-					<View>
-						{i === 0 && <View style={styles.section}>
-							<Text style={{ fontWeight: 900 }}>{title}</Text>
-						</View>
-						}
 						<View style={styles.section}>
+							{i === 0 &&
+								<Html style={styles.h2}>{title}</Html>
+							}
+
 							<View style={styles.columnSection}>
 								<View style={styles.column}>
-									<Text ><Html style={styles.text}>{page?.description}</Html></Text>
-								</View>
-								<View style={styles.column}>
-									<Text ><Html style={styles.text}>{page?.tech_description}</Html></Text>
+									<Html style={styles.text}>
+										{page?.description}
+									</Html>
 								</View>
 							</View>
 						</View>
+
 					</View>
-
-				</View>
-			</Page>
-		)
-
+				</Page>
+			)}
+		</>
 	)
 }

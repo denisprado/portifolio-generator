@@ -1,8 +1,7 @@
 import { WorkPDF } from '@/components/pdf/work';
-import ReactPDF from '@react-pdf/renderer';
-import { Button, Edit, ImageField, ImageInput, SimpleForm, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
-import { PageFields } from './create';
+import { Edit, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
 import { PageTitle } from '../portifolio/edit';
+import { PageInputs } from './PageInputs';
 
 const Aside = async () => {
 	const record = useRecordContext();
@@ -25,10 +24,10 @@ export const WorkEdit = () => (
 			</TabbedForm.Tab>
 
 			<TabbedForm.Tab label="Página 1">
-				<PageFields n={"1"} />
+				<PageInputs n={"1"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Página 2">
-				<PageFields n={"2"} />
+				<PageInputs n={"2"} />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	</Edit >

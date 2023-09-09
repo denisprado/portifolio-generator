@@ -30,8 +30,8 @@ const AdminApp: React.FC = () => {
 				element={<ForgotPasswordPage />}
 			/>
 		</CustomRoutes> */}
-			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} show={PortifolioShow} create={PortifolioCreate} recordRepresentation="title" />
-			<Resource name="work" list={WorkList} edit={WorkEdit} show={WorkShow} create={WorkCreate} recordRepresentation="title" />
+			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
+			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
 		</Admin>
 	)
 };
