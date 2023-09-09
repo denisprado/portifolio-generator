@@ -1,6 +1,10 @@
 import { PortifolioPDF } from '@/components/pdf/portifolio';
-import { Edit, useRecordContext } from 'react-admin';
+import { Edit, Loading, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react';
+
+
 
 export const PageTitle = () => {
 	const record = useRecordContext();
@@ -13,10 +17,12 @@ const Aside = async () => {
 		return
 	}
 	return (
-		<div style={{ minWidth: 684 }}>
-			{/* @ts-expect-error */}
-			<PortifolioPDF params={record} />
-		</div>
+		<Suspense fallback={<Loading />}>
+			<div style={{ minWidth: 684 }}>
+				{/* @ts-expect-error */}
+				<PortifolioPDF params={record} />
+			</div>
+		</Suspense>
 	)
 }
 

@@ -11,7 +11,15 @@ export const styles = StyleSheet.create({
 		flexDirection: `column`,
 		backgroundColor: '#fff',
 		flexGrow: 1,
-		margin: 0
+		margin: 0,
+		display: 'none'
+	},
+	pageLoaded: {
+		flexDirection: `column`,
+		backgroundColor: '#fff',
+		flexGrow: 1,
+		margin: 0,
+		display: 'flex'
 	},
 	pageContent: {
 		display: 'flex',

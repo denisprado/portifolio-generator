@@ -3,6 +3,7 @@ import { Loading, useGetMany } from 'react-admin';
 import { Html } from 'react-pdf-html';
 import { WorkPagePdf } from './work';
 import { styles } from './styles';
+import { useState } from 'react';
 
 export const PortifolioPDF = async ({ params }: any) => {
 
@@ -14,6 +15,8 @@ export const PortifolioPDF = async ({ params }: any) => {
 	const cv = params?.cv
 	const contact = params?.contact
 
+	const [loading, setLoading] = useState(true)
+
 	const { data, isLoading, error } = useGetMany(
 		'work',
 		{ ids: params?.work_id }
@@ -24,11 +27,11 @@ export const PortifolioPDF = async ({ params }: any) => {
 	return (
 
 		<PDFViewer style={styles.viewer} showToolbar={false}  >
-			<Document style={{ margin: 0 }}>
+			<Document style={{ margin: 0 }} onRender={() => setLoading(false)}>
 
 				{/* Página 1 - Capa */}
 
-				<Page size={"A4"} style={styles.page}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
 					<View style={styles.pageContent}>
 						<View style={styles.section}>
 
@@ -60,7 +63,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* 2ª Contra Capa */}
 
-				<Page size={"A4"} style={styles.page}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
 					<View style={styles.pageContent}>
 						<View style={styles.section}>
 							<View style={styles.column}>
@@ -79,7 +82,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* Contra Capa */}
 
-				<Page size={"A4"} style={styles.page}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
 
 					<View style={styles.section}>
 						<Image src={image_2} style={styles.image} />
