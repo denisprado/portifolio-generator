@@ -46,9 +46,6 @@ export const PortifolioPDF = async ({ params }: any) => {
 								<View style={styles.column}>
 									<Html style={styles.text}>{description}</Html>
 								</View>
-								<View style={styles.column}>
-									<Html style={styles.text}>{description}</Html>
-								</View>
 							</View>
 						</View>
 					</View>
@@ -66,15 +63,19 @@ export const PortifolioPDF = async ({ params }: any) => {
 				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
 					<View style={styles.pageContent}>
 						<View style={styles.section}>
-							<View style={styles.column}>
-								<Html style={styles.h3}>Biografia</Html>
-								<Html style={styles.text}>{bio}</Html>
+							<View style={styles.columnSection}>
+								<View style={styles.column}>
+									<Html style={styles.h3}>Biografia</Html>
+									<Html style={styles.text}>{bio}</Html>
+								</View>
 							</View>
 						</View>
 						<View style={styles.section}>
-							<View style={styles.column}>
-								<Html style={styles.h3}>Curriculum Vitae</Html>
-								<Html style={styles.text}>{cv}</Html>
+							<View style={styles.columnSection}>
+								<View style={styles.column}>
+									<Html style={styles.h3}>Curriculum Vitae</Html>
+									<Html style={styles.text}>{cv}</Html>
+								</View>
 							</View>
 						</View>
 					</View>

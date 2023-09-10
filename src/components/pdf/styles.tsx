@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 11,
-		width: 180,
 	},
 	h1: {
 		fontSize: 24,
@@ -48,15 +47,15 @@ export const styles = StyleSheet.create({
 	},
 	columnSection: {
 		display: 'flex',
-		gap: "10mm",
-		width: "190mm",
+		gap: "5%",
+		width: "75%",
 		flex: 1,
 		flexDirection: "row"
 	},
 	column: {
 		padding: "0",
 		margin: 0,
-		width: "140mm",
+		width: "37,5%",
 
 	},
 	image: {

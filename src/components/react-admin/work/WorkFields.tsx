@@ -4,12 +4,9 @@ import { PageInputs } from './PageInputs';
 export const WorkFields = () => {
 	const { data } = useGetIdentity();
 
-	if (!data) {
-		return
-	}
 	return (
 		<TabbedForm>
-			<TextInput source="user_id" hidden value={data?.id} />
+			<TextInput source="user_id" sx={{ display: 'none' }} value={data?.id} defaultValue={data?.id} />
 			<TabbedForm.Tab label="Informações da Obra">
 				{/* <TextInput source="id" hidden disabled /> */}
 				<TextInput source="title" fullWidth label={"Titulo"} validate={[required()]} />

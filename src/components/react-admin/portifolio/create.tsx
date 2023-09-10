@@ -20,7 +20,7 @@ const Aside = async () => {
 
 export const PortifolioCreate = () => (
 	/* @ts-expect-error */
-	<Create Create aside={< Aside />} title={< PageTitle />}>
+	<Create aside={< Aside />} title={< PageTitle />}>
 		<PortifolioInputs />
 	</Create >
 );
