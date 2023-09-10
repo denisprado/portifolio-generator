@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
 	},
 	columnSection: {
 		display: 'flex',
-		gap: "5%",
+		gap: "10mm",
 		width: "75%",
 		flex: 1,
 		flexDirection: "row"
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
 	column: {
 		padding: "0",
 		margin: 0,
-		width: "37,5%",
+		width: "75%",
 
 	},
 	image: {

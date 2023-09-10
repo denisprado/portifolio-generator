@@ -6,13 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 type ImageOriginal = {
   rawFile: File;
   title?: string;
-  src?: string;
+  url?: string;
 };
 
 type ImageObject = {
-  path: string;
+  title: string;
   rawFile: File;
-  imageUrl: string;
+  url: string;
 };
 
 type ImageObjectMap = {
@@ -46,8 +46,8 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl,
-          image_2: imageObject2?.image?.imageUrl!
+          image_1: [imageObject1?.image],
+          image_2: [imageObject2?.image]!
         }!;
 
         return dataProvider.create('work', {
@@ -57,6 +57,7 @@ const dataProvider = withLifecycleCallbacks(
         });
       },
       beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
+        console.log('params beforeUpdate', params);
         const imageObject1 = params.data.image_1
           ? imageObjectFinal(params.data.image_1)
           : null;
@@ -69,8 +70,8 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl,
-          image_2: imageObject2?.image?.imageUrl!
+          image_1: [imageObject1?.image],
+          image_2: [imageObject2?.image]!
         }!;
 
         return dataProvider.update('work', {
@@ -96,8 +97,8 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl,
-          image_2: imageObject2?.image?.imageUrl!
+          image_1: [imageObject1?.image],
+          image_2: [imageObject2?.image]!
         }!;
 
         return dataProvider.create('portfolio', {
@@ -119,8 +120,8 @@ const dataProvider = withLifecycleCallbacks(
 
         const newParams = {
           ...params.data,
-          image_1: imageObject1?.image?.imageUrl,
-          image_2: imageObject2?.image?.imageUrl!
+          image_1: [imageObject1?.image],
+          image_2: [imageObject2?.image]!
         }!;
 
         return dataProvider.update('portfolio', {
@@ -137,7 +138,9 @@ const dataProvider = withLifecycleCallbacks(
 export default dataProvider;
 
 function imageObjectFinal(image: ImageOriginal) {
-  if (!image || !image.rawFile) {
+  const imageType = typeof image;
+
+  if (!image.rawFile) {
     console.log('image', image);
     throw new Error('image.rawFile undefined');
   }
@@ -147,10 +150,9 @@ function imageObjectFinal(image: ImageOriginal) {
 
 const uploadImageToStorage = async ({ image }: ImageObjectMap) => {
   const { rawFile } = image;
-  console.log(rawFile);
-  const path = image ? image.path : '';
+
+  const path = image ? image.title : '';
   if (rawFile === undefined) {
-    console.log('error');
     return;
   }
 
@@ -173,9 +175,9 @@ const imageObject = ({
 
   const imageId = uuidv4();
 
-  const path = `images/${imageId}`;
-  const imageUrl: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+  const title = `images/${imageId}`;
+  const url: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${title}`;
 
-  const image: ImageObject = { path, rawFile, imageUrl };
+  const image: ImageObject = { title, rawFile, url };
   return { image };
 };

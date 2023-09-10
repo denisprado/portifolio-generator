@@ -9,17 +9,12 @@ export const WorkList = () => {
 
 				<TextField source="title" />
 
-				<ImageField source="image_1" src="image_1.imageUrl" />
+				<ImageField source="image_1" src="src" />
 				<RichTextField source="description_1" />
 				<RichTextField source="tech_description_1" />
 
-
-				<ImageField source="image_2" />
-				<RichTextField source="description_2" />
-				<RichTextField source="tech_description_2" />
-
 				<EditButton label='Editar' />
-				<ShowButton label='Visualizar' />
+
 			</Datagrid>
 		</ReactAdminList>
 	)

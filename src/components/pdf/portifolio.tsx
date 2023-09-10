@@ -9,8 +9,8 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 	const title = params?.title
 	const description = params?.description
-	const image_1 = params?.image_1
-	const image_2 = params?.image_2
+	const image_1 = params?.image_1?.url
+	const image_2 = params?.image_2?.url
 	const bio = params?.bio
 	const cv = params?.cv
 	const contact = params?.contact

@@ -7,7 +7,7 @@ import { styles } from '@/components/pdf/styles';
 
 const Aside = async () => {
 	const record = useRecordContext();
-
+	console.log(record)
 	return (
 		<div style={styles.viewer}>
 			<Suspense fallback={<Loading />}>

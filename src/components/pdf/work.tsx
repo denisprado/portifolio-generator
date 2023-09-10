@@ -17,8 +17,8 @@ export const WorkPDF = async ({ params }: any) => {
 
 export const WorkPagePdf = ({ params }: any) => {
 	const title = params?.title
-	const image_1 = params?.image_1
-	const image_2 = params?.image_2
+	const image_1 = params?.image_1?.url
+	const image_2 = params?.image_2?.url
 	const description_1 = params?.description_1
 	const description_2 = params?.description_2
 	const tech_description_1 = params?.tech_description_1

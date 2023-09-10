@@ -9,8 +9,9 @@ export const PortifolioInputs = () => {
 			<TextInput source="user_id" sx={{ display: 'none' }} defaultValue={data?.id} value={data?.id} />
 			<TextInput source="title" validate={[required()]} fullWidth />
 			<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_1`} label="Imagem">
-				<ImageField source={`src`} src={`image_1`} />
+				<ImageField source={`url`} title="title" />
 			</ImageInput>
+			<ImageField source={`image_1`} title="title" />
 			<RichTextInput source="description" label={"Descrição"} />
 		</TabbedForm.Tab>
 		<TabbedForm.Tab label="Obras">
@@ -26,6 +27,7 @@ export const PortifolioInputs = () => {
 			<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_2`} label="Imagem">
 				<ImageField source={`src`} src={`image_2`} />
 			</ImageInput>
+			<ImageField source={`image_1`} title="title" />
 			<RichTextInput source="contact" label={"Contato"} />
 		</TabbedForm.Tab>
 	</TabbedForm>;
