@@ -1,6 +1,7 @@
 import { PortifolioPDF } from '@/components/pdf/portifolio';
+import { styles } from '@/components/pdf/styles';
 import * as React from "react";
-import { CreateButton, Datagrid, EditButton, ImageField, ReferenceArrayField, RichTextField, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, Toolbar, ToolbarProps, required, useRecordContext } from 'react-admin';
+import { CreateButton, Datagrid, EditButton, ImageField, Loading, ReferenceArrayField, RichTextField, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, Toolbar, ToolbarProps, required, useRecordContext } from 'react-admin';
 
 
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
@@ -18,10 +19,11 @@ const Aside = async () => {
 	const record = useRecordContext();
 
 	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-			{/* @ts-expect-error */}
-			<PortifolioPDF params={record} />
-
+		<div style={styles.viewer}>
+			<React.Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<PortifolioPDF params={record} />
+			</React.Suspense>
 		</div>
 	)
 }

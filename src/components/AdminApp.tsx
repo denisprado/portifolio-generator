@@ -1,14 +1,12 @@
 'use client'
-import { PortifolioCreate, PortifolioEdit, PortifolioList, PortifolioShow } from '@/components/react-admin/portifolio';
+import { PortifolioCreate, PortifolioEdit, PortifolioList } from '@/components/react-admin/portifolio';
 import { authProvider } from "@/utils/authProvider";
 import dataProvider from '@/utils/dataProvider';
-import { Card, CardContent, CardHeader } from '@mui/material';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import ptBrMessages from 'ra-language-pt-br';
-import { ForgotPasswordPage, LoginPage, SetPasswordPage } from 'ra-supabase';
-import { Admin, CustomRoutes, Resource } from 'react-admin';
-import { Route } from 'react-router-dom';
-import { WorkCreate, WorkEdit, WorkList, WorkShow } from "./react-admin/work";
+import { LoginPage } from 'ra-supabase';
+import { Admin, Resource } from 'react-admin';
+import { WorkCreate, WorkEdit, WorkList } from "./react-admin/work";
 
 
 

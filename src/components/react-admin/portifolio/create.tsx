@@ -1,17 +1,19 @@
 import { PortifolioPDF } from '@/components/pdf/portifolio';
-import { Create, SimpleForm, useRecordContext } from 'react-admin';
-import { PageTitle } from './edit';
-import { Card, CardContent } from '@mui/material';
+import { Suspense } from 'react';
+import { Create, Loading, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PageTitle } from './edit';
+import { styles } from '@/components/pdf/styles';
 
 const Aside = async () => {
 	const record = useRecordContext();
 
 	return (
-		<div style={{ minWidth: 684 }}>
-			{/* @ts-expect-error */}
-			<PortifolioPDF params={record} />
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<PortifolioPDF params={record} />
+			</Suspense>
 		</div>
 	)
 }

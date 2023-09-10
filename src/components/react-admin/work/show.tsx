@@ -1,7 +1,8 @@
 import { WorkPDF } from "@/components/pdf/work";
 import * as React from "react";
-import { CreateButton, EditButton, ImageField, Show, ShowButton, SimpleShowLayout, TextField, Toolbar, ToolbarProps, useRecordContext } from 'react-admin';
-
+import { CreateButton, EditButton, Loading, ImageField, Show, ShowButton, SimpleShowLayout, TextField, Toolbar, ToolbarProps, useRecordContext } from 'react-admin';
+import { Suspense } from 'react';
+import { styles } from "@/components/pdf/styles";
 
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 	return (
@@ -16,10 +17,11 @@ const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 const Aside = async () => {
 	const record = useRecordContext();
 	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-			{/* @ts-expect-error */}
-			<WorkPDF params={record} />
-
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<WorkPDF params={record} />
+			</Suspense>
 		</div>
 	)
 }

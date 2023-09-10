@@ -3,6 +3,7 @@ import { Edit, Loading, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react';
+import { styles } from '@/components/pdf/styles';
 
 
 
@@ -17,12 +18,12 @@ const Aside = async () => {
 		return
 	}
 	return (
-		<Suspense fallback={<Loading />}>
-			<div style={{ minWidth: 684 }}>
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
 				{/* @ts-expect-error */}
 				<PortifolioPDF params={record} />
-			</div>
-		</Suspense>
+			</Suspense>
+		</div>
 	)
 }
 

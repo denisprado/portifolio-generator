@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 11,
-		// width: 180,
+		width: 180,
 	},
 	h1: {
 		fontSize: 24,

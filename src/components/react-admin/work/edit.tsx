@@ -1,15 +1,19 @@
 import { WorkPDF } from '@/components/pdf/work';
-import { Edit, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
+import { Edit, Loading, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
 import { PageTitle } from '../portifolio/edit';
 import { PageInputs } from './PageInputs';
+import { Suspense } from 'react';
+import { styles } from '@/components/pdf/styles';
 
 const Aside = async () => {
 	const record = useRecordContext();
 
 	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-			{/* @ts-expect-error */}
-			<WorkPDF params={record} />
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<WorkPDF params={record} />
+			</Suspense>
 		</div>
 	)
 }
