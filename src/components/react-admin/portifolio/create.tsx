@@ -5,23 +5,23 @@ import { PortifolioInputs } from './PortifolioInputs';
 import { PageTitle } from './edit';
 import { styles } from '@/components/pdf/styles';
 
-// const Aside = async () => {
-// 	const record = useRecordContext();
+const Aside = async () => {
+	const record = useRecordContext();
 
-// 	return (
-// 		<div style={styles.viewer}>
-// 			<Suspense fallback={<Loading />}>
-// 				{/* @ts-expect-error */}
-// 				<PortifolioPDF params={record} />
-// 			</Suspense>
-// 		</div>
-// 	)
-// }
+	return (
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<PortifolioPDF params={record} />
+			</Suspense>
+		</div>
+	)
+}
 
 
 export const PortifolioCreate = () => (
-
-	<Create title={<PageTitle />}>
+	/* @ts-expect-error */
+	<Create aside={<Aside />} title={<PageTitle />}>
 		<PortifolioInputs />
 	</Create >
 );

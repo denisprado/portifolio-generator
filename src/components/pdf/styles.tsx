@@ -1,5 +1,6 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
+
 export const styles = StyleSheet.create({
 	viewer: {
 		margin: 0,
@@ -26,9 +27,32 @@ export const styles = StyleSheet.create({
 		flexDirection: `column`,
 	},
 	section: {
+		// border: '1px solid red',
+		display: 'flex',
 		marginTop: "10mm",
 		marginLeft: "10mm",
 		marginRight: "10mm",
+		width: '50%'
+	},
+	columnSection: {
+		display: 'flex',
+		gap: "10mm",
+		width: "100%",
+		flexGlow: 1,
+		flexDirection: "row",
+		// border: '1px solid green',
+	},
+	column: {
+		padding: "0",
+		margin: 0,
+		width: "100%",
+		display: 'flex',
+		// border: '1px solid blue',
+	},
+	image: {
+		width: "190mm",
+		height: "220mm",
+		objectFit: 'cover'
 	},
 	text: {
 		fontSize: 11,
@@ -43,24 +67,7 @@ export const styles = StyleSheet.create({
 	},
 	h3: {
 		fontSize: 11,
-		fontWeight: 'bold'
+		fontWeight: 'black'
 	},
-	columnSection: {
-		display: 'flex',
-		gap: "10mm",
-		width: "75%",
-		flex: 1,
-		flexDirection: "row"
-	},
-	column: {
-		padding: "0",
-		margin: 0,
-		width: "75%",
 
-	},
-	image: {
-		width: "190mm",
-		height: "190mm",
-		objectFit: 'cover'
-	}
 });

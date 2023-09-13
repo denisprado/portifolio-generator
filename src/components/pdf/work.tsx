@@ -17,11 +17,8 @@ export const WorkPDF = async ({ params }: any) => {
 
 export const WorkPagePdf = ({ params }: any) => {
 	const title = params?.title
-	const image_1_url = params.image_1[0]
-	const parse_image_1 = image_1_url && JSON.parse(image_1_url)
-	const image_1 = parse_image_1 ? parse_image_1.url : ''
-	const image_2_url = params.image_2[0]
-	const image_2 = image_2_url ? JSON.parse(image_2_url).url : ''
+	const image_1_src = params?.image_1_src
+	const image_2_src = params?.image_2_src
 	const description_1 = params?.description_1
 	const description_2 = params?.description_2
 	const tech_description_1 = params?.tech_description_1
@@ -37,7 +34,7 @@ export const WorkPagePdf = ({ params }: any) => {
 
 	const pages = [
 		{
-			image: image_1,
+			image: image_1_src,
 			description: description_1,
 			tech_description: tech_description_1,
 			image_order: image_1_order_image,
@@ -48,9 +45,9 @@ export const WorkPagePdf = ({ params }: any) => {
 
 	]
 
-	if (image_2) {
+	if (image_2_src) {
 		pages.push({
-			image: image_2,
+			image: image_2_src,
 			description: description_2,
 			tech_description: tech_description_2,
 			image_order: image_2_order_image,

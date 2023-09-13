@@ -1,6 +1,5 @@
 import { RichTextInput } from 'ra-input-rich-text';
 import { ImageField, ImageInput, ReferenceArrayInput, SelectArrayInput, TabbedForm, TextInput, required, useGetIdentity, useRecordContext } from 'react-admin';
-import MyImageField from '../common/MyImageField';
 
 export const PortifolioInputs = () => {
 	const { data } = useGetIdentity();

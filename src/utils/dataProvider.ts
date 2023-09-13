@@ -41,8 +41,7 @@ const dataProvider = withLifecycleCallbacks(
         return dataProvider.create('work', {
           ...params,
           data: {
-            ...params.data,
-            ...newParams.data
+            ...newParams
           }
         });
       },
@@ -52,8 +51,7 @@ const dataProvider = withLifecycleCallbacks(
         return dataProvider.update('work', {
           ...params,
           data: {
-            ...params.data,
-            ...newParams.data
+            ...newParams
           }
         });
       }
@@ -64,9 +62,9 @@ const dataProvider = withLifecycleCallbacks(
         const newParams = await createNewParams(params);
 
         return dataProvider.create('portfolio', {
+          ...params,
           data: {
-            ...params.data,
-            ...newParams.data
+            ...newParams
           }
         });
       },
@@ -76,8 +74,7 @@ const dataProvider = withLifecycleCallbacks(
         return dataProvider.update('portfolio', {
           ...params,
           data: {
-            ...params.data,
-            ...newParams.data
+            ...newParams
           }
         });
       }
@@ -97,13 +94,11 @@ async function createNewParams(params: Partial<any>) {
   console.log(image1Src);
 
   const newParams1 = {
-    data: {
-      image_1: {
-        src: image1Src?.path,
-        title: imageObject1?.title
-      },
-      image_1_src: imageObject1?.url
-    }
+    image_1: {
+      src: image1Src?.path,
+      title: imageObject1?.title
+    },
+    image_1_src: imageObject1?.url
   };
 
   const imageObject2 = imageObject(params.data.image_2);
@@ -111,18 +106,16 @@ async function createNewParams(params: Partial<any>) {
   const image2Src = imageObject2 && (await uploadImage(imageObject2));
   console.log(image2Src);
   const newParams2 = {
-    data: {
-      image_2: {
-        src: image2Src?.path,
-        title: imageObject2?.title
-      },
-      image_2_src: imageObject2?.url
-    }
+    image_2: {
+      src: image2Src?.path,
+      title: imageObject2?.title
+    },
+    image_2_src: imageObject2?.url
   };
 
-  const newParams = newParams2.data.image_2_src
-    ? { ...params, ...newParams1, ...newParams2 }
-    : { ...params, ...newParams1 };
+  const newParams = newParams2.image_2_src
+    ? { ...params.data, ...newParams1, ...newParams2 }
+    : { ...params.data, ...newParams1 };
 
   console.log(newParams);
   return newParams;
