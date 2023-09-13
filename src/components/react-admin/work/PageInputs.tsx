@@ -14,7 +14,7 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 			<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_${n}`} label="Imagem">
 				<ImageField source={`src`} src={`image_${n}`} />
 			</ImageInput>
-			<ImageField source={`image_${n}`} title="title" />
+			<ImageField source={`image_${n}_src`} title="title" />
 			<RichTextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
 			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
 			{/* <div className='flex flex-row justify-start items-start gap-16'>

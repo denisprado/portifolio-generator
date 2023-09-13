@@ -52,7 +52,8 @@ const dataProvider = withLifecycleCallbacks(
         return dataProvider.update('work', {
           ...params,
           data: {
-            ...newParams
+            ...params.data,
+            ...newParams.data
           }
         });
       }
@@ -64,7 +65,8 @@ const dataProvider = withLifecycleCallbacks(
 
         return dataProvider.create('portfolio', {
           data: {
-            ...newParams
+            ...params.data,
+            ...newParams.data
           }
         });
       },
@@ -74,7 +76,8 @@ const dataProvider = withLifecycleCallbacks(
         return dataProvider.update('portfolio', {
           ...params,
           data: {
-            ...newParams
+            ...params.data,
+            ...newParams.data
           }
         });
       }
