@@ -7,10 +7,12 @@ import { useState } from 'react';
 
 export const PortifolioPDF = async ({ params }: any) => {
 
+	// const image_1_url = params.image_1[0]
+	// const image_1 = image_1_url ? JSON.parse(image_1_url).url : ''
 	const title = params?.title
 	const description = params?.description
-	const image_1 = params?.image_1?.url
-	const image_2 = params?.image_2?.url
+	// console.log(image_1)
+	// const image_2 = JSON.parse(params.image_2[0]).url ? JSON.parse(params.image_2[0]).url : ''
 	const bio = params?.bio
 	const cv = params?.cv
 	const contact = params?.contact
@@ -39,7 +41,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 						</View>
 						<View style={styles.section}>
-							<Image src={image_1} style={styles.image} />
+							{/* <Image src={image_1} style={styles.image} /> */}
 						</View>
 						<View style={styles.section}>
 							<View style={styles.columnSection}>
@@ -53,10 +55,9 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* Obras */}
 
-				{data && data?.map(work =>
-
+				{/* {data && data?.map(work =>
 					<WorkPagePdf key={work?.id} params={work} />
-				)}
+				)} */}
 
 				{/* 2ª Contra Capa */}
 
@@ -85,9 +86,9 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
 
-					<View style={styles.section}>
+					{/* <View style={styles.section}>
 						<Image src={image_2} style={styles.image} />
-					</View>
+					</View> */}
 					<View style={styles.section}>
 						<View style={styles.column}>
 							<Html style={styles.h3}>Contato</Html>

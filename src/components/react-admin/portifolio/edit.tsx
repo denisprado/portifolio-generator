@@ -14,10 +14,7 @@ export const PageTitle = () => {
 
 const Aside = async () => {
 	const record = useRecordContext();
-	console.log(record)
-	if (!record) {
-		return
-	}
+
 	return (
 		<div style={styles.viewer}>
 			<Suspense fallback={<Loading />}>

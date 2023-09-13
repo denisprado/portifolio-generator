@@ -18,7 +18,7 @@ const Aside = async () => {
 }
 export const WorkCreate = () => (
 	/* @ts-expect-error */
-	<Create aside={<Aside />} title={<PageTitle />}>
+	<Create title={<PageTitle />}>
 		<WorkFields />
 	</Create>
 );
