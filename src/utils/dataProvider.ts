@@ -5,20 +5,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 type ImageOriginal = {
   rawFile: File;
-  title: string;
-};
-
-type ImageParam = {
-  imageParam: ImageOriginal;
+  title?: string;
+  url?: string;
 };
 
 type ImageObject = {
-  path: string;
+  title: string;
   rawFile: File;
-  imageUrl: string;
+  url: string;
 };
 
 type ImageObjectMap = {
+  [x: string]: any;
   image: ImageObject;
 };
 
@@ -36,66 +34,44 @@ const dataProvider = withLifecycleCallbacks(
     {
       resource: 'work',
       beforeCreate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
+        const newParams = await createNewParams(params);
 
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
-
-        const newParams = {
-          ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
-        }!;
+        console.log(params, newParams);
 
         return dataProvider.create('work', {
+          ...params,
           data: {
             ...newParams
           }
         });
       },
       beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
-        if (!params || !params.data || !params.data.image_1) {
-          throw new Error('params.data.image_1 undefined');
-        }
-
-        const imagesArray: ImageOriginal[] = [
-          params.data.image_1,
-          params.data.image_2!
-        ];
-
-        if (imagesArray.length < 1) {
-          throw new Error('ImagesArray undefined');
-        }
-
-        const images = imagesArray.map((imageOriginal) => {
-          console.log('imageParam', imageOriginal);
-          return imageOriginal && imageObject(imageOriginal);
-        });
-
-        uploadToStorage({ images });
-
-        const newParams = {
-          ...params.data,
-          image_1: images[0].image.imageUrl,
-          image_2: images[1].image.imageUrl!
-        }!;
-
+        const newParams = await createNewParams(params);
+        console.log(newParams);
         return dataProvider.update('work', {
+          ...params,
+          data: {
+            ...newParams
+          }
+        });
+      }
+    },
+    {
+      resource: 'portfolio',
+      beforeCreate: async (params: Partial<any>, dataProvider: any) => {
+        const newParams = await createNewParams(params);
+
+        return dataProvider.create('portfolio', {
+          ...params,
+          data: {
+            ...newParams
+          }
+        });
+      },
+      beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
+        const newParams = await createNewParams(params);
+
+        return dataProvider.update('portfolio', {
           ...params,
           data: {
             ...newParams
@@ -108,29 +84,87 @@ const dataProvider = withLifecycleCallbacks(
 
 export default dataProvider;
 
-// upload das imagens
-const uploadToStorage = async ({ images }: ImageObjectProps) => {
-  images.map(async ({ image }: ImageObjectMap) => {
-    const rawFile = image.rawFile;
-    const path = image.path;
-    const { data: storageUploadData, error: uploadError } =
-      await supabaseClient.storage.from('images').upload(path, rawFile, {
-        cacheControl: '3600',
-        upsert: false
-      });
-    return { storageUploadData, uploadError };
-  });
-  return;
-};
+async function createNewParams(params: Partial<any>) {
+  if (!params.data.image_1) {
+    return params;
+  }
+  const imageObject1 = imageObject(params.data.image_1);
+  console.log(imageObject1);
+  const image1Src = imageObject1 && (await uploadImage(imageObject1));
+  console.log(image1Src);
+
+  const newParams1 = {
+    image_1: {
+      src: image1Src?.path,
+      title: imageObject1?.title,
+      file: imageObject1?.rawFile
+    },
+    image_1_src: imageObject1?.url
+  };
+
+  const imageObject2 = imageObject(params.data.image_2);
+  console.log(imageObject2);
+  const image2Src = imageObject2 && (await uploadImage(imageObject2));
+  console.log(image2Src);
+  const newParams2 = {
+    image_2: {
+      src: image2Src?.path,
+      title: imageObject2?.title,
+      file: imageObject2?.rawFile
+    },
+    image_2_src: imageObject2?.url
+  };
+
+  const newParams = newParams2.image_2_src
+    ? { ...params.data, ...newParams1, ...newParams2 }
+    : { ...params.data, ...newParams1 };
+
+  console.log(newParams);
+  return newParams;
+}
 
 // retorn objetos de imagem
 
-const imageObject = ({ rawFile, title }: ImageOriginal): ImageObjectMap => {
+const imageObject = (
+  imageOriginal: ImageOriginal
+): ImageOriginal | undefined => {
+  if (!imageOriginal) {
+    return undefined;
+  }
+  if (imageOriginal.rawFile?.size === 0) {
+    throw new Error('rawFile ImageObject undefined');
+  }
+
+  if (!imageOriginal.rawFile || imageOriginal === undefined) {
+    return imageOriginal;
+  }
+
+  const newFile = new File(['xc'], 'file.pdf');
+
+  const { rawFile = newFile } = imageOriginal;
+
   const imageId = uuidv4();
+  const title = `images/${imageId}`;
+  const url: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${title}`;
+  const image: ImageObject = { title, rawFile, url };
+  console.log(image);
+  return { title, rawFile, url };
+};
 
-  const path = `images/${imageId}`;
-  const imageUrl: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+const uploadImage = async ({ rawFile, title, url }: ImageOriginal) => {
+  if (rawFile === undefined || title === undefined) {
+    return;
+  }
 
-  const image: ImageObject = { path, rawFile, imageUrl };
-  return { image };
+  const { data, error: uploadError } = await supabaseClient.storage
+    .from('images')
+    .upload(title, rawFile, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (uploadError) {
+    console.log('Error: ', uploadError);
+  }
+  return data;
 };

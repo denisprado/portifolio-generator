@@ -1,23 +1,26 @@
 import { WorkPDF } from '@/components/pdf/work';
-import ReactPDF from '@react-pdf/renderer';
-import { Button, Edit, ImageField, ImageInput, SimpleForm, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
-import { PageFields } from './create';
-
+import { Edit, Loading, TabbedForm, TextInput, required, useRecordContext } from 'react-admin';
+import { PageTitle } from '../portifolio/edit';
+import { PageInputs } from './PageInputs';
+import { Suspense } from 'react';
+import { styles } from '@/components/pdf/styles';
 
 const Aside = async () => {
 	const record = useRecordContext();
 
 	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-			{/* @ts-expect-error */}
-			<WorkPDF params={record} />
+		<div style={styles.viewer}>
+			<Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<WorkPDF params={record} />
+			</Suspense>
 		</div>
 	)
 }
 
 export const WorkEdit = () => (
 	/* @ts-expect-error */
-	<Edit aside={< Aside />}>
+	<Edit aside={<Aside />} title={<PageTitle />}>
 		<TabbedForm>
 			<TabbedForm.Tab label="Informações da Obra">
 				{/* <TextInput source="id" hidden disabled /> */}
@@ -25,10 +28,10 @@ export const WorkEdit = () => (
 			</TabbedForm.Tab>
 
 			<TabbedForm.Tab label="Página 1">
-				<PageFields n={"1"} />
+				<PageInputs n={"1"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Página 2">
-				<PageFields n={"2"} />
+				<PageInputs n={"2"} />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	</Edit >

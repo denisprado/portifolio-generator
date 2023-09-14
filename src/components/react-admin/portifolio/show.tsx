@@ -1,14 +1,13 @@
-import * as React from "react";
-import { Show, SimpleShowLayout, TextField, DateField, RichTextField, ReferenceArrayField, Datagrid, EditButton, NumberField, CreateButton, ShowButton, Button, Link, DeleteButton, SaveButton, Toolbar, ToolbarProps, useRecordContext, SimpleForm } from 'react-admin';
 import { PortifolioPDF } from '@/components/pdf/portifolio';
+import { styles } from '@/components/pdf/styles';
+import * as React from "react";
+import { CreateButton, Datagrid, EditButton, ImageField, Loading, ReferenceArrayField, RichTextField, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, Toolbar, ToolbarProps, required, useRecordContext } from 'react-admin';
 
 
 const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
-	const { work_id } = useRecordContext();
 
 	return (
 		<Toolbar {...props}>
-			<ShowButton resource={`work`} />
 			<EditButton />
 			<ShowButton />
 			<CreateButton resource="work" />
@@ -18,29 +17,24 @@ const CommentFormToolbar: React.VFC<ToolbarProps> = (props) => {
 
 const Aside = async () => {
 	const record = useRecordContext();
-	return (
-		<div style={{ minWidth: 684, margin: '1em', border: '1px solid red' }}>
-			{/* @ts-expect-error */}
-			<PortifolioPDF params={record} />
 
+	return (
+		<div style={styles.viewer}>
+			<React.Suspense fallback={<Loading />}>
+				{/* @ts-expect-error */}
+				<PortifolioPDF params={record} />
+			</React.Suspense>
 		</div>
 	)
 }
 
 export const PortifolioShow = (props: any) => (
 	/* @ts-expect-error */
-	<Show {...props} aside={< Aside />}>
+	<Show {...props} aside={<Aside />}>
 		<SimpleShowLayout>
-			<TextField source="title" />
-			<TextField source="description" />
-			<ReferenceArrayField label="Trabalhos" reference="work" source="work_id" >
-				<Datagrid>
-					<TextField source="title" />
-					<TextField source="description" />
+			<TextField source="title" validate={[required()]} fullWidth />
+			<RichTextField source="description" label={"Descrição"} />
 
-					<SimpleForm toolbar={<CommentFormToolbar />}>teste</SimpleForm>
-				</Datagrid>
-			</ReferenceArrayField>
 
 		</SimpleShowLayout>
 	</Show>
