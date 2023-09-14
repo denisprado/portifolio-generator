@@ -1,9 +1,9 @@
-import { PortifolioPDF } from '@/components/pdf/portifolio';
+import { Orientation, PortifolioPDF } from '@/components/pdf/portifolio';
 import { Edit, Loading, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react';
-import { styles } from '@/components/pdf/styles';
+import { styles as optionStyles } from '@/components/pdf/styles';
 
 
 
@@ -14,7 +14,7 @@ export const PageTitle = () => {
 
 const Aside = async () => {
 	const record = useRecordContext();
-
+	const styles = optionStyles[record?.page_layout as Orientation]
 	return (
 		<div style={styles.viewer}>
 			<Suspense fallback={<Loading />}>
