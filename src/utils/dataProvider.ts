@@ -96,7 +96,8 @@ async function createNewParams(params: Partial<any>) {
   const newParams1 = {
     image_1: {
       src: image1Src?.path,
-      title: imageObject1?.title
+      title: imageObject1?.title,
+      file: imageObject1?.rawFile
     },
     image_1_src: imageObject1?.url
   };
@@ -108,7 +109,8 @@ async function createNewParams(params: Partial<any>) {
   const newParams2 = {
     image_2: {
       src: image2Src?.path,
-      title: imageObject2?.title
+      title: imageObject2?.title,
+      file: imageObject2?.rawFile
     },
     image_2_src: imageObject2?.url
   };

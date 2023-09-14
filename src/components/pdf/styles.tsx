@@ -1,7 +1,7 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
 
-export const styles = StyleSheet.create({
+export const portrait = StyleSheet.create({
 	viewer: {
 		margin: 0,
 		height: '297mm',
@@ -71,3 +71,82 @@ export const styles = StyleSheet.create({
 	},
 
 });
+
+
+export const landscape = StyleSheet.create({
+	viewer: {
+		margin: 0,
+		width: '297mm',
+		display: 'flex',
+		height: '210mm'
+	},
+	page: {
+		flexDirection: `row`,
+		backgroundColor: '#fff',
+		flexGrow: 1,
+		margin: 0,
+		display: 'none'
+	},
+	pageLoaded: {
+		flexDirection: `row`,
+		backgroundColor: '#fff',
+		flexGrow: 1,
+		margin: 0,
+		display: 'flex'
+	},
+	pageContent: {
+		display: 'flex',
+		flexDirection: `column`,
+	},
+	section: {
+		// border: '1px solid red',
+		display: 'flex',
+		marginTop: "10mm",
+		marginLeft: "10mm",
+		marginRight: "10mm",
+		width: '50%'
+	},
+	columnSection: {
+		display: 'flex',
+		gap: "10mm",
+		width: "100%",
+		flexGlow: 1,
+		flexDirection: "row",
+		// border: '1px solid green',
+	},
+	column: {
+		padding: "0",
+		margin: 0,
+		width: "100%",
+		display: 'flex',
+		// border: '1px solid blue',
+	},
+	image: {
+		width: "280mm",
+		height: "140mm",
+		objectFit: 'cover'
+	},
+	text: {
+		fontSize: 11,
+	},
+	h1: {
+		fontSize: 24,
+		fontWeight: 900
+	},
+	h2: {
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	h3: {
+		fontSize: 11,
+		fontWeight: 'black'
+	},
+
+});
+
+export interface Styles {
+	portrait: typeof portrait;
+	landscape: typeof landscape;
+}
+
+export const styles: Styles = { portrait: portrait, landscape: landscape }

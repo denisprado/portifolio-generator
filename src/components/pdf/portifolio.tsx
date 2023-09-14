@@ -2,11 +2,13 @@ import { Document, Image, PDFDownloadLink, PDFViewer, Page, StyleSheet, Text, Vi
 import { Loading, useGetMany } from 'react-admin';
 import { Html } from 'react-pdf-html';
 import { WorkPagePdf } from './work';
-import { styles } from './styles';
+import { styles as optionStyles } from './styles';
 import { useState } from 'react';
 
+export type Orientation = 'landscape' | 'portrait';
+
 export const PortifolioPDF = async ({ params }: any) => {
-	console.log(params)
+
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
 
@@ -16,6 +18,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 	const bio = params?.bio
 	const cv = params?.cv
 	const contact = params?.contact
+	const orientation = params?.page_layout as Orientation
 
 	const [loading, setLoading] = useState(true)
 
@@ -26,6 +29,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 	if (isLoading) { return <Loading />; }
 	if (error) { return <p>ERROR</p>; }
 
+	const styles = optionStyles[orientation];
 	return (
 
 		<PDFViewer style={styles.viewer} showToolbar={false}  >
@@ -33,7 +37,7 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* Página 1 - Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
 					<View style={styles.pageContent}>
 						<View style={styles.section}>
 
@@ -56,12 +60,12 @@ export const PortifolioPDF = async ({ params }: any) => {
 				{/* Obras */}
 
 				{data && data?.map(work =>
-					<WorkPagePdf key={work?.id} params={work} />
+					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} />
 				)}
 
 				{/* 2ª Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
 					<View style={styles.pageContent}>
 						<View style={styles.section}>
 							<View style={styles.columnSection}>
@@ -84,15 +88,17 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded}>
+				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
+					<View style={styles.pageContent}>
 
-					<View style={styles.section}>
-						<Image src={image_2_src} style={styles.image} />
-					</View>
-					<View style={styles.section}>
-						<View style={styles.column}>
-							<Html style={styles.h3}>Contato</Html>
-							<Html style={styles.text}>{contact}</Html>
+						<View style={styles.section}>
+							<Image src={image_2_src} style={styles.image} />
+						</View>
+						<View style={styles.section}>
+							<View style={styles.column}>
+								<Html style={styles.h3}>Contato</Html>
+								<Html style={styles.text}>{contact}</Html>
+							</View>
 						</View>
 					</View>
 				</Page>

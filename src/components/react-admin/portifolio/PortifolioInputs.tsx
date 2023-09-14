@@ -1,5 +1,5 @@
 import { RichTextInput } from 'ra-input-rich-text';
-import { ImageField, ImageInput, ReferenceArrayInput, SelectArrayInput, TabbedForm, TextInput, required, useGetIdentity, useRecordContext } from 'react-admin';
+import { ImageField, ImageInput, ReferenceArrayInput, SelectArrayInput, SelectInput, TabbedForm, TextInput, required, useGetIdentity, useRecordContext } from 'react-admin';
 
 export const PortifolioInputs = () => {
 	const { data } = useGetIdentity();
@@ -30,6 +30,13 @@ export const PortifolioInputs = () => {
 				</ImageInput>
 				<ImageField source={`image_2_src`} />
 				<RichTextInput source="contact" label={"Contato"} />
+			</TabbedForm.Tab>
+			<TabbedForm.Tab label="Opções">
+
+				<SelectInput source="page_layout" label={"Layout"} choices={[
+					{ id: 'portrait', name: 'Retrato' },
+					{ id: 'landscape', name: 'Paisagem' },
+				]} />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	);
