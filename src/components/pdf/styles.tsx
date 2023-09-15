@@ -1,5 +1,4 @@
-import { StyleSheet } from '@react-pdf/renderer';
-
+import { Font, StyleSheet } from '@react-pdf/renderer';
 
 export const portrait = StyleSheet.create({
 	viewer: {
@@ -38,7 +37,7 @@ export const portrait = StyleSheet.create({
 		display: 'flex',
 		gap: "10mm",
 		width: "100%",
-		flexGlow: 1,
+		flexGrow: 1,
 		flexDirection: "row",
 		// border: '1px solid green',
 	},
@@ -76,9 +75,9 @@ export const portrait = StyleSheet.create({
 export const landscape = StyleSheet.create({
 	viewer: {
 		margin: 0,
-		width: '297mm',
+		width: '210mm',
 		display: 'flex',
-		height: '210mm'
+		height: '149mm'
 	},
 	page: {
 		flexDirection: `row`,
@@ -104,13 +103,13 @@ export const landscape = StyleSheet.create({
 		marginTop: "10mm",
 		marginLeft: "10mm",
 		marginRight: "10mm",
-		width: '50%'
+		width: '45%'
 	},
 	columnSection: {
 		display: 'flex',
 		gap: "10mm",
 		width: "100%",
-		flexGlow: 1,
+		flexGrow: 1,
 		flexDirection: "row",
 		// border: '1px solid green',
 	},
@@ -141,12 +140,37 @@ export const landscape = StyleSheet.create({
 		fontSize: 11,
 		fontWeight: 'black'
 	},
-
 });
 
+const fontFamily = ['Helvética', 'Times-Roman']
+
+
+const textStyles = StyleSheet.create({
+	text: {
+		fontSize: 11,
+		fontFamily: fontFamily[1]
+	},
+	h1: {
+		fontSize: 24,
+		fontWeight: 900,
+		fontFamily: fontFamily[1]
+	},
+	h2: {
+		fontSize: 16,
+		fontWeight: 'bold'
+	},
+	h3: {
+		fontSize: 11,
+		fontWeight: 'black',
+		fontStyle: 'italic'
+	},
+})
 export interface Styles {
 	portrait: typeof portrait;
 	landscape: typeof landscape;
 }
 
-export const styles: Styles = { portrait: portrait, landscape: landscape }
+export const styles: Styles = {
+	portrait: { ...portrait, ...textStyles },
+	landscape: { ...landscape, ...textStyles }
+}

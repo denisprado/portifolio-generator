@@ -4,6 +4,7 @@ import { PortifolioInputs } from './PortifolioInputs';
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react';
 import { styles as optionStyles } from '@/components/pdf/styles';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 
 
@@ -16,8 +17,9 @@ const Aside = async () => {
 	const record = useRecordContext();
 	const styles = optionStyles[record?.page_layout as Orientation]
 	return (
-		<div style={styles.viewer}>
+		<div style={styles?.viewer}>
 			<Suspense fallback={<Loading />}>
+
 				{/* @ts-expect-error */}
 				<PortifolioPDF params={record} />
 			</Suspense>

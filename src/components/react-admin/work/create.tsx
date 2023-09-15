@@ -9,7 +9,7 @@ const Aside = async () => {
 	const record = useRecordContext();
 	const styles = optionStyles[record?.page_layout as Orientation]
 	return (
-		<div style={styles.viewer}>
+		<div style={styles?.viewer}>
 			<Suspense fallback={<Loading />}>
 				{/* @ts-expect-error */}
 				<WorkPDF params={record} />

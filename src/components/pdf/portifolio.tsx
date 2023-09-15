@@ -32,25 +32,25 @@ export const PortifolioPDF = async ({ params }: any) => {
 	const styles = optionStyles[orientation];
 	return (
 
-		<PDFViewer style={styles.viewer} showToolbar={false}  >
+		<PDFViewer style={styles?.viewer} >
 			<Document style={{ margin: 0 }} onRender={() => setLoading(false)}>
 
 				{/* Página 1 - Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
-					<View style={styles.pageContent}>
-						<View style={styles.section}>
+				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+					<View style={styles?.pageContent}>
+						<View style={styles?.section}>
 
-							<Html style={styles.h1}>{title}</Html>
+							<Html style={styles?.h1}>{title}</Html>
 
 						</View>
-						<View style={styles.section}>
-							<Image src={image_1_src} style={styles.image} />
+						<View style={styles?.section}>
+							<Image src={image_1_src} style={styles?.image} />
 						</View>
-						<View style={styles.section}>
-							<View style={styles.columnSection}>
-								<View style={styles.column}>
-									<Html style={styles.text}>{description}</Html>
+						<View style={styles?.section}>
+							<View style={styles?.columnSection}>
+								<View style={styles?.column}>
+									<Html style={styles?.text}>{description}</Html>
 								</View>
 							</View>
 						</View>
@@ -65,21 +65,18 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* 2ª Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
-					<View style={styles.pageContent}>
-						<View style={styles.section}>
-							<View style={styles.columnSection}>
-								<View style={styles.column}>
-									<Html style={styles.h3}>Biografia</Html>
-									<Html style={styles.text}>{bio}</Html>
+				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+					<View style={styles?.pageContent}>
+						<View style={styles?.section}>
+							<View style={styles?.columnSection}>
+								<View style={styles?.column}>
+									<Html style={styles?.h3}>Biografia</Html>
+									<Html style={styles?.text}>{bio}</Html>
 								</View>
-							</View>
-						</View>
-						<View style={styles.section}>
-							<View style={styles.columnSection}>
-								<View style={styles.column}>
-									<Html style={styles.h3}>Curriculum Vitae</Html>
-									<Html style={styles.text}>{cv}</Html>
+
+								<View style={styles?.column}>
+									<Html style={styles?.h3}>Curriculum Vitae</Html>
+									<Html style={styles?.text}>{cv}</Html>
 								</View>
 							</View>
 						</View>
@@ -88,16 +85,16 @@ export const PortifolioPDF = async ({ params }: any) => {
 
 				{/* Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles.page : styles.pageLoaded} orientation={orientation}>
-					<View style={styles.pageContent}>
+				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+					<View style={styles?.pageContent}>
 
-						<View style={styles.section}>
-							<Image src={image_2_src} style={styles.image} />
+						<View style={styles?.section}>
+							<Image src={image_2_src} style={styles?.image} />
 						</View>
-						<View style={styles.section}>
-							<View style={styles.column}>
-								<Html style={styles.h3}>Contato</Html>
-								<Html style={styles.text}>{contact}</Html>
+						<View style={styles?.section}>
+							<View style={styles?.column}>
+								<Html style={styles?.h3}>Contato</Html>
+								<Html style={styles?.text}>{contact}</Html>
 							</View>
 						</View>
 					</View>

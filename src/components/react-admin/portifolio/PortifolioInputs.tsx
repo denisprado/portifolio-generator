@@ -37,6 +37,7 @@ export const PortifolioInputs = () => {
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />
+
 			</TabbedForm.Tab>
 		</TabbedForm>
 	);

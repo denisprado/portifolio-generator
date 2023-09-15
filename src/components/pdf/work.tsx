@@ -9,7 +9,7 @@ export const WorkPDF = async ({ params, page_layout }: any) => {
 	const orientation = page_layout as Orientation
 	const styles = optionStyles[orientation];
 	return (
-		<PDFViewer style={styles.viewer}>
+		<PDFViewer style={styles?.viewer}>
 			<Document style={{ margin: 0 }}>
 				<WorkPagePdf params={params} page_layout={page_layout} />
 			</Document>
@@ -64,24 +64,24 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	return (
 		<>
 			{pages.map((page, i) =>
-				<Page size={"A4"} style={styles.page} orientation={page_layout}>
-					<View style={styles.pageContent}>
+				<Page size={"A4"} style={styles?.page} orientation={page_layout}>
+					<View style={styles?.pageContent}>
 
-						<View style={styles.section}>
-							<Image src={page.image} style={styles.image} />
-							<Html style={styles.text}>
+						<View style={styles?.section}>
+							<Image src={page.image} style={styles?.image} />
+							<Html style={styles?.text}>
 								{page?.tech_description}
 							</Html>
 						</View>
 
-						<View style={styles.section}>
+						<View style={styles?.section}>
 							{i === 0 &&
-								<Html style={styles.h2}>{title}</Html>
+								<Html style={styles?.h2}>{title}</Html>
 							}
 
-							<View style={styles.columnSection}>
-								<View style={styles.column}>
-									<Html style={styles.text}>
+							<View style={styles?.columnSection}>
+								<View style={styles?.column}>
+									<Html style={styles?.text}>
 										{page?.description}
 									</Html>
 								</View>
