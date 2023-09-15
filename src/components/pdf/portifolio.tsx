@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export type Orientation = 'landscape' | 'portrait';
 
-export const PortifolioPDF = async ({ params }: any) => {
+const PortifolioPDF = async ({ params }: any) => {
 
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -103,3 +103,5 @@ export const PortifolioPDF = async ({ params }: any) => {
 		</PDFViewer >
 	)
 };
+
+export default PortifolioPDF

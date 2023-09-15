@@ -5,7 +5,7 @@ import { styles as optionStyles, portrait } from './styles';
 import { Orientation } from './portifolio';
 
 
-export const WorkPDF = async ({ params, page_layout }: any) => {
+const WorkPDF = async ({ params, page_layout }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
 	const styles = optionStyles[orientation];
 	return (
@@ -95,3 +95,5 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 		</>
 	)
 }
+
+export default WorkPDF

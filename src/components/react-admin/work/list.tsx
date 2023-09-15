@@ -2,7 +2,7 @@
 import { Datagrid, EditButton, ImageField, List as ReactAdminList, RichTextField, ShowButton, TextField } from 'react-admin'
 
 
-export const WorkList = () => {
+const WorkList = () => {
 	return (
 		<ReactAdminList>
 			<Datagrid>
@@ -19,3 +19,5 @@ export const WorkList = () => {
 		</ReactAdminList>
 	)
 }
+
+export default WorkList

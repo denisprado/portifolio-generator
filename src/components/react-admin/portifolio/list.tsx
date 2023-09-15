@@ -15,3 +15,5 @@ export const PortifolioList = () => {
 		</ReactAdminList>
 	)
 }
+
+export default PortifolioList

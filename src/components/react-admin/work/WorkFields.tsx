@@ -1,7 +1,7 @@
 import { SelectInput, TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
 import { PageInputs } from './PageInputs';
 
-export const WorkFields = () => {
+const WorkFields = () => {
 	const { data } = useGetIdentity();
 
 	return (
@@ -26,3 +26,5 @@ export const WorkFields = () => {
 		</TabbedForm>
 	)
 };
+
+export default WorkFields
