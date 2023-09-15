@@ -1,12 +1,12 @@
 import React from 'react';
 import { Document, Page, Text, View, Image, PDFViewer } from '@react-pdf/renderer';
 import { Html } from 'react-pdf-html';
-import { styles as optionStyles } from './styles';
+import { styles as optionStyles, portrait } from './styles';
 import { Orientation } from './portifolio';
 
 
 export const WorkPDF = async ({ params, page_layout }: any) => {
-	const orientation = page_layout as Orientation
+	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
 	const styles = optionStyles[orientation];
 	return (
 		<PDFViewer style={styles?.viewer}>
@@ -18,6 +18,7 @@ export const WorkPDF = async ({ params, page_layout }: any) => {
 };
 
 export const WorkPagePdf = ({ params, page_layout }: any) => {
+
 	const title = params?.title
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -33,7 +34,7 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	const text_2_vertical_align = params?.text_2_vertical_align
 	const text_1_horizontal_align = params?.text_2_horizontal_align
 	const text_2_horizontal_align = params?.text_2_horizontal_align
-	const orientation = page_layout as Orientation
+	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
 	const styles = optionStyles[orientation];
 
 	const pages = [
@@ -64,7 +65,7 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	return (
 		<>
 			{pages.map((page, i) =>
-				<Page size={"A4"} style={styles?.page} orientation={page_layout}>
+				<Page size={"A4"} style={styles?.page} orientation={orientation}>
 					<View style={styles?.pageContent}>
 
 						<View style={styles?.section}>

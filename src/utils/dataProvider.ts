@@ -15,15 +15,6 @@ type ImageObject = {
   url: string;
 };
 
-type ImageObjectMap = {
-  [x: string]: any;
-  image: ImageObject;
-};
-
-type ImageObjectProps = {
-  images: ImageObjectMap[];
-};
-
 const dataProvider = withLifecycleCallbacks(
   supabaseDataProvider({
     instanceUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,8 +27,6 @@ const dataProvider = withLifecycleCallbacks(
       beforeCreate: async (params: Partial<any>, dataProvider: any) => {
         const newParams = await createNewParams(params);
 
-        console.log(params, newParams);
-
         return dataProvider.create('work', {
           ...params,
           data: {
@@ -47,7 +36,6 @@ const dataProvider = withLifecycleCallbacks(
       },
       beforeUpdate: async (params: Partial<any>, dataProvider: any) => {
         const newParams = await createNewParams(params);
-        console.log(newParams);
         return dataProvider.update('work', {
           ...params,
           data: {
@@ -89,9 +77,7 @@ async function createNewParams(params: Partial<any>) {
     return params;
   }
   const imageObject1 = imageObject(params.data.image_1);
-  console.log(imageObject1);
   const image1Src = imageObject1 && (await uploadImage(imageObject1));
-  console.log(image1Src);
 
   const newParams1 = {
     image_1: {
@@ -103,9 +89,7 @@ async function createNewParams(params: Partial<any>) {
   };
 
   const imageObject2 = imageObject(params.data.image_2);
-  console.log(imageObject2);
   const image2Src = imageObject2 && (await uploadImage(imageObject2));
-  console.log(image2Src);
   const newParams2 = {
     image_2: {
       src: image2Src?.path,
@@ -119,7 +103,6 @@ async function createNewParams(params: Partial<any>) {
     ? { ...params.data, ...newParams1, ...newParams2 }
     : { ...params.data, ...newParams1 };
 
-  console.log(newParams);
   return newParams;
 }
 
@@ -147,7 +130,6 @@ const imageObject = (
   const title = `images/${imageId}`;
   const url: string = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${title}`;
   const image: ImageObject = { title, rawFile, url };
-  console.log(image);
   return { title, rawFile, url };
 };
 

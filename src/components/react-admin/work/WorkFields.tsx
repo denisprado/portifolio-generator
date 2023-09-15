@@ -1,4 +1,4 @@
-import { TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
+import { SelectInput, TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
 import { PageInputs } from './PageInputs';
 
 export const WorkFields = () => {
@@ -16,6 +16,12 @@ export const WorkFields = () => {
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Página 2">
 				<PageInputs n={"2"} />
+			</TabbedForm.Tab>
+			<TabbedForm.Tab label="Opções">
+				<SelectInput source="page_layout" label={"Layout"} defaultValue={'portrait'} emptyValue={'portrait'} choices={[
+					{ id: 'portrait', name: 'Retrato' },
+					{ id: 'landscape', name: 'Paisagem' },
+				]} />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	)
