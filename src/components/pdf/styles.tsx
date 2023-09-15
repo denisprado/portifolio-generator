@@ -5,7 +5,9 @@ export const portrait = StyleSheet.create({
 		margin: 0,
 		height: '297mm',
 		display: 'flex',
-		width: '210mm'
+		width: '210mm',
+		marginHorizontal: `10mm`,
+		marginVertical: `10mm`
 	},
 	page: {
 		flexDirection: `column`,
@@ -77,7 +79,9 @@ export const landscape = StyleSheet.create({
 		margin: 0,
 		width: '210mm',
 		display: 'flex',
-		height: '149mm'
+		height: '149mm',
+		marginHorizontal: `10mm`,
+		marginVertical: `10mm`
 	},
 	page: {
 		flexDirection: `row`,
@@ -142,18 +146,16 @@ export const landscape = StyleSheet.create({
 	},
 });
 
-const fontFamily = ['Helvética', 'Times-Roman']
-
 
 const textStyles = StyleSheet.create({
 	text: {
 		fontSize: 11,
-		fontFamily: fontFamily[1]
+		fontFamily: 'Times-Roman'
 	},
 	h1: {
 		fontSize: 24,
 		fontWeight: 900,
-		fontFamily: fontFamily[1]
+		fontFamily: 'Times-Roman'
 	},
 	h2: {
 		fontSize: 16,

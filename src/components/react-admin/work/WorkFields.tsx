@@ -18,7 +18,7 @@ const WorkFields = () => {
 				<PageInputs n={"2"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Opções">
-				<SelectInput source="page_layout" label={"Layout"} defaultValue={'portrait'} emptyValue={'portrait'} choices={[
+				<SelectInput source="page_layout" label={"Layout"} emptyText={"Selecione um layout"} defaultValue={'portrait'} emptyValue={'portrait'} choices={[
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />

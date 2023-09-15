@@ -4,7 +4,7 @@ import dataProvider from '@/utils/dataProvider'
 import polyglotI18nProvider from 'ra-i18n-polyglot'
 import ptBrMessages from 'ra-language-pt-br'
 import { LoginPage } from 'ra-supabase'
-import { Admin, Resource } from 'react-admin'
+import { Admin, Resource, defaultTheme, defaultDarkTheme } from 'react-admin'
 import dynamic from 'next/dynamic'
 
 const WorkCreate = dynamic(() => import("./react-admin/work/create"))
@@ -20,10 +20,13 @@ const AdminApp: React.FC = () => {
 	const messages: any = {
 		'pt-br': ptBrMessages,
 	}
+	const lightTheme = defaultTheme;
+	const darkTheme = defaultDarkTheme;
 
 	const i18nProvider = polyglotI18nProvider(locale => messages[locale], 'pt-br', { allowMissing: true })
 	return (
-		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider}>
+		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider} lightTheme={lightTheme}
+			darkTheme={darkTheme}>
 			{/* <CustomRoutes noLayout>
 			<Route
 				path={SetPasswordPage.path}

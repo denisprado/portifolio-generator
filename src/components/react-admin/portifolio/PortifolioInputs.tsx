@@ -32,7 +32,7 @@ export const PortifolioInputs = () => {
 				<RichTextInput source="contact" label={"Contato"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Opções">
-				<SelectInput source="page_layout" label={"Layout"} defaultValue={'portrait'} emptyValue={'portrait'} choices={[
+				<SelectInput source="page_layout" label={"Layout"} defaultValue={'portrait'} emptyText={"Selecione um layout"} emptyValue={'portrait'} choices={[
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />
