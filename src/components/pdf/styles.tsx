@@ -1,4 +1,48 @@
 import { Font, StyleSheet } from '@react-pdf/renderer';
+import montserrat from 'next/font/local'
+
+const oswald400 = "http://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1_FvgUFoZAaRliE.ttf"
+const oswald500 = "http://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs18NvgUFoZAaRliE.ttf"
+const oswald600 = "http://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1y9ogUFoZAaRliE.ttf"
+const oswald700 = "http://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1xZogUFoZAaRliE.ttf"
+
+
+
+// Registre a fonte após o carregamento
+
+// Font.register({
+// 	family: 'Oswald',
+// 	src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf'
+// 	// fonts: [
+// 	// 	{ src: oswald400 },
+// 	// 	{ src: oswald500, fontWeight: 500 },
+// 	// 	{ src: oswald600, fontWeight: 600 },
+// 	// 	{ src: oswald700, fontWeight: 700 },
+// 	// ],
+// });
+
+
+const textStyles = StyleSheet.create({
+	p: {
+		margin: 0,
+		fontSize: 10,
+		fontFamily: 'Montserrat',
+	},
+	h1: {
+		fontFamily: 'Helvetica-Bold',
+		fontSize: 24,
+
+	},
+	h2: {
+		fontSize: 16,
+		marginBottom: '3mm'
+	},
+	h3: {
+		fontFamily: 'Helvetica-Bold',
+		fontSize: 11,
+		marginBottom: '5mm'
+	},
+})
 
 export const portrait = StyleSheet.create({
 	viewer: {
@@ -38,7 +82,7 @@ export const portrait = StyleSheet.create({
 	columnSection: {
 		display: 'flex',
 		gap: "10mm",
-		width: "100%",
+		width: "100mm",
 		flexGrow: 1,
 		flexDirection: "row",
 		// border: '1px solid green',
@@ -46,7 +90,7 @@ export const portrait = StyleSheet.create({
 	column: {
 		padding: "0",
 		margin: 0,
-		width: "100%",
+		width: "100mm",
 		display: 'flex',
 		// border: '1px solid blue',
 	},
@@ -55,24 +99,9 @@ export const portrait = StyleSheet.create({
 		height: "220mm",
 		objectFit: 'cover'
 	},
-	text: {
-		fontSize: 11,
-	},
-	h1: {
-		fontSize: 24,
-		fontWeight: 900
-	},
-	h2: {
-		fontSize: 16,
-		fontWeight: 'bold'
-	},
-	h3: {
-		fontSize: 11,
-		fontWeight: 'black'
-	},
+
 
 });
-
 
 export const landscape = StyleSheet.create({
 	viewer: {
@@ -112,7 +141,7 @@ export const landscape = StyleSheet.create({
 	columnSection: {
 		display: 'flex',
 		gap: "10mm",
-		width: "100%",
+		width: "100mm",
 		flexGrow: 1,
 		flexDirection: "row",
 		// border: '1px solid green',
@@ -120,7 +149,7 @@ export const landscape = StyleSheet.create({
 	column: {
 		padding: "0",
 		margin: 0,
-		width: "100%",
+		width: "100mm",
 		display: 'flex',
 		// border: '1px solid blue',
 	},
@@ -129,50 +158,14 @@ export const landscape = StyleSheet.create({
 		height: "140mm",
 		objectFit: 'cover'
 	},
-	text: {
-		fontSize: 11,
-	},
-	h1: {
-		fontSize: 24,
-		fontWeight: 900
-	},
-	h2: {
-		fontSize: 16,
-		fontWeight: 'bold'
-	},
-	h3: {
-		fontSize: 11,
-		fontWeight: 'black'
-	},
+
 });
-
-
-const textStyles = StyleSheet.create({
-	text: {
-		fontSize: 11,
-		fontFamily: 'Times-Roman'
-	},
-	h1: {
-		fontSize: 24,
-		fontWeight: 900,
-		fontFamily: 'Times-Roman'
-	},
-	h2: {
-		fontSize: 16,
-		fontWeight: 'bold'
-	},
-	h3: {
-		fontSize: 11,
-		fontWeight: 'black',
-		fontStyle: 'italic'
-	},
-})
 export interface Styles {
 	portrait: typeof portrait;
 	landscape: typeof landscape;
 }
 
-export const styles: Styles = {
+export const styles = {
 	portrait: { ...portrait, ...textStyles },
 	landscape: { ...landscape, ...textStyles }
 }

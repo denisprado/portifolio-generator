@@ -1,13 +1,18 @@
-import { Document, Image, PDFDownloadLink, PDFViewer, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { Document, Image, PDFViewer, Page, View, Text } from '@react-pdf/renderer';
+import { useEffect, useState } from 'react';
 import { Loading, useGetMany } from 'react-admin';
 import { Html } from 'react-pdf-html';
-import { WorkPagePdf } from './work';
 import { styles as optionStyles } from './styles';
-import { useState } from 'react';
+import { WorkPagePdf } from './work';
+import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
 
 export type Orientation = 'landscape' | 'portrait';
 
-const PortifolioPDF = async ({ params }: any) => {
+
+
+
+const PortifolioPDF = ({ params }: any) => {
+	useRegisterReactPDFFont()
 
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -40,9 +45,7 @@ const PortifolioPDF = async ({ params }: any) => {
 				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
 						<View style={styles?.section}>
-
-							<Html style={styles?.h1}>{title}</Html>
-
+							<Text style={styles?.h1}>{title}</Text>
 						</View>
 						<View style={styles?.section}>
 							<Image src={image_1_src} style={styles?.image} />
@@ -50,7 +53,7 @@ const PortifolioPDF = async ({ params }: any) => {
 						<View style={styles?.section}>
 							<View style={styles?.columnSection}>
 								<View style={styles?.column}>
-									<Html style={styles?.text}>{description}</Html>
+									<Text style={styles?.p}>{description}</Text>
 								</View>
 							</View>
 						</View>
@@ -70,13 +73,13 @@ const PortifolioPDF = async ({ params }: any) => {
 						<View style={styles?.section}>
 							<View style={styles?.columnSection}>
 								<View style={styles?.column}>
-									<Html style={styles?.h3}>Biografia</Html>
-									<Html style={styles?.text}>{bio}</Html>
+									<Text style={styles?.h3}>Biografia</Text>
+									<Text style={styles?.p}>{bio}</Text>
 								</View>
 
 								<View style={styles?.column}>
-									<Html style={styles?.h3}>Curriculum Vitae</Html>
-									<Html style={styles?.text}>{cv}</Html>
+									<Text style={styles?.h3}>Curriculum Vitae</Text>
+									<Text style={styles?.p}>{cv}</Text>
 								</View>
 							</View>
 						</View>
@@ -93,8 +96,8 @@ const PortifolioPDF = async ({ params }: any) => {
 						</View>
 						<View style={styles?.section}>
 							<View style={styles?.column}>
-								<Html style={styles?.h3}>Contato</Html>
-								<Html style={styles?.text}>{contact}</Html>
+								<Text style={styles?.h3}>Contato</Text>
+								<Text style={styles?.p}>{contact}</Text>
 							</View>
 						</View>
 					</View>

@@ -1,5 +1,4 @@
-import { ImageField, ImageInput, required } from 'react-admin';
-import { RichTextInput } from 'ra-input-rich-text';
+import { ImageField, ImageInput, TextInput, required } from 'react-admin';
 import { PageFieldsProps } from './create';
 
 
@@ -15,8 +14,8 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 				<ImageField source={`src`} src={`image_${n}`} />
 			</ImageInput>
 			<ImageField source={`image_${n}_src`} title="title" />
-			<RichTextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
-			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
+			<TextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
+			<TextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
 			{/* <div className='flex flex-row justify-start items-start gap-16'>
                 <div className='flex flex-col justify-start items-start'>
 

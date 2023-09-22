@@ -1,9 +1,8 @@
 import { Orientation } from '@/components/pdf/portifolio';
 import { styles as optionStyles } from '@/components/pdf/styles';
-import { Suspense } from 'react';
-import { Edit, Loading, useRecordContext } from 'react-admin';
-import { PortifolioInputs } from './PortifolioInputs';
 import dynamic from "next/dynamic";
+import { Edit, useRecordContext } from 'react-admin';
+import { PortifolioInputs } from './PortifolioInputs';
 const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"));
 
 export const PageTitle = () => {

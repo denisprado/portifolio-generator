@@ -1,10 +1,9 @@
 
-import SupabaseProvider from './supabase-provider';
-import Footer from '@/components/ui/Footer';
-import Navbar from '@/components/ui/Navbar';
+import { Roboto } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
-import { usePathname } from 'next/navigation';
+import SupabaseProvider from './supabase-provider';
+
 
 const meta = {
 	title: 'Next.js Subscription Starter',
@@ -41,6 +40,7 @@ export const metadata = {
 	}
 };
 
+
 export default function RootLayout({
 	// Layouts must accept a children prop.
 	// This will be populated with nested layouts or pages
@@ -51,7 +51,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className="bg-black loading">
 				<SupabaseProvider>
-						{children}
+					{children}
 				</SupabaseProvider>
 			</body>
 		</html>

@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 import { Create, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
 import { PageTitle } from './edit';
-const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"));
+
+const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"), {
+	ssr: false,
+});
 
 const Aside = async () => {
 	const record = useRecordContext();

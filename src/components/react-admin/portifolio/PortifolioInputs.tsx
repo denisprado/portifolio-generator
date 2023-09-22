@@ -1,8 +1,9 @@
-import { RichTextInput } from 'ra-input-rich-text';
+import { getAllFontFamiliesToLoad } from '@/components/fonts/lib';
 import { ImageField, ImageInput, ReferenceArrayInput, SelectArrayInput, SelectInput, TabbedForm, TextInput, required, useGetIdentity, useRecordContext } from 'react-admin';
 
 export const PortifolioInputs = () => {
 	const { data } = useGetIdentity();
+	const allFontFamilies = getAllFontFamiliesToLoad();
 
 	return (
 		<TabbedForm>
@@ -13,7 +14,7 @@ export const PortifolioInputs = () => {
 					<ImageField source={`src`} />
 				</ImageInput>
 				<ImageField source={`image_1_src`} />
-				<RichTextInput source="description" label={"Descrição"} />
+				<TextInput source="description" label={"Descrição"} fullWidth />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Obras">
 				<ReferenceArrayInput reference="work" source="work_id" label={"Obras"} validate={[required()]}>
@@ -21,15 +22,15 @@ export const PortifolioInputs = () => {
 				</ReferenceArrayInput>
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="3ª Capa">
-				<RichTextInput source="bio" label={"Biografia"} />
-				<RichTextInput source="cv" label={"Curriculum Vitae"} />
+				<TextInput fullWidth source="bio" label={"Biografia"} />
+				<TextInput source="cv" fullWidth label={"Curriculum Vitae"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="4ª Capa">
 				<ImageInput accept={'image/png,image/jpg,image/jpeg'} source={`image_2`} label="Imagem">
 					<ImageField source={`src`} />
 				</ImageInput>
 				<ImageField source={`image_2_src`} />
-				<RichTextInput source="contact" label={"Contato"} />
+				<TextInput fullWidth source="contact" label={"Contato"} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label="Opções">
 				<SelectInput source="page_layout" label={"Layout"} defaultValue={'portrait'} emptyText={"Selecione um layout"} emptyValue={'portrait'} choices={[

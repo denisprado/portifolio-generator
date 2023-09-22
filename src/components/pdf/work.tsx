@@ -1,11 +1,9 @@
-import React from 'react';
-import { Document, Page, Text, View, Image, PDFViewer } from '@react-pdf/renderer';
-import { Html } from 'react-pdf-html';
-import { styles as optionStyles, portrait } from './styles';
+import { Text, Document, Image, PDFViewer, Page, View } from '@react-pdf/renderer';
 import { Orientation } from './portifolio';
+import { styles as optionStyles } from './styles';
 
 
-const WorkPDF = async ({ params, page_layout }: any) => {
+const WorkPDF = ({ params, page_layout }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
 	const styles = optionStyles[orientation];
 	return (
@@ -70,21 +68,21 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 
 						<View style={styles?.section}>
 							<Image src={page.image} style={styles?.image} />
-							<Html style={styles?.text}>
+							<Text style={styles?.p}>
 								{page?.tech_description}
-							</Html>
+							</Text>
 						</View>
 
 						<View style={styles?.section}>
 							{i === 0 &&
-								<Html style={styles?.h2}>{title}</Html>
+								<Text style={styles?.h2}>{title}</Text>
 							}
 
 							<View style={styles?.columnSection}>
 								<View style={styles?.column}>
-									<Html style={styles?.text}>
+									<Text style={styles?.p}>
 										{page?.description}
-									</Html>
+									</Text>
 								</View>
 							</View>
 						</View>
