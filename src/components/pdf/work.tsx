@@ -6,18 +6,22 @@ import { useGetOne } from 'react-admin';
 
 const WorkPDF = ({ params, page_layout, theme }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const [styles] = useThemeStyles({ orientation: orientation, theme: theme });
+
+	const { data: workTheme } = useGetOne('theme', { id: params?.theme_id });
+
+	const [styles] = useThemeStyles({ orientation: orientation, theme: workTheme });
+
 	return (
 		<PDFViewer style={styles?.viewer}>
 			<Document style={{ margin: 0 }}>
-				<WorkPagePdf params={params} page_layout={page_layout} theme={theme} />
+				<WorkPagePdf params={params} page_layout={page_layout} theme={workTheme} />
 			</Document>
 		</PDFViewer >
 	)
 };
 
-export const WorkPagePdf = ({ params, page_layout }: any) => {
-	const { data: theme } = useGetOne('theme', { id: params?.theme_id });
+export const WorkPagePdf = ({ params, page_layout, theme }: any) => {
+
 	const title = params?.title
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -34,7 +38,7 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	const text_1_horizontal_align = params?.text_2_horizontal_align
 	const text_2_horizontal_align = params?.text_2_horizontal_align
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', theme: theme })
+	const [styles] = useThemeStyles({ orientation: orientation, theme: theme })
 
 
 	const pages = [

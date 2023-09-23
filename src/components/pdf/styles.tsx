@@ -47,22 +47,25 @@ export function useThemeStyles({ orientation, theme }: ThemeStyles) {
 	const textStyles = StyleSheet.create({
 		p: {
 			margin: 0,
-			fontSize: 10,
+			fontSize: theme?.paragraph_text_size,
 			fontFamily: theme?.paragraph_font_family,
+			color: theme?.text_primary_color
 		},
 		h1: {
 			fontFamily: theme?.title_font_family,
-			fontSize: 24,
-
+			fontSize: theme?.title_text_size,
+			color: theme?.text_secondary_color
 		},
 		h2: {
-			fontSize: 16,
-			marginBottom: '3mm'
+			fontSize: +theme?.title_text_size - 8,
+			marginBottom: '3mm',
+			color: theme?.text_secondary_color
 		},
 		h3: {
 			fontFamily: 'Helvetica-Bold',
-			fontSize: 11,
-			marginBottom: '5mm'
+			fontSize: +theme?.paragraph_text_size * 1.1,
+			marginBottom: '5mm',
+			color: theme?.text_primary_color
 		},
 	})
 
@@ -77,14 +80,14 @@ export function useThemeStyles({ orientation, theme }: ThemeStyles) {
 		},
 		page: {
 			flexDirection: `column`,
-			backgroundColor: '#fff',
+			backgroundColor: theme?.background_primary_color,
 			flexGrow: 1,
 			margin: 0,
 			display: 'none'
 		},
 		pageLoaded: {
 			flexDirection: `column`,
-			backgroundColor: '#fff',
+			backgroundColor: theme?.background_primary_color,
 			flexGrow: 1,
 			margin: 0,
 			display: 'flex'
@@ -99,7 +102,8 @@ export function useThemeStyles({ orientation, theme }: ThemeStyles) {
 			marginTop: "10mm",
 			marginLeft: "10mm",
 			marginRight: "10mm",
-			width: '50%'
+			width: '50%',
+			backgroundColor: theme?.background_secondary_color,
 		},
 		columnSection: {
 			display: 'flex',
@@ -136,14 +140,14 @@ export function useThemeStyles({ orientation, theme }: ThemeStyles) {
 		},
 		page: {
 			flexDirection: `row`,
-			backgroundColor: '#fff',
+			backgroundColor: theme?.background_primary_color,
 			flexGrow: 1,
 			margin: 0,
 			display: 'none'
 		},
 		pageLoaded: {
 			flexDirection: `row`,
-			backgroundColor: '#fff',
+			backgroundColor: theme?.background_primary_color,
 			flexGrow: 1,
 			margin: 0,
 			display: 'flex'

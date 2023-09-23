@@ -61,7 +61,7 @@ const PortifolioPDF = ({ params }: any) => {
 				{/* Obras */}
 
 				{data && data?.map(work =>
-					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} />
+					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} theme={theme} />
 				)}
 
 				{/* 2ª Contra Capa */}
