@@ -1,4 +1,4 @@
-import { SelectInput, TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
+import { ReferenceInput, SelectInput, TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
 import { PageInputs } from './PageInputs';
 
 const WorkFields = () => {
@@ -22,6 +22,7 @@ const WorkFields = () => {
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />
+				<ReferenceInput source="theme_id" reference="theme" />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	)

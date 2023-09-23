@@ -1,7 +1,6 @@
+import { useThemeStyles } from '@/components/pdf/styles';
 import dynamic from "next/dynamic";
-import { Orientation } from '@/components/pdf/portifolio';
-import { styles as optionStyles } from '@/components/pdf/styles';
-import { Create, useRecordContext } from 'react-admin';
+import { Create, useGetOne, useRecordContext } from 'react-admin';
 import { PageTitle } from '../portifolio/edit';
 
 const WorkPDF = dynamic(() => import("@/components/pdf/work"));
@@ -9,17 +8,18 @@ const WorkFields = dynamic(() => import("./WorkFields"));
 
 const Aside = async () => {
 	const record = useRecordContext();
-	const styles = optionStyles[record?.page_layout as Orientation]
+	const { data: theme, isLoading, error } = useGetOne('theme', { id: record?.theme_id });
+	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', theme: theme })
 	return (
 		<div style={styles?.viewer}>
-			{/* @ts-expect-error */}
+
 			<WorkPDF params={record} />
 		</div>
 	)
 }
-const WorkCreate = () => (
+export const WorkCreate = () => (
 	/* @ts-expect-error */
-	<Create aside={<Aside />} title={<PageTitle />}>
+	<Create aside={<Aside />} title={<PageTitle />} >
 		<WorkFields />
 	</Create>
 );

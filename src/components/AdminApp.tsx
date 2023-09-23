@@ -6,6 +6,7 @@ import ptBrMessages from 'ra-language-pt-br'
 import { LoginPage } from 'ra-supabase'
 import { Admin, Resource, defaultTheme, defaultDarkTheme } from 'react-admin'
 import dynamic from 'next/dynamic'
+import { ThemeCreate, ThemeEdit, ThemeList } from "./react-admin/theme"
 
 const WorkCreate = dynamic(() => import("./react-admin/work/create"))
 const WorkList = dynamic(() => import("./react-admin/work/list"))
@@ -39,6 +40,7 @@ const AdminApp: React.FC = () => {
 		</CustomRoutes> */}
 			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
 			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
+			<Resource name="theme" list={ThemeList} edit={ThemeEdit} create={ThemeCreate} recordRepresentation="title" />
 		</Admin>
 	)
 }

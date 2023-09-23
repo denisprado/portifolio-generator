@@ -1,22 +1,23 @@
 import { Text, Document, Image, PDFViewer, Page, View } from '@react-pdf/renderer';
 import { Orientation } from './portifolio';
-import { styles as optionStyles } from './styles';
+import { useThemeStyles } from './styles';
+import { useGetOne } from 'react-admin';
 
 
-const WorkPDF = ({ params, page_layout }: any) => {
+const WorkPDF = ({ params, page_layout, theme }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const styles = optionStyles[orientation];
+	const [styles] = useThemeStyles({ orientation: orientation, theme: theme });
 	return (
 		<PDFViewer style={styles?.viewer}>
 			<Document style={{ margin: 0 }}>
-				<WorkPagePdf params={params} page_layout={page_layout} />
+				<WorkPagePdf params={params} page_layout={page_layout} theme={theme} />
 			</Document>
 		</PDFViewer >
 	)
 };
 
 export const WorkPagePdf = ({ params, page_layout }: any) => {
-
+	const { data: theme } = useGetOne('theme', { id: params?.theme_id });
 	const title = params?.title
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -24,7 +25,7 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	const description_2 = params?.description_2
 	const tech_description_1 = params?.tech_description_1
 	const tech_description_2 = params?.tech_description_2
-	const image_1_orientation = params?.image_1_orientation
+	const image_1_orientation = params && params?.image_1_orientation ? params?.image_1_orientation : 'portrait'
 	const image_1_order_image = params?.image_1_order_image ?? 'inicial'
 	const text_1_vertical_align = params?.text_1_vertical_align
 	const image_2_orientation = params?.image_2_orientation
@@ -33,7 +34,8 @@ export const WorkPagePdf = ({ params, page_layout }: any) => {
 	const text_1_horizontal_align = params?.text_2_horizontal_align
 	const text_2_horizontal_align = params?.text_2_horizontal_align
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const styles = optionStyles[orientation];
+	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', theme: theme })
+
 
 	const pages = [
 		{

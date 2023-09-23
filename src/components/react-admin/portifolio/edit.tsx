@@ -1,7 +1,6 @@
-import { Orientation } from '@/components/pdf/portifolio';
-import { styles as optionStyles } from '@/components/pdf/styles';
+import { useThemeStyles } from '@/components/pdf/styles';
 import dynamic from "next/dynamic";
-import { Edit, useRecordContext } from 'react-admin';
+import { Edit, useGetOne, useRecordContext } from 'react-admin';
 import { PortifolioInputs } from './PortifolioInputs';
 const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"));
 
@@ -12,16 +11,18 @@ export const PageTitle = () => {
 
 const Aside = async () => {
 	const record = useRecordContext();
-	const styles = optionStyles[record?.page_layout as Orientation]
+	const { data: theme } = useGetOne('theme', { id: record?.theme_id });
+
+	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', theme: theme })
 	return (
 		<div style={styles?.viewer}>
-			{/* @ts-expect-error */}
+
 			<PortifolioPDF params={record} />
 		</div>
 	)
 }
 
-const PortifolioEdit = () => (
+export const PortifolioEdit = () => (
 	/* @ts-expect-error */
 	<Edit aside={<Aside />} title={<PageTitle />}>
 		<PortifolioInputs />

@@ -1,18 +1,16 @@
-import { Document, Image, PDFViewer, Page, View, Text } from '@react-pdf/renderer';
-import { useEffect, useState } from 'react';
-import { Loading, useGetMany } from 'react-admin';
-import { Html } from 'react-pdf-html';
-import { styles as optionStyles } from './styles';
-import { WorkPagePdf } from './work';
 import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
+import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
+import { useState } from 'react';
+import { Loading, useGetMany, useGetOne } from 'react-admin';
+import { useThemeStyles } from './styles';
+import { WorkPagePdf } from './work';
 
 export type Orientation = 'landscape' | 'portrait';
 
-
-
-
 const PortifolioPDF = ({ params }: any) => {
 	useRegisterReactPDFFont()
+	const { data: theme } = useGetOne('theme', { id: params?.theme_id });
+
 
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -34,7 +32,7 @@ const PortifolioPDF = ({ params }: any) => {
 	if (isLoading) { return <Loading />; }
 	if (error) { return <p>ERROR</p>; }
 
-	const styles = optionStyles[orientation];
+	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', theme: theme })
 	return (
 
 		<PDFViewer style={styles?.viewer} >

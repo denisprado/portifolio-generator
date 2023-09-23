@@ -1,8 +1,7 @@
 
-import { Datagrid, EditButton, ImageField, List as ReactAdminList, RichTextField, ShowButton, TextField } from 'react-admin'
+import { Datagrid, EditButton, ImageField, List as ReactAdminList, RichTextField, TextField } from 'react-admin'
 
-
-const WorkList = () => {
+export const WorkList = () => {
 	return (
 		<ReactAdminList>
 			<Datagrid>

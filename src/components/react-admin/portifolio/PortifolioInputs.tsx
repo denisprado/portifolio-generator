@@ -1,9 +1,7 @@
-import { getAllFontFamiliesToLoad } from '@/components/fonts/lib';
-import { ImageField, ImageInput, ReferenceArrayInput, SelectArrayInput, SelectInput, TabbedForm, TextInput, required, useGetIdentity, useRecordContext } from 'react-admin';
+import { ImageField, ImageInput, ReferenceArrayInput, ReferenceInput, SelectArrayInput, SelectInput, TabbedForm, TextInput, required, useGetIdentity } from 'react-admin';
 
 export const PortifolioInputs = () => {
 	const { data } = useGetIdentity();
-	const allFontFamilies = getAllFontFamiliesToLoad();
 
 	return (
 		<TabbedForm>
@@ -37,6 +35,7 @@ export const PortifolioInputs = () => {
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />
+				<ReferenceInput source="theme_id" reference="theme" />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	);
