@@ -3,7 +3,7 @@ import { Datagrid, EditButton, List as ReactAdminList, TextField } from 'react-a
 import { ColorField } from 'react-admin-color-picker'
 
 
-export const ThemeList = () => {
+export const ColorThemeList = () => {
 
 	return (
 		<ReactAdminList>
@@ -19,4 +19,4 @@ export const ThemeList = () => {
 	)
 }
 
-export default ThemeList
+export default ColorThemeList

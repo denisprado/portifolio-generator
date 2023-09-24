@@ -1,15 +1,16 @@
 import { Edit, useRecordContext } from 'react-admin';
-import { ThemeInputs } from './ThemeInputs';
+import ColorThemeInputs from './ColorThemeInputs';
 
 export const PageTitle = () => {
 	const record = useRecordContext();
 	return <span>{record ? `"${record.title}"` : ''}</span>;
 };
 
-export const ThemeEdit = () => (
+export const ColorThemeEdit = () => (
+
 	<Edit title={<PageTitle />}>
-		<ThemeInputs />
+		<ColorThemeInputs />
 	</Edit>
 );
 
-export default ThemeEdit
+export default ColorThemeEdit

@@ -1,12 +1,11 @@
 'use client'
 import { authProvider } from "@/utils/authProvider"
 import dataProvider from '@/utils/dataProvider'
+import dynamic from 'next/dynamic'
 import polyglotI18nProvider from 'ra-i18n-polyglot'
 import ptBrMessages from 'ra-language-pt-br'
 import { LoginPage } from 'ra-supabase'
-import { Admin, Resource, defaultTheme, defaultDarkTheme } from 'react-admin'
-import dynamic from 'next/dynamic'
-import { ThemeCreate, ThemeEdit, ThemeList } from "./react-admin/theme"
+import { Admin, Resource, defaultDarkTheme, defaultTheme } from 'react-admin'
 
 const WorkCreate = dynamic(() => import("./react-admin/work/create"))
 const WorkList = dynamic(() => import("./react-admin/work/list"))
@@ -16,6 +15,14 @@ const PortifolioCreate = dynamic(() => import("./react-admin/portifolio/create")
 const PortifolioList = dynamic(() => import("./react-admin/portifolio/list"))
 const PortifolioEdit = dynamic(() => import("./react-admin/portifolio/edit"))
 
+const TypographyThemeCreate = dynamic(() => import("./react-admin/typography_theme/create"))
+const TypographyThemeList = dynamic(() => import("./react-admin/typography_theme/list"))
+const TypographyThemeEdit = dynamic(() => import("./react-admin/typography_theme/edit"))
+
+const ColorThemeCreate = dynamic(() => import("./react-admin/color_theme/create"))
+const ColorThemeList = dynamic(() => import("./react-admin/color_theme/list"))
+const ColorThemeEdit = dynamic(() => import("./react-admin/color_theme/edit"))
+
 
 const AdminApp: React.FC = () => {
 	const messages: any = {
@@ -23,24 +30,15 @@ const AdminApp: React.FC = () => {
 	}
 	const lightTheme = defaultTheme;
 	const darkTheme = defaultDarkTheme;
-
 	const i18nProvider = polyglotI18nProvider(locale => messages[locale], 'pt-br', { allowMissing: true })
+
 	return (
-		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider} lightTheme={lightTheme}
-			darkTheme={darkTheme}>
-			{/* <CustomRoutes noLayout>
-			<Route
-				path={SetPasswordPage.path}
-				element={<SetPasswordPage />}
-			/>
-			<Route
-				path={ForgotPasswordPage.path}
-				element={<ForgotPasswordPage />}
-			/>
-		</CustomRoutes> */}
+		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider} lightTheme={lightTheme} darkTheme={darkTheme}>
+
+			<Resource name="typography_theme" list={TypographyThemeList} edit={TypographyThemeEdit} create={TypographyThemeCreate} recordRepresentation="title" />
+			<Resource name="color_theme" list={ColorThemeList} edit={ColorThemeEdit} create={ColorThemeCreate} recordRepresentation="title" />
 			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
 			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
-			<Resource name="theme" list={ThemeList} edit={ThemeEdit} create={ThemeCreate} recordRepresentation="title" />
 		</Admin>
 	)
 }
