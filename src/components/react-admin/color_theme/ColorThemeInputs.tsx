@@ -1,8 +1,10 @@
-import { SimpleForm, TextInput } from 'react-admin'
+import { FormDataConsumer, SimpleForm, TextInput } from 'react-admin'
 import { ColorField, ColorInput } from 'react-admin-color-picker'
+import { useWatch } from 'react-hook-form'
 
-export const ColorThemeInputs = () =>
-	<SimpleForm>
+export const ColorThemeInputs = () => {
+
+	return (<SimpleForm>
 		<TextInput source='title' />
 		<ColorInput source="background_primary_color" label={"Primary Background Color"} picker="Sketch" />
 		<ColorField source="background_primary_color"></ColorField>
@@ -12,6 +14,7 @@ export const ColorThemeInputs = () =>
 		<ColorField source="text_primary_color"></ColorField>
 		<ColorInput source="text_secondary_color" label={"Secondary Text Color"} picker="Sketch" />
 		<ColorField source="text_secondary_color"></ColorField>
-	</SimpleForm>
+	</SimpleForm>)
+}
 
 export default ColorThemeInputs
