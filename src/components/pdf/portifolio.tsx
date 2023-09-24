@@ -9,7 +9,10 @@ export type Orientation = 'landscape' | 'portrait';
 
 const PortifolioPDF = ({ params }: any) => {
 	useRegisterReactPDFFont()
-	const { data: theme } = useGetOne('theme', { id: params?.theme_id });
+	const { data: color_theme } = useGetOne('color_theme', { id: params?.color_theme_id });
+	const { data: typography_theme } = useGetOne('color_theme', { id: params?.color_theme_id });
+
+
 
 
 	const image_1_src = params?.image_1_src
@@ -32,7 +35,7 @@ const PortifolioPDF = ({ params }: any) => {
 	if (isLoading) { return <Loading />; }
 	if (error) { return <p>ERROR</p>; }
 
-	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', theme: theme })
+	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme })
 	return (
 
 		<PDFViewer style={styles?.viewer} >
@@ -61,7 +64,7 @@ const PortifolioPDF = ({ params }: any) => {
 				{/* Obras */}
 
 				{data && data?.map(work =>
-					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} theme={theme} />
+					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} colorTheme={color_theme} typographyTheme={typography_theme} />
 				)}
 
 				{/* 2ª Contra Capa */}

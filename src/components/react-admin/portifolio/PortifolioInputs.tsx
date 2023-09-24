@@ -35,8 +35,11 @@ export const PortifolioInputs = () => {
 					{ id: 'portrait', name: 'Retrato' },
 					{ id: 'landscape', name: 'Paisagem' },
 				]} />
-				<ReferenceInput source="theme_id" reference="theme" />
+				<ReferenceInput source="color_theme_id" reference="color_theme" />
+				<ReferenceInput source="typography_theme_id" reference="typography_theme" />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	);
 };
+
+export default PortifolioInputs

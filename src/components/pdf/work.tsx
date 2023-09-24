@@ -7,20 +7,21 @@ import { useGetOne } from 'react-admin';
 const WorkPDF = ({ params, page_layout, theme }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
 
-	const { data: workTheme } = useGetOne('theme', { id: params?.theme_id });
+	const { data: workColorTheme } = useGetOne('color_theme', { id: params?.color_theme_id });
+	const { data: workTypographyTheme } = useGetOne('typography_theme', { id: params?.typography_theme_id });
 
-	const [styles] = useThemeStyles({ orientation: orientation, theme: workTheme });
+	const [styles] = useThemeStyles({ orientation: orientation, color_theme: workColorTheme, typography_theme: workTypographyTheme });
 
 	return (
 		<PDFViewer style={styles?.viewer}>
 			<Document style={{ margin: 0 }}>
-				<WorkPagePdf params={params} page_layout={page_layout} theme={workTheme} />
+				<WorkPagePdf params={params} page_layout={page_layout} colorTheme={workColorTheme} typographyTheme={workTypographyTheme} />
 			</Document>
 		</PDFViewer >
 	)
 };
 
-export const WorkPagePdf = ({ params, page_layout, theme }: any) => {
+export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme }: any) => {
 
 	const title = params?.title
 	const image_1_src = params?.image_1_src
@@ -37,8 +38,9 @@ export const WorkPagePdf = ({ params, page_layout, theme }: any) => {
 	const text_2_vertical_align = params?.text_2_vertical_align
 	const text_1_horizontal_align = params?.text_2_horizontal_align
 	const text_2_horizontal_align = params?.text_2_horizontal_align
+
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const [styles] = useThemeStyles({ orientation: orientation, theme: theme })
+	const [styles] = useThemeStyles({ orientation: orientation, color_theme: colorTheme, typography_theme: typographyTheme })
 
 
 	const pages = [

@@ -9,8 +9,10 @@ const WorkFields = dynamic(() => import("./WorkFields"));
 const Aside = async () => {
 	const record = useRecordContext();
 
-	const { data: theme, isLoading, error } = useGetOne('theme', { id: record?.theme_id });
-	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', theme: theme })
+	const { data: color_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
+	const { data: typography_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
+
+	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme })
 	return (
 		<div style={styles?.viewer}>
 
