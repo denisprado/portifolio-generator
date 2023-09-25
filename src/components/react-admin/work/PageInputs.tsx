@@ -23,18 +23,14 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 						{ id: 'horizontal', name: 'Horizontal' },
 					]} />
 					<RadioButtonGroupInput label={"Ordem da imagem"} source={`image_${n}_order_image`} choices={[
-						{ id: 'inicial', name: 'Inicial' },
+						{ id: 'initial', name: 'Inicial' },
 						{ id: 'final', name: 'Final' },
 					]} />
 				</div>
 				<div className='flex flex-col items-start justify-start'>
 					<RadioButtonGroupInput label={"Orientação da seção de descrição"} source={`description_${n}_order`} choices={[
-						{ id: 'flex-start', name: 'Topo' },
-						{ id: 'flex-end', name: 'Base' },
-					]} />
-					<RadioButtonGroupInput label={"Orientação da seção de descrição"} source={`tech_${n}_order`} choices={[
-						{ id: 'flex-start', name: 'Inicial' },
-						{ id: 'flex-end', name: 'Final' },
+						{ id: 'initial', name: 'Inicial' },
+						{ id: 'final', name: 'Final' },
 					]} />
 				</div>
 				<div className='flex flex-col items-start justify-start'>

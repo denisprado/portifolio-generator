@@ -37,9 +37,9 @@ export type TypographyTheme = {
 
 export function useThemeStyles({ orientation, color_theme, typography_theme, spacing_theme }: ThemeStyles) {
 
-	const margin = `${spacing_theme?.magin}mm`;
-	const spacing = `${spacing_theme?.spacing}mm`;
-	const imageMargin = `${spacing_theme?.image_margin}mm`;
+	const margin = spacing_theme?.magin ? `${spacing_theme?.magin}mm` : '10mm';
+	const spacing = spacing_theme?.spacing ? `${spacing_theme?.spacing}mm` : '10mm';
+	const imageMargin = spacing_theme?.image_margin ? `${spacing_theme?.image_margin}mm` : '10mm';
 
 	const portrait = StyleSheet.create({
 		viewer: {
@@ -155,6 +155,10 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 	})
 
 	const column = StyleSheet.create({
+		containerColumn: {
+			display: 'flex',
+			flexDirection: 'row'
+		},
 		column: {
 			display: 'flex',
 			width: "50%",

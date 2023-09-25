@@ -11,8 +11,10 @@ const Aside = async () => {
 
 	const { data: color_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
 	const { data: typography_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
+	const { data: spacing_theme } = useGetOne('color_theme', { id: record?.spacing_theme_id });
 
-	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme })
+	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme, spacing_theme: spacing_theme })
+
 	return (
 		<div style={styles?.viewer}>
 

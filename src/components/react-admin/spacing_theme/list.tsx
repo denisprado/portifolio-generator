@@ -5,9 +5,9 @@ export const SpacingThemeList = () =>
 	<ReactAdminList>
 		<Datagrid>
 			<TextField source="title" />
-			<TextField source="magin"></TextField>
+			<TextField source="margin"></TextField>
 			<TextField source="spacing"></TextField>
-			<TextField source="margin_image"></TextField>
+			<TextField source="image_margin"></TextField>
 
 			<EditButton label='Editar' />
 		</Datagrid>

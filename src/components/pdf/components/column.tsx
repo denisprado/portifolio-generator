@@ -1,6 +1,5 @@
 import { View } from "@react-pdf/renderer";
 import { ReactNode } from "react";
-import { ThemeStyles } from "../styles";
 
 type SectionProps = {
 	children: ReactNode
