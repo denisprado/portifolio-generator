@@ -2,6 +2,8 @@ import { Text, Document, Image, PDFViewer, Page, View } from '@react-pdf/rendere
 import { Orientation } from './portifolio';
 import { useThemeStyles } from './styles';
 import { useGetOne } from 'react-admin';
+import { Section } from './components/section';
+import { Column } from './components/column';
 
 
 const WorkPDF = ({ params, page_layout, theme }: any) => {
@@ -9,8 +11,9 @@ const WorkPDF = ({ params, page_layout, theme }: any) => {
 
 	const { data: workColorTheme } = useGetOne('color_theme', { id: params?.color_theme_id });
 	const { data: workTypographyTheme } = useGetOne('typography_theme', { id: params?.typography_theme_id });
+	const { data: workSpacingTheme } = useGetOne('spacing_theme', { id: params?.spacing_theme_id });
 
-	const [styles] = useThemeStyles({ orientation: orientation, color_theme: workColorTheme, typography_theme: workTypographyTheme });
+	const [styles] = useThemeStyles({ orientation: orientation, color_theme: workColorTheme, typography_theme: workTypographyTheme, spacing_theme: workSpacingTheme });
 
 	return (
 		<PDFViewer style={styles?.viewer}>
@@ -21,7 +24,7 @@ const WorkPDF = ({ params, page_layout, theme }: any) => {
 	)
 };
 
-export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme }: any) => {
+export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme, spacingTheme }: any) => {
 
 	const title = params?.title
 	const image_1_src = params?.image_1_src
@@ -40,7 +43,7 @@ export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme }
 	const text_2_horizontal_align = params?.text_2_horizontal_align
 
 	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const [styles] = useThemeStyles({ orientation: orientation, color_theme: colorTheme, typography_theme: typographyTheme })
+	const [styles] = useThemeStyles({ orientation: orientation, color_theme: colorTheme, typography_theme: typographyTheme, spacing_theme: spacingTheme })
 
 
 	const pages = [
@@ -74,26 +77,27 @@ export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme }
 				<Page size={"A4"} style={styles?.page} orientation={orientation}>
 					<View style={styles?.pageContent}>
 
-						<View style={styles?.section}>
+						<Section style={styles}>
 							<Image src={page.image} style={styles?.image} />
-							<Text style={styles?.p}>
-								{page?.tech_description}
-							</Text>
-						</View>
 
-						<View style={styles?.section}>
-							{i === 0 &&
-								<Text style={styles?.h2}>{title}</Text>
-							}
+						</Section>
 
-							<View style={styles?.columnSection}>
-								<View style={styles?.column}>
-									<Text style={styles?.p}>
-										{page?.description}
-									</Text>
-								</View>
-							</View>
-						</View>
+						<Section style={styles}>
+							<Column style={styles}>
+								{i === 0 &&
+									<Text style={styles?.h2}>{title}</Text>
+								}
+
+								<Text style={styles?.p}>
+									{page?.description}
+								</Text>
+							</Column>
+							<Column style={styles}>
+								<Text style={styles?.p}>
+									{page?.tech_description}
+								</Text>
+							</Column>
+						</Section>
 
 					</View>
 				</Page>

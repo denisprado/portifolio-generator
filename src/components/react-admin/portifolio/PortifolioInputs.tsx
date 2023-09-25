@@ -37,6 +37,7 @@ export const PortifolioInputs = () => {
 				]} />
 				<ReferenceInput source="color_theme_id" reference="color_theme" />
 				<ReferenceInput source="typography_theme_id" reference="typography_theme" />
+				<ReferenceInput source="spacing_theme_id" reference="spacing_theme" />
 			</TabbedForm.Tab>
 		</TabbedForm>
 	);

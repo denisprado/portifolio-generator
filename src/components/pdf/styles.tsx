@@ -4,6 +4,13 @@ export type ThemeStyles = {
 	orientation: 'landscape' | 'portrait'
 	color_theme: ColorTheme
 	typography_theme: TypographyTheme
+	spacing_theme?: SpacingTheme
+}
+
+export type SpacingTheme = {
+	magin: string
+	spacing: string
+	image_margin: string
 }
 
 export type ColorTheme = {
@@ -28,7 +35,85 @@ export type TypographyTheme = {
 
 
 
-export function useThemeStyles({ orientation, color_theme, typography_theme }: ThemeStyles) {
+export function useThemeStyles({ orientation, color_theme, typography_theme, spacing_theme }: ThemeStyles) {
+
+	const margin = `${spacing_theme?.magin}mm`;
+	const spacing = `${spacing_theme?.spacing}mm`;
+	const imageMargin = `${spacing_theme?.image_margin}mm`;
+
+	const portrait = StyleSheet.create({
+		viewer: {
+			margin: 0,
+			height: '297mm',
+			display: 'flex',
+			width: '210mm',
+			marginHorizontal: margin,
+			marginVertical: margin
+		},
+		page: {
+			flexDirection: `column`,
+			backgroundColor: color_theme?.background_primary_color,
+			flexGrow: 1,
+			margin: 0,
+			display: 'none'
+		},
+		pageLoaded: {
+			flexDirection: `column`,
+			backgroundColor: color_theme?.background_primary_color,
+			flexGrow: 1,
+			margin: 0,
+			display: 'flex'
+		},
+		pageContent: {
+			display: 'flex',
+			flexDirection: `column`,
+		},
+
+		image: {
+			width: "100%",
+			height: "220mm",
+			objectFit: 'cover',
+			margin: imageMargin,
+		},
+
+
+	});
+
+	const landscape = StyleSheet.create({
+		viewer: {
+			margin: 0,
+			width: '210mm',
+			display: 'flex',
+			height: '149mm',
+			marginHorizontal: margin,
+			marginVertical: margin
+		},
+		page: {
+			flexDirection: `row`,
+			backgroundColor: color_theme?.background_primary_color,
+			flexGrow: 1,
+			margin: 0,
+			display: 'none'
+		},
+		pageLoaded: {
+			flexDirection: `row`,
+			backgroundColor: color_theme?.background_primary_color,
+			flexGrow: 1,
+			margin: 0,
+			display: 'flex'
+		},
+		pageContent: {
+			display: 'flex',
+			flexDirection: `column`,
+		},
+		image: {
+			width: "280mm",
+			height: "140mm",
+			objectFit: 'cover',
+			margin: imageMargin,
+		},
+
+	});
 
 	const textStyles = StyleSheet.create({
 		p: {
@@ -55,126 +140,40 @@ export function useThemeStyles({ orientation, color_theme, typography_theme }: T
 		},
 	})
 
-	const portrait = StyleSheet.create({
-		viewer: {
-			margin: 0,
-			height: '297mm',
-			display: 'flex',
-			width: '210mm',
-			marginHorizontal: `10mm`,
-			marginVertical: `10mm`
-		},
-		page: {
-			flexDirection: `column`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'none'
-		},
-		pageLoaded: {
-			flexDirection: `column`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'flex'
-		},
-		pageContent: {
-			display: 'flex',
-			flexDirection: `column`,
-		},
+	const section = StyleSheet.create({
 		section: {
-			// border: '1px solid red',
 			display: 'flex',
-			marginTop: "10mm",
-			marginLeft: "10mm",
-			marginRight: "10mm",
-			width: '50%',
+			width: '100%',
+			flexGrow: 1,
+		},
+		innerSection: {
+			width: '100%',
+			display: 'flex',
+			flexGrow: 1,
+			flexDirection: 'row'
+		},
+	})
+
+	const column = StyleSheet.create({
+		column: {
+			display: 'flex',
+			width: "50%",
+			flexGrow: 1,
 			backgroundColor: color_theme?.background_secondary_color,
 		},
-		columnSection: {
+		innerColumn: {
+			padding: "10mm",
+			width: "100%",
 			display: 'flex',
-			gap: "10mm",
-			width: "100mm",
+			height: '57mm',
 			flexGrow: 1,
-			flexDirection: "row",
-			// border: '1px solid green',
-		},
-		column: {
-			padding: "0",
-			margin: 0,
-			width: "100mm",
-			display: 'flex',
 			// border: '1px solid blue',
 		},
-		image: {
-			width: "190mm",
-			height: "220mm",
-			objectFit: 'cover'
-		},
+	})
 
-
-	});
-
-	const landscape = StyleSheet.create({
-		viewer: {
-			margin: 0,
-			width: '210mm',
-			display: 'flex',
-			height: '149mm',
-			marginHorizontal: `10mm`,
-			marginVertical: `10mm`
-		},
-		page: {
-			flexDirection: `row`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'none'
-		},
-		pageLoaded: {
-			flexDirection: `row`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'flex'
-		},
-		pageContent: {
-			display: 'flex',
-			flexDirection: `column`,
-		},
-		section: {
-			// border: '1px solid red',
-			display: 'flex',
-			marginTop: "10mm",
-			marginLeft: "10mm",
-			marginRight: "10mm",
-			width: '45%'
-		},
-		columnSection: {
-			display: 'flex',
-			gap: "10mm",
-			width: "100mm",
-			flexGrow: 1,
-			flexDirection: "row",
-			// border: '1px solid green',
-		},
-		column: {
-			padding: "0",
-			margin: 0,
-			width: "100mm",
-			display: 'flex',
-			// border: '1px solid blue',
-		},
-		image: {
-			width: "280mm",
-			height: "140mm",
-			objectFit: 'cover'
-		},
-
-	});
-
-	const finalPortrait = { ...portrait, ...textStyles }
-	const finalLandscape = { ...landscape, ...textStyles }
+	const finalPortrait = { ...portrait, ...textStyles, ...section, ...column }
+	const finalLandscape = { ...landscape, ...textStyles, ...section, ...column }
 	const styles = orientation === 'landscape' ? finalLandscape : finalPortrait;
+
 	return [styles]
 }

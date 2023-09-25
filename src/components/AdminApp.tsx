@@ -23,6 +23,10 @@ const ColorThemeCreate = dynamic(() => import("./react-admin/color_theme/create"
 const ColorThemeList = dynamic(() => import("./react-admin/color_theme/list"))
 const ColorThemeEdit = dynamic(() => import("./react-admin/color_theme/edit"))
 
+const SpacingThemeCreate = dynamic(() => import("./react-admin/spacing_theme/create"))
+const SpacingThemeList = dynamic(() => import("./react-admin/spacing_theme/list"))
+const SpacingThemeEdit = dynamic(() => import("./react-admin/spacing_theme/edit"))
+
 
 const AdminApp: React.FC = () => {
 	const messages: any = {
@@ -37,6 +41,7 @@ const AdminApp: React.FC = () => {
 
 			<Resource name="typography_theme" list={TypographyThemeList} edit={TypographyThemeEdit} create={TypographyThemeCreate} recordRepresentation="title" />
 			<Resource name="color_theme" list={ColorThemeList} edit={ColorThemeEdit} create={ColorThemeCreate} recordRepresentation="title" />
+			<Resource name="spacing_theme" list={SpacingThemeList} edit={SpacingThemeEdit} create={SpacingThemeCreate} recordRepresentation="title" />
 			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
 			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
 		</Admin>

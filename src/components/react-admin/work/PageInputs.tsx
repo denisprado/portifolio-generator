@@ -18,7 +18,6 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 			<TextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
 			<div className='flex flex-row items-start justify-start gap-16'>
 				<div className='flex flex-col items-start justify-start'>
-
 					<RadioButtonGroupInput label={"Orientação da imagem"} source={`image_${n}_orientation`} choices={[
 						{ id: 'vertical', name: 'Vertical' },
 						{ id: 'horizontal', name: 'Horizontal' },
@@ -29,7 +28,16 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 					]} />
 				</div>
 				<div className='flex flex-col items-start justify-start'>
-
+					<RadioButtonGroupInput label={"Orientação da seção de descrição"} source={`description_${n}_order`} choices={[
+						{ id: 'flex-start', name: 'Topo' },
+						{ id: 'flex-end', name: 'Base' },
+					]} />
+					<RadioButtonGroupInput label={"Orientação da seção de descrição"} source={`tech_${n}_order`} choices={[
+						{ id: 'flex-start', name: 'Inicial' },
+						{ id: 'flex-end', name: 'Final' },
+					]} />
+				</div>
+				<div className='flex flex-col items-start justify-start'>
 					<RadioButtonGroupInput label={"Orientação Vertical dos textos"} source={`image_${n}_order_image`} choices={[
 						{ id: 'flex-start', name: 'Topo' },
 						{ id: 'flex-end', name: 'Base' },
