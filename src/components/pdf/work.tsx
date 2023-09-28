@@ -7,9 +7,10 @@ import { Column } from './components/column';
 import { useRegisterReactPDFFont } from '../fonts/hooks';
 import { ContainerColumn } from './components/columnSection';
 import { WorkPageContent } from './components/workPageContent';
+import { Html } from 'react-pdf-html';
 
 
-const WorkPDF = ({ params, page_layout, theme }: any) => {
+const WorkPDF = ({ params, page_layout }: any) => {
 
 	useRegisterReactPDFFont()
 
@@ -24,13 +25,17 @@ const WorkPDF = ({ params, page_layout, theme }: any) => {
 	return (
 		<PDFViewer style={styles?.viewer}>
 			<Document style={{ margin: 0 }}>
-				<WorkPagePdf params={params} page_layout={page_layout} colorTheme={workColorTheme} typographyTheme={workTypographyTheme} />
+				<WorkPagePdf params={params} page_layout={page_layout} colorTheme={workColorTheme} typographyTheme={workTypographyTheme} spacingTheme={workSpacingTheme} />
 			</Document>
 		</PDFViewer >
 	)
 };
 
 export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme, spacingTheme }: any) => {
+
+	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
+	const [styles] = useThemeStyles({ orientation: orientation, color_theme: colorTheme, typography_theme: typographyTheme, spacing_theme: spacingTheme })
+
 
 	const title = params?.title
 	const image_1_src = params?.image_1_src
@@ -56,10 +61,6 @@ export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme, 
 
 	const description_1_order = params?.description_1_order
 	const description_2_order = params?.description_2_order
-
-	const orientation = page_layout !== undefined ? page_layout as Orientation : params?.page_layout as Orientation
-	const [styles] = useThemeStyles({ orientation: orientation, color_theme: colorTheme, typography_theme: typographyTheme, spacing_theme: spacingTheme })
-
 
 	const pages = [
 		{
@@ -110,12 +111,11 @@ export const WorkPagePdf = ({ params, page_layout, colorTheme, typographyTheme, 
 									</Text>
 								</Column>
 								<Column style={styles}>
-									<Text style={styles?.p}>
+									<Html stylesheet={styles}>
 										{page?.tech_description}
-									</Text>
+									</Html>
 								</Column>
 							</ContainerColumn>
-
 						</Section>
 
 					</WorkPageContent>

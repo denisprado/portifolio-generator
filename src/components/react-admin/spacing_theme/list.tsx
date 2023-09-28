@@ -6,7 +6,7 @@ export const SpacingThemeList = () =>
 		<Datagrid>
 			<TextField source="title" />
 			<TextField source="margin"></TextField>
-			<TextField source="spacing"></TextField>
+			<TextField source="padding"></TextField>
 			<TextField source="image_margin"></TextField>
 
 			<EditButton label='Editar' />

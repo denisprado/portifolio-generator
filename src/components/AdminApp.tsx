@@ -6,6 +6,7 @@ import polyglotI18nProvider from 'ra-i18n-polyglot'
 import ptBrMessages from 'ra-language-pt-br'
 import { LoginPage } from 'ra-supabase'
 import { Admin, Resource, defaultDarkTheme, defaultTheme } from 'react-admin'
+import { useRegisterReactPDFFont } from "./fonts/hooks"
 
 const WorkCreate = dynamic(() => import("./react-admin/work/create"))
 const WorkList = dynamic(() => import("./react-admin/work/list"))
@@ -39,11 +40,11 @@ const AdminApp: React.FC = () => {
 	return (
 		<Admin basename='/admin' dataProvider={dataProvider} loginPage={LoginPage} authProvider={authProvider} i18nProvider={i18nProvider} lightTheme={lightTheme} darkTheme={darkTheme}>
 
+			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
+			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
 			<Resource name="typography_theme" list={TypographyThemeList} edit={TypographyThemeEdit} create={TypographyThemeCreate} recordRepresentation="title" />
 			<Resource name="color_theme" list={ColorThemeList} edit={ColorThemeEdit} create={ColorThemeCreate} recordRepresentation="title" />
 			<Resource name="spacing_theme" list={SpacingThemeList} edit={SpacingThemeEdit} create={SpacingThemeCreate} recordRepresentation="title" />
-			<Resource name="portfolio" list={PortifolioList} edit={PortifolioEdit} create={PortifolioCreate} recordRepresentation="title" />
-			<Resource name="work" list={WorkList} edit={WorkEdit} create={WorkCreate} recordRepresentation="title" />
 		</Admin>
 	)
 }

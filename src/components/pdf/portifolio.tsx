@@ -6,15 +6,13 @@ import { useThemeStyles } from './styles';
 import { WorkPagePdf } from './work';
 import { Section } from './components/section';
 import { Column } from './components/column';
+import { ContainerColumn } from './components/columnSection';
 
 export type Orientation = 'landscape' | 'portrait';
 
 const PortifolioPDF = ({ params }: any) => {
-	useRegisterReactPDFFont()
 
-	const { data: color_theme } = useGetOne('color_theme', { id: params?.color_theme_id });
-	const { data: typography_theme } = useGetOne('typography_theme', { id: params?.typography_theme_id });
-	const { data: spacing_theme } = useGetOne('spacing_theme', { id: params?.spacing_theme_id });
+	useRegisterReactPDFFont()
 
 	const image_1_src = params?.image_1_src
 	const image_2_src = params?.image_2_src
@@ -27,6 +25,12 @@ const PortifolioPDF = ({ params }: any) => {
 	const contact = params?.contact
 	const orientation = params?.page_layout as Orientation
 
+	const { data: color_theme } = useGetOne('color_theme', { id: params?.color_theme_id });
+	const { data: typography_theme } = useGetOne('typography_theme', { id: params?.typography_theme_id });
+	const { data: spacing_theme } = useGetOne('spacing_theme', { id: params?.spacing_theme_id });
+
+	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme, spacing_theme: spacing_theme })
+
 	const [loading, setLoading] = useState(true)
 
 	const { data, isLoading, error } = useGetMany(
@@ -38,7 +42,6 @@ const PortifolioPDF = ({ params }: any) => {
 
 	const { data: user } = useGetIdentity();
 
-	const [styles] = useThemeStyles({ orientation: params?.page_layout ? params?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme, spacing_theme: spacing_theme })
 	return (
 
 		<PDFViewer style={styles?.viewer} >
@@ -52,18 +55,19 @@ const PortifolioPDF = ({ params }: any) => {
 							<View style={{ padding: '10mm', paddingBottom: '0' }}>
 								<Text style={styles?.h1}>{title}</Text>
 							</View>
-
 						</Section>
 						<Section style={styles}>
-							<Image src={image_1_src} style={styles?.image} />
+							<Image src={image_1_src} style={styles?.imageCover} />
 						</Section>
 						<Section style={styles}>
-							<Column style={styles}>
-								<Text style={styles?.p}>{description}</Text>
-							</Column>
-							<Column style={styles}>
-								<Text style={styles?.p}>{user?.fullName}</Text>
-							</Column>
+							<ContainerColumn style={styles} descriptionOrder={'initial'}>
+								<Column style={styles}>
+									<Text style={styles?.p}>{description}</Text>
+								</Column>
+								<Column style={styles}>
+									<Text style={styles?.p}>{user?.fullName}</Text>
+								</Column>
+							</ContainerColumn>
 						</Section>
 					</View>
 				</Page>
@@ -71,7 +75,7 @@ const PortifolioPDF = ({ params }: any) => {
 				{/* Obras */}
 
 				{data && data?.map(work =>
-					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} colorTheme={color_theme} typographyTheme={typography_theme} />
+					<WorkPagePdf key={work?.id} params={work} page_layout={orientation} colorTheme={color_theme} typographyTheme={typography_theme} spacingTheme={spacing_theme} />
 				)}
 
 				{/* 2ª Contra Capa */}
@@ -104,6 +108,8 @@ const PortifolioPDF = ({ params }: any) => {
 							<Column style={styles}>
 								<Text style={styles?.h3}>Contato</Text>
 								<Text style={styles?.p}>{contact}</Text>
+							</Column>
+							<Column style={styles}>
 							</Column>
 						</Section>
 					</View>

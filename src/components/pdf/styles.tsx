@@ -4,13 +4,13 @@ export type ThemeStyles = {
 	orientation: 'landscape' | 'portrait'
 	color_theme: ColorTheme
 	typography_theme: TypographyTheme
-	spacing_theme?: SpacingTheme
+	spacing_theme: SpacingTheme
 }
 
 export type SpacingTheme = {
-	magin: string
-	spacing: string
-	image_margin: string
+	magin: number
+	padding: number
+	image_margin: number
 }
 
 export type ColorTheme = {
@@ -36,17 +36,45 @@ export type TypographyTheme = {
 
 
 export function useThemeStyles({ orientation, color_theme, typography_theme, spacing_theme }: ThemeStyles) {
+	console.log(spacing_theme)
+	const margin: number = spacing_theme?.magin ? Number(spacing_theme?.magin) : 0;
+	const padding: number = spacing_theme?.padding ? Number(spacing_theme?.padding) : 0;
+	const imageMargin: number = spacing_theme?.image_margin ? Number(spacing_theme?.image_margin) : 0
 
-	const margin = spacing_theme?.magin ? `${spacing_theme?.magin}mm` : '10mm';
-	const spacing = spacing_theme?.spacing ? `${spacing_theme?.spacing}mm` : '10mm';
-	const imageMargin = spacing_theme?.image_margin ? `${spacing_theme?.image_margin}mm` : '10mm';
+	console.log(margin, padding, imageMargin)
 
-	const portrait = StyleSheet.create({
+	const pageSetup = {
+		landscape: {
+			height: 210,
+			width: 297,
+		},
+		portrait: {
+			height: 297,
+			width: 210,
+		}
+	}
+
+	const imageSetup = {
+		landscape: {
+			height: 160,
+			width: "100%"
+		},
+		portrait: {
+			height: 220,
+			width: "100%"
+		}
+	}
+
+	const columnSetup = {
+		height: pageSetup[orientation].height - imageSetup[orientation].height - (2 * imageMargin)
+	}
+
+	const page = StyleSheet.create({
 		viewer: {
 			margin: 0,
-			height: '297mm',
+			height: `${pageSetup[orientation].height}mm`,
 			display: 'flex',
-			width: '210mm',
+			width: `${pageSetup[orientation].width}mm`,
 			marginHorizontal: margin,
 			marginVertical: margin
 		},
@@ -68,51 +96,6 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 			display: 'flex',
 			flexDirection: `column`,
 		},
-
-		image: {
-			width: "100%",
-			height: "220mm",
-			objectFit: 'cover',
-			margin: imageMargin,
-		},
-
-
-	});
-
-	const landscape = StyleSheet.create({
-		viewer: {
-			margin: 0,
-			width: '210mm',
-			display: 'flex',
-			height: '149mm',
-			marginHorizontal: margin,
-			marginVertical: margin
-		},
-		page: {
-			flexDirection: `row`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'none'
-		},
-		pageLoaded: {
-			flexDirection: `row`,
-			backgroundColor: color_theme?.background_primary_color,
-			flexGrow: 1,
-			margin: 0,
-			display: 'flex'
-		},
-		pageContent: {
-			display: 'flex',
-			flexDirection: `column`,
-		},
-		image: {
-			width: "280mm",
-			height: "140mm",
-			objectFit: 'cover',
-			margin: imageMargin,
-		},
-
 	});
 
 	const textStyles = StyleSheet.create({
@@ -140,6 +123,22 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 		},
 	})
 
+	const image = StyleSheet.create({
+		image: {
+			width: `${imageSetup[orientation].width}`,
+			height: `${imageSetup[orientation].height}mm`,
+			margin: `${imageMargin}mm`,
+			objectFit: 'cover',
+		},
+		imageCover: {
+			width: `${imageSetup[orientation].width}`,
+			// height: `${imageSetup[orientation].height}mm`,
+			height: `${imageSetup[orientation].height - ((20) + ((+textStyles.h1 ? +textStyles.h1 : 10) / 2.83465)) + 2}mm`,
+			margin: `${imageMargin}mm`,
+			objectFit: 'cover',
+		},
+	})
+
 	const section = StyleSheet.create({
 		section: {
 			display: 'flex',
@@ -157,27 +156,30 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 	const column = StyleSheet.create({
 		containerColumn: {
 			display: 'flex',
-			flexDirection: 'row'
+			flexDirection: 'row',
+			marginTop: 0,
+
 		},
 		column: {
+
+			margin: `${margin}mm`,
 			display: 'flex',
 			width: "50%",
 			flexGrow: 1,
 			backgroundColor: color_theme?.background_secondary_color,
 		},
 		innerColumn: {
-			padding: "10mm",
+
+			padding: `${padding}mm`,
 			width: "100%",
 			display: 'flex',
-			height: '57mm',
+			height: `${columnSetup.height}mm`,
 			flexGrow: 1,
 			// border: '1px solid blue',
 		},
 	})
 
-	const finalPortrait = { ...portrait, ...textStyles, ...section, ...column }
-	const finalLandscape = { ...landscape, ...textStyles, ...section, ...column }
-	const styles = orientation === 'landscape' ? finalLandscape : finalPortrait;
-
+	const styles = { ...page, ...image, ...textStyles, ...section, ...column }
+	console.log(styles)
 	return [styles]
 }

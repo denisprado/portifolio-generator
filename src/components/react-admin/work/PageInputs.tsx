@@ -1,4 +1,5 @@
-import { ImageField, ImageInput, RadioButtonGroupInput, TextInput, required } from 'react-admin';
+import { ClearButtons, ListButtons, RichTextInput, RichTextInputToolbar } from 'ra-input-rich-text';
+import { ImageField, ImageInput, RadioButtonGroupInput, required } from 'react-admin';
 import { PageFieldsProps } from './create';
 
 
@@ -14,8 +15,14 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 				<ImageField source={`src`} src={`image_${n}`} />
 			</ImageInput>
 			<ImageField source={`image_${n}_src`} title="title" />
-			<TextInput label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
-			<TextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} />
+			<RichTextInput toolbar={<RichTextInputToolbar>
+				<ListButtons size={'small'} />
+				<ClearButtons size={'small'} />
+			</RichTextInputToolbar>} label={"Descrição da Obra"} fullWidth source={`description_${n}`} validate={validate} />
+			<RichTextInput label={"Informação Técnica"} fullWidth source={`tech_description_${n}`} validate={validate} toolbar={<RichTextInputToolbar>
+				<ListButtons size={'small'} />
+				<ClearButtons size={'small'} />
+			</RichTextInputToolbar>} />
 			<div className='flex flex-row items-start justify-start gap-16'>
 				<div className='flex flex-col items-start justify-start'>
 					<RadioButtonGroupInput label={"Orientação da imagem"} source={`image_${n}_orientation`} choices={[
