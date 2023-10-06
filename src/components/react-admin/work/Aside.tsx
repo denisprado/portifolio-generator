@@ -15,7 +15,6 @@ export const Aside = async () => {
 
 	return (
 		<div style={styles?.viewer}>
-			{		/* @ts-expect-error */}
 			<WorkPDF record={record} styles={styles} />
 		</div>
 	);

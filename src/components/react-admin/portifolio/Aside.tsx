@@ -37,11 +37,8 @@ export const Aside = async () => {
 
 	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme, spacing_theme: spacing_theme });
 
-	console.log(styles)
-
 	return (
 		<div style={(await styles)?.viewer}>
-			{		/* @ts-expect-error */}
 			<PortifolioPDF record={record} styles={styles} />
 		</div>
 	);
