@@ -10,8 +10,9 @@ type SectionProps = {
 
 export const ContainerColumn = ({ style, descriptionOrder = 'initial', children }: SectionProps) => {
 
-	let { containerColumn: { flexDirection: newDirection }, } = style
-
+	let cColumn = style && style.containerColumn ? style.containerColumn : { flexDirection: 'row' }
+	let fDirection = cColumn && cColumn?.flexDirection ? cColumn?.flexDirection : 'row'
+	let newDirection = fDirection
 	newDirection = descriptionOrder === 'initial' ? newDirection : newDirection + '-reverse'
 
 	return (

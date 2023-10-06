@@ -6,8 +6,8 @@ const WorkFields = () => {
 
 	return (
 		<TabbedForm>
-			<TextInput source="user_id" sx={{ display: 'none' }} value={data?.id} defaultValue={data?.id} />
 			<TabbedForm.Tab label="Informações da Obra">
+				<TextInput source="user_id" sx={{ display: 'none' }} value={data?.id} defaultValue={data?.id} />
 				{/* <TextInput source="id" hidden disabled /> */}
 				<TextInput source="title" fullWidth label={"Titulo"} validate={[required()]} />
 			</TabbedForm.Tab>

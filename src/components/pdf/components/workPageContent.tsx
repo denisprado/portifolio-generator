@@ -9,10 +9,13 @@ type SectionProps = {
 }
 
 export const WorkPageContent = ({ style, imageOrder = 'initial', children }: SectionProps) => {
-
-	let { pageContent: { flexDirection: newDirection }, } = style
+	console.log("imageOrder", imageOrder)
+	let pageContent = style && style.containerColumn ? style.pageContent : { flexDirection: 'column' }
+	let flexDirection = pageContent && pageContent?.flexDirection ? pageContent?.flexDirection : 'column'
+	let newDirection = flexDirection
 
 	newDirection = imageOrder === 'initial' ? newDirection : newDirection + '-reverse'
+	console.log("newDirection", newDirection)
 
 	return (
 		<View style={[style?.pageContent, { flexDirection: newDirection }]}>

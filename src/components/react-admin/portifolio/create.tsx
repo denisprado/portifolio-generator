@@ -1,32 +1,18 @@
-import { useThemeStyles } from '@/components/pdf/styles';
 import dynamic from "next/dynamic";
-import { Create, useGetOne, useRecordContext } from 'react-admin';
-import { PageTitle } from './edit';
+import { Create, useRecordContext } from 'react-admin';
+import { PageTitle } from "../common/PageTitle";
+import { Aside } from './Aside';
 
 const PortifolioInputs = dynamic(() => import("@/components/react-admin/portifolio/PortifolioInputs"));
-const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"), {
-	ssr: false,
-});
 
-const Aside = async () => {
-	const record = useRecordContext();
-	const { data: color_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
-	const { data: typography_theme } = useGetOne('typography_theme', { id: record?.typography_theme_id });
-	const { data: spacing_theme } = useGetOne('spacing_theme', { id: record?.spacing_theme_id });
+export const PortifolioCreate = () => {
 
-	const [styles] = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', color_theme: color_theme, typography_theme: typography_theme, spacing_theme: spacing_theme })
 	return (
-		<div style={styles?.viewer}>
-			<PortifolioPDF params={record} />
-		</div>
+		/* @ts-expect-error */
+		<Create aside={<Aside />} title={<PageTitle />} redirect={false}>
+			<PortifolioInputs />
+		</Create >
 	)
-}
-
-export const PortifolioCreate = () => (
-	/* @ts-expect-error */
-	<Create aside={<Aside />} title={<PageTitle />}>
-		<PortifolioInputs />
-	</Create >
-);
+};
 
 export default PortifolioCreate

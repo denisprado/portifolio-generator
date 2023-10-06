@@ -1,9 +1,11 @@
 import { ClearButtons, ListButtons, RichTextInput, RichTextInputToolbar } from 'ra-input-rich-text';
 import { ImageField, ImageInput, RadioButtonGroupInput, required } from 'react-admin';
-import { PageFieldsProps } from './create';
 
+type PageInputProps = {
+	n: string
+}
 
-export const PageInputs = ({ n }: PageFieldsProps) => {
+export const PageInputs = ({ n }: PageInputProps) => {
 	if (!n) {
 		return <></>;
 	}
@@ -41,10 +43,6 @@ export const PageInputs = ({ n }: PageFieldsProps) => {
 					]} />
 				</div>
 				<div className='flex flex-col items-start justify-start'>
-					<RadioButtonGroupInput label={"Orientação Vertical dos textos"} source={`image_${n}_order_image`} choices={[
-						{ id: 'flex-start', name: 'Topo' },
-						{ id: 'flex-end', name: 'Base' },
-					]} />
 					<RadioButtonGroupInput label={"Orientação horizontal dos textos"} source={`text_${n}_horizontal_align`} choices={[
 						{ id: 'left', name: 'Esquerda' },
 						{ id: 'right', name: 'Direita' },

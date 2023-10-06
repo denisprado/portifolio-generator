@@ -36,12 +36,11 @@ export type TypographyTheme = {
 
 
 export function useThemeStyles({ orientation, color_theme, typography_theme, spacing_theme }: ThemeStyles) {
-	console.log(spacing_theme)
+
 	const margin: number = spacing_theme?.magin ? Number(spacing_theme?.magin) : 0;
 	const padding: number = spacing_theme?.padding ? Number(spacing_theme?.padding) : 0;
 	const imageMargin: number = spacing_theme?.image_margin ? Number(spacing_theme?.image_margin) : 0
 
-	console.log(margin, padding, imageMargin)
 
 	const pageSetup = {
 		landscape: {
@@ -112,6 +111,7 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 		},
 		h2: {
 			fontSize: +typography_theme?.title_text_size - 8,
+			fontFamily: typography_theme?.title_font_family,
 			marginBottom: '3mm',
 			color: color_theme?.text_secondary_color
 		},
@@ -161,7 +161,6 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 
 		},
 		column: {
-
 			margin: `${margin}mm`,
 			display: 'flex',
 			width: "50%",
@@ -169,7 +168,6 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 			backgroundColor: color_theme?.background_secondary_color,
 		},
 		innerColumn: {
-
 			padding: `${padding}mm`,
 			width: "100%",
 			display: 'flex',
@@ -180,6 +178,6 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 	})
 
 	const styles = { ...page, ...image, ...textStyles, ...section, ...column }
-	console.log(styles)
+
 	return [styles]
 }

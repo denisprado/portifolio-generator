@@ -9,6 +9,7 @@ import { getAllFontFamiliesToLoad } from "@/components/fonts/lib";
 export const useRegisterReactPDFFont = () => {
 	useEffect(() => {
 		const allFontFamilies = getAllFontFamiliesToLoad();
+
 		allFontFamilies.forEach((fontFamily) => {
 			Font.register({
 				family: fontFamily,
