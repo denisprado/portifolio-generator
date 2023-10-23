@@ -3,7 +3,9 @@ import { Create } from 'react-admin';
 import { PageTitle } from "../common/PageTitle";
 import { Aside } from './Aside';
 
-const WorkFields = dynamic(() => import("./WorkFields"));
+const WorkFields = dynamic(() => import("./WorkFields"), {
+	loading: () => <p>Loading...</p>,
+});
 
 export const WorkCreate = () => (
 	/* @ts-expect-error */

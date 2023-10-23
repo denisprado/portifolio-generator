@@ -9,8 +9,8 @@ type SectionProps = {
 
 export const Section = ({ style, children }: SectionProps) => {
 	return (
-		<View style={style?.section}>
-			<View style={style?.innerSection}>
+		<View style={{ ...style?.section }}>
+			<View style={{ ...style?.innerSection }}>
 				{children}
 			</View>
 		</View>

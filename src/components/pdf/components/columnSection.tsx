@@ -1,6 +1,5 @@
 import { View } from "@react-pdf/renderer";
 import { ReactNode } from "react";
-import { ThemeStyles } from "../styles";
 
 type SectionProps = {
 	children: ReactNode
@@ -15,8 +14,10 @@ export const ContainerColumn = ({ style, descriptionOrder = 'initial', children 
 	let newDirection = fDirection
 	newDirection = descriptionOrder === 'initial' ? newDirection : newDirection + '-reverse'
 
+	const styles = { ...style?.containerColumn, flexDirection: newDirection }
+
 	return (
-		<View style={[style?.containerColumn, { flexDirection: newDirection }]}>
+		<View style={styles}>
 			{children}
 		</View>
 	)

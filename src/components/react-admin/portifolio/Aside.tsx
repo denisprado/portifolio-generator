@@ -27,8 +27,10 @@ export type PortifolioType = {
 	color_theme_id: string
 	spacing_theme_id: string
 }
-import PortifolioPDF from '@/components/pdf/portifolio';
-// const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"));
+// import PortifolioPDF from '@/components/pdf/portifolio';
+const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"), {
+	loading: () => <p>Loading...</p>,
+});
 export const Aside = async () => {
 	const record = useRecordContext() as PortifolioType
 	const { data: color_theme } = useGetOne('color_theme', { id: record?.color_theme_id });

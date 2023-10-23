@@ -8,8 +8,8 @@ type SectionProps = {
 
 export const Column = ({ style, children }: SectionProps) => {
 	return (
-		<View style={style?.column}>
-			<View style={style?.innerColumn}>
+		<View style={{ ...style.column }}>
+			<View style={{ ...style.innerColumn }}>
 				{children}
 			</View>
 		</View>

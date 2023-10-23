@@ -7,6 +7,8 @@ import { WorkPagePdf } from './WorkPagePdf';
 import { Column } from './components/column';
 import { ContainerColumn } from './components/columnSection';
 import { Section } from './components/section';
+import { ResumeIframeCSR } from './components/Frama';
+import { SuppressResumePDFErrorMessage } from '../react-admin/common/SuppressResumePDFErrorMessage';
 
 export type Orientation = 'landscape' | 'portrait';
 
@@ -39,7 +41,7 @@ const PortifolioPDF = ({ record, styles }: RecordType) => {
 
 	return (
 
-		<PDFViewer style={styles?.viewer} >
+		<ResumeIframeCSR documentSize={'A4'} scale={1} enablePDFViewer={true}>
 			<Document style={{ margin: 0 }} onRender={() => setLoading(false)}>
 
 				{/* Página 1 - Capa */}
@@ -110,7 +112,8 @@ const PortifolioPDF = ({ record, styles }: RecordType) => {
 					</View>
 				</Page>
 			</Document>
-		</PDFViewer >
+			<SuppressResumePDFErrorMessage />
+		</ResumeIframeCSR >
 	)
 };
 
