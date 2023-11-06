@@ -1,10 +1,10 @@
+import { supabaseClient } from '@/utils/supabase';
 import { StyleSheet } from '@react-pdf/renderer';
+import { PortifolioType } from '../react-admin/portifolio/Aside';
 
 export type ThemeStyles = {
 	orientation: 'landscape' | 'portrait'
-	color_theme: ColorTheme
-	typography_theme: TypographyTheme
-	spacing_theme: SpacingTheme
+	portfolio: PortifolioType
 }
 
 export type SpacingTheme = {
@@ -35,7 +35,13 @@ export type TypographyTheme = {
 
 
 
-export function useThemeStyles({ orientation, color_theme, typography_theme, spacing_theme }: ThemeStyles) {
+export async function useThemeStyles({ orientation, portfolio }: ThemeStyles) {
+
+
+	const { color_theme_id, typography_theme_id, spacing_theme_id } = portfolio
+	const { data: color_theme } = await supabaseClient.from('color_theme').select().match({ color_theme_id }).single()
+	const { data: typography_theme } = await supabaseClient.from('typography_theme').select().match({ typography_theme_id }).single()
+	const { data: spacing_theme } = await supabaseClient.from('spacing_theme').select().match({ spacing_theme_id }).single()
 
 	const margin: number = spacing_theme?.magin ? Number(spacing_theme?.magin) : 0;
 	const padding: number = spacing_theme?.padding ? Number(spacing_theme?.padding) : 0;
@@ -179,5 +185,5 @@ export function useThemeStyles({ orientation, color_theme, typography_theme, spa
 
 	const styles = { ...page, ...image, ...textStyles, ...section, ...column }
 
-	return [styles]
+	return styles
 }

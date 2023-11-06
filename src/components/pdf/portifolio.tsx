@@ -1,20 +1,22 @@
-import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
-import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
-import { useState } from 'react';
-import { Loading, useGetIdentity, useGetMany } from 'react-admin';
+import { supabaseClient } from '@/utils/supabase';
+import { Document, Image, Page, Text, View } from '@react-pdf/renderer';
+import { useGetIdentity } from 'react-admin';
+import { SuppressResumePDFErrorMessage } from '../react-admin/common/SuppressResumePDFErrorMessage';
 import { RecordType } from '../react-admin/common/useStyles';
 import { WorkPagePdf } from './WorkPagePdf';
+import { ResumeIframeCSR } from './components/Frama';
 import { Column } from './components/column';
 import { ContainerColumn } from './components/columnSection';
 import { Section } from './components/section';
-import { ResumeIframeCSR } from './components/Frama';
-import { SuppressResumePDFErrorMessage } from '../react-admin/common/SuppressResumePDFErrorMessage';
+import { useThemeStyles } from './styles';
 
 export type Orientation = 'landscape' | 'portrait';
 
-const PortifolioPDF = ({ record, styles }: RecordType) => {
-	console.log(styles)
-	useRegisterReactPDFFont()
+const PortifolioPDF = async ({ record }: RecordType) => {
+
+	//useRegisterReactPDFFont()
+
+	const styles = await useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', portfolio: record });
 
 	const image_1_src = record?.image_1_src
 	const image_2_src = record?.image_2_src
@@ -27,26 +29,17 @@ const PortifolioPDF = ({ record, styles }: RecordType) => {
 	const contact = record?.contact
 	const orientation = record?.page_layout as Orientation
 
-
-	const [loading, setLoading] = useState(true)
-
-	const { data, isLoading, error } = useGetMany(
-		'work',
-		{ ids: record?.work_id }
-	);
-	if (isLoading) { return <Loading />; }
-	if (error) { return <p>ERROR</p>; }
-
+	const { work_id } = record
+	const { data: workData } = await supabaseClient.from('portfolio').select().match({ work_id }).single()
 	const { data: user } = useGetIdentity();
 
 	return (
-
 		<ResumeIframeCSR documentSize={'A4'} scale={1} enablePDFViewer={true}>
-			<Document style={{ margin: 0 }} onRender={() => setLoading(false)}>
+			<Document style={{ margin: 0 }} >
 
 				{/* Página 1 - Capa */}
 
-				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
 						<Section style={styles}>
 							<View style={{ padding: '10mm', paddingBottom: '0' }}>
@@ -71,13 +64,13 @@ const PortifolioPDF = ({ record, styles }: RecordType) => {
 
 				{/* Obras */}
 
-				{data && data?.map(work =>
+				{workData && workData?.map((work: { id: any; }) =>
 					<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={orientation} />
 				)}
 
 				{/* 2ª Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
 						<Section style={styles}>
 							<Column style={styles}>
@@ -88,16 +81,14 @@ const PortifolioPDF = ({ record, styles }: RecordType) => {
 								<Text style={styles?.h3}>Curriculum Vitae</Text>
 								<Text style={styles?.p}>{cv}</Text>
 							</Column>
-
 						</Section>
 					</View>
 				</Page>
 
 				{/* Contra Capa */}
 
-				<Page size={"A4"} style={loading ? styles?.page : styles?.pageLoaded} orientation={orientation}>
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
-
 						<Section style={styles}>
 							<Image src={image_2_src} style={styles?.image} />
 						</Section>

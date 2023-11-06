@@ -133,7 +133,7 @@ const imageObject = (
   return { title, rawFile, url };
 };
 
-const uploadImage = async ({ rawFile, title, url }: ImageOriginal) => {
+export const uploadImage = async ({ rawFile, title, url }: ImageOriginal) => {
   if (rawFile === undefined || title === undefined) {
     return;
   }
