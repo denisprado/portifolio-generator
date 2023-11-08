@@ -3,7 +3,6 @@ import { StyleSheet } from '@react-pdf/renderer';
 import { PortifolioType } from '../react-admin/portifolio/Aside';
 
 export type ThemeStyles = {
-	orientation: 'landscape' | 'portrait'
 	portfolio: PortifolioType
 }
 
@@ -35,13 +34,15 @@ export type TypographyTheme = {
 
 
 
-export async function useThemeStyles({ orientation, portfolio }: ThemeStyles) {
+export async function useThemeStyles({ portfolio }: ThemeStyles) {
 
-
-	const { color_theme_id, typography_theme_id, spacing_theme_id } = portfolio
-	const { data: color_theme } = await supabaseClient.from('color_theme').select().match({ color_theme_id }).single()
-	const { data: typography_theme } = await supabaseClient.from('typography_theme').select().match({ typography_theme_id }).single()
-	const { data: spacing_theme } = await supabaseClient.from('spacing_theme').select().match({ spacing_theme_id }).single()
+	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = portfolio
+	if (!color_theme_id || !typography_theme_id || !spacing_theme_id || !page_layout) {
+		return
+	}
+	const { data: color_theme } = await supabaseClient.from('color_theme').select().match({ id: color_theme_id }).single()
+	const { data: typography_theme } = await supabaseClient.from('typography_theme').select().match({ id: typography_theme_id }).single()
+	const { data: spacing_theme } = await supabaseClient.from('spacing_theme').select().match({ id: spacing_theme_id }).single()
 
 	const margin: number = spacing_theme?.magin ? Number(spacing_theme?.magin) : 0;
 	const padding: number = spacing_theme?.padding ? Number(spacing_theme?.padding) : 0;
@@ -71,15 +72,15 @@ export async function useThemeStyles({ orientation, portfolio }: ThemeStyles) {
 	}
 
 	const columnSetup = {
-		height: pageSetup[orientation].height - imageSetup[orientation].height - (2 * imageMargin)
+		height: pageSetup[page_layout].height - imageSetup[page_layout].height - (2 * imageMargin)
 	}
 
 	const page = StyleSheet.create({
 		viewer: {
 			margin: 0,
-			height: `${pageSetup[orientation].height}mm`,
+			height: `${pageSetup[page_layout].height}mm`,
 			display: 'flex',
-			width: `${pageSetup[orientation].width}mm`,
+			width: `${pageSetup[page_layout].width}mm`,
 			marginHorizontal: margin,
 			marginVertical: margin
 		},
@@ -131,15 +132,15 @@ export async function useThemeStyles({ orientation, portfolio }: ThemeStyles) {
 
 	const image = StyleSheet.create({
 		image: {
-			width: `${imageSetup[orientation].width}`,
-			height: `${imageSetup[orientation].height}mm`,
+			width: `${imageSetup[page_layout].width}`,
+			height: `${imageSetup[page_layout].height}mm`,
 			margin: `${imageMargin}mm`,
 			objectFit: 'cover',
 		},
 		imageCover: {
-			width: `${imageSetup[orientation].width}`,
-			// height: `${imageSetup[orientation].height}mm`,
-			height: `${imageSetup[orientation].height - ((20) + ((+textStyles.h1 ? +textStyles.h1 : 10) / 2.83465)) + 2}mm`,
+			width: `${imageSetup[page_layout].width}`,
+			// height: `${imageSetup[page_layout].height}mm`,
+			height: `${imageSetup[page_layout].height - ((20) + ((+textStyles.h1 ? +textStyles.h1 : 10) / 2.83465)) + 2}mm`,
 			margin: `${imageMargin}mm`,
 			objectFit: 'cover',
 		},

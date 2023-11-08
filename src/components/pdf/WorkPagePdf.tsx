@@ -1,3 +1,4 @@
+'use client'
 import { Image, Page, Text } from '@react-pdf/renderer';
 import { Html } from 'react-pdf-html';
 import { Column } from './components/column';

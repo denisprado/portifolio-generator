@@ -9,7 +9,7 @@ import { useThemeStyles } from '@/components/pdf/styles';
 
 export const Aside = async () => {
 	const record = useRecordContext() as PortifolioType;
-	const styles = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', portfolio: record });
+	const styles = useThemeStyles({ portfolio: record });
 
 	return (
 		<div style={(await styles)?.viewer}>

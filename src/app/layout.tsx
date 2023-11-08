@@ -49,7 +49,7 @@ export default function RootLayout({
 
 	return (
 		<html lang="en">
-			<body className=" loading">
+			<body className="loading">
 				<SupabaseProvider>
 					{children}
 				</SupabaseProvider>

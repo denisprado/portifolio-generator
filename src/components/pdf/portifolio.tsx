@@ -1,9 +1,7 @@
-import { supabaseClient } from '@/utils/supabase';
 import { Document, Image, Page, Text, View } from '@react-pdf/renderer';
-import { useGetIdentity } from 'react-admin';
+import { useRegisterReactPDFFont } from '../fonts/hooks';
 import { SuppressResumePDFErrorMessage } from '../react-admin/common/SuppressResumePDFErrorMessage';
 import { RecordType } from '../react-admin/common/useStyles';
-import { WorkPagePdf } from './WorkPagePdf';
 import { ResumeIframeCSR } from './components/Frama';
 import { Column } from './components/column';
 import { ContainerColumn } from './components/columnSection';
@@ -13,10 +11,11 @@ import { useThemeStyles } from './styles';
 export type Orientation = 'landscape' | 'portrait';
 
 const PortifolioPDF = async ({ record }: RecordType) => {
-
 	//useRegisterReactPDFFont()
-
-	const styles = await useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', portfolio: record });
+	if (!record) {
+		return
+	}
+	const styles = await useThemeStyles({ portfolio: record });
 
 	const image_1_src = record?.image_1_src
 	const image_2_src = record?.image_2_src
@@ -30,8 +29,12 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 	const orientation = record?.page_layout as Orientation
 
 	const { work_id } = record
-	const { data: workData } = await supabaseClient.from('portfolio').select().match({ work_id }).single()
-	const { data: user } = useGetIdentity();
+	// const { data: workData } = await supabaseClient.from('portfolio').select().match({ work_id }).single()
+	// const { data: user } = useGetIdentity();
+
+	if (!styles) {
+		return
+	}
 
 	return (
 		<ResumeIframeCSR documentSize={'A4'} scale={1} enablePDFViewer={true}>
@@ -54,9 +57,9 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 								<Column style={styles}>
 									<Text style={styles?.p}>{description}</Text>
 								</Column>
-								<Column style={styles}>
+								{/* <Column style={styles}>
 									<Text style={styles?.p}>{user?.fullName}</Text>
-								</Column>
+								</Column> */}
 							</ContainerColumn>
 						</Section>
 					</View>
@@ -64,9 +67,9 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 
 				{/* Obras */}
 
-				{workData && workData?.map((work: { id: any; }) =>
+				{/* {workData && workData?.map((work: { id: any; }) =>
 					<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={orientation} />
-				)}
+				)} */}
 
 				{/* 2ª Contra Capa */}
 

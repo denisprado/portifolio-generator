@@ -15,7 +15,7 @@ type CardType = {
 
 export default function Card({ id, title, description, imageSrc }: CardType) {
 	return (
-		<Link href={`/dashboard/portfolios/${id}`} className='btn'>
+		<Link href={`/dashboard/portfolios/addForm/${id}`} className='btn'>
 			<MuiCard sx={{ maxWidth: 345 }}>
 				<CardActionArea>
 					<CardMedia

@@ -9,6 +9,18 @@ import { supabaseClient } from '@/utils/supabase';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
+export async function getUserId() {
+  const { data: userDetails } = await supabaseClient
+    .from('users')
+    .select('*')
+    .single();
+  const userId = userDetails ? userDetails.id : '';
+  if (!userId) {
+    return;
+  }
+  return userId;
+}
+
 export async function createTodo(prevState: any, formData: FormData) {
   const schema = z.object({
     title: z.string().min(1),
@@ -19,9 +31,8 @@ export async function createTodo(prevState: any, formData: FormData) {
     contact: z.string().min(1),
     user_id: z.string().min(1)
   });
-
-  const [session] = await Promise.all([getSession()]);
-  const user = session?.user;
+  console.log(formData);
+  const userId = getUserId();
 
   const data = schema.parse({
     title: formData.get('title'),
@@ -30,7 +41,7 @@ export async function createTodo(prevState: any, formData: FormData) {
     cv: formData.get('cv'),
     contact: formData.get('contact'),
     orientation: formData.get('orientation'),
-    user_id: user ? user.id : '',
+    user_id: userId,
     image_1: 'initial'
   });
 
@@ -50,7 +61,10 @@ export async function createTodo(prevState: any, formData: FormData) {
     console.error('Erro ao fazer upload da imagem:', error);
   }
   // Obtenha a URL da imagem carregada
-  const imageUrl = file ? file.path : '';
+  const imageUrl = file
+    ? 'https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/' +
+      file.path
+    : '';
   data.image_1 = imageUrl;
   console.log(data);
   try {

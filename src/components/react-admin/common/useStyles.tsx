@@ -11,7 +11,7 @@ const useStyles = async ({ record }: RecordType) => {
 	const [styles, setStyles] = useState({})
 	useEffect(() => {
 		function getStyles() {
-			const styles = useThemeStyles({ orientation: record?.page_layout ? record?.page_layout : 'portrait', portfolio: record });
+			const styles = useThemeStyles({ portfolio: record });
 			setStyles(styles)
 		}
 		getStyles()

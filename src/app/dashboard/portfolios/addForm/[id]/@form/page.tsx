@@ -26,14 +26,10 @@ export default async function Portfolio({ params, children }: {
 	}
 
 	return (
-		<div className='grid w-full grid-cols-12 gap-4 '>
-			<div className='w-full col-span-7'>
-				<AddForm />
-				<pre>{JSON.stringify(portfolio, null, 2)}</pre>
-			</div>
-			<div className='w-full col-span-5'>
-				{children}
-			</div>
+
+		<div className='w-full col-span-7'>
+			<AddForm />
 		</div>
+
 	)
 }
