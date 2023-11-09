@@ -1,5 +1,4 @@
 
-import { Roboto } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 import SupabaseProvider from './supabase-provider';
