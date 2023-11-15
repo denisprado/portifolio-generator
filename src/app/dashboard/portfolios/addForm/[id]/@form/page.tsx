@@ -7,7 +7,6 @@ import { AddForm } from './add-form'
 
 export async function generateStaticParams() {
 	const { data: portfolios } = await supabaseClient.from('portfolio').select('id')
-
 	return portfolios ? portfolios.map(({ id }) => ({
 		id,
 	})) : []
@@ -28,7 +27,7 @@ export default async function Portfolio({ params, children }: {
 	return (
 
 		<div className='w-full col-span-7'>
-			<AddForm />
+			<AddForm params={{ id: id }} />
 		</div>
 
 	)

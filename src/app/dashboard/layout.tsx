@@ -24,6 +24,8 @@ import { Drawer } from '@/components/ui/Drawer/Drawer';
 import { DrawerHeader } from '@/components/ui/DrawerHeader/DrawerHeader';
 import Link from 'next/link';
 
+export const revalidate = 0
+
 export const drawerWidth = 240;
 
 export const openedMixin = (theme: Theme): CSSObject => ({
@@ -57,7 +59,7 @@ export default function DashboardLayout({
 	children: React.ReactNode
 }) {
 	const theme = useTheme();
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(true);
 
 	const handleDrawerOpen = () => {
 		setOpen(true);

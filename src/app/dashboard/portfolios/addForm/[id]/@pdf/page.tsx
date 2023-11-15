@@ -1,6 +1,7 @@
 'use client'
 
 import { getSession } from "@/app/supabase-server";
+import { useRegisterReactPDFFont } from "@/components/fonts/hooks";
 import { WorkPagePdf } from "@/components/pdf/WorkPagePdf";
 import { Column } from "@/components/pdf/components/column";
 import { ContainerColumn } from "@/components/pdf/components/columnSection";
@@ -8,7 +9,7 @@ import { Section } from "@/components/pdf/components/section";
 import { Orientation } from "@/components/pdf/portifolio";
 import { useThemeStyles } from "@/components/pdf/styles";
 import { supabaseClient } from "@/utils/supabase";
-import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
+import ReactPDF, { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -24,39 +25,41 @@ export default function PdfView({ params, }: {
 	const { id } = params
 
 	if (!id) {
+		console.log("id", id)
 		return null
 	}
+
+	useRegisterReactPDFFont()
 
 	const [works, setWorks] = useState<any>([])
 	const [portfolio, setPortfolio] = useState<any>([])
 	const [user, setUser] = useState<any>([])
 	const [styles, setStyles] = useState<any>()
 
+
+
 	useEffect(() => {
 		const fetchWorks = async () => {
-			const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id }).single()
+			const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id: id }).single()
+
 			setPortfolio(portfolio)
 		}
 		fetchWorks()
 	}, [])
 
-	if (!portfolio) {
-		notFound()
-	}
-
 	useEffect(() => {
 		const fetchStyles = async () => {
+			console.log("portfolio", portfolio)
 			const portStyles = await useThemeStyles({ portfolio: portfolio });
+
 			setStyles(portStyles)
 		}
 		fetchStyles()
-	}, [])
+	}, [portfolio])
 
 	if (!portfolio) {
 		notFound()
 	}
-
-
 
 	const image_1 = portfolio?.image_1
 	const image_2_src = portfolio?.image_2_src
@@ -101,76 +104,80 @@ export default function PdfView({ params, }: {
 
 
 	if (!styles) {
-		return
+		return null
 	}
 
 	return (
-		<PDFViewer>
-			<Document style={{ margin: 0, width: "210mm", height: '297mm' }} >
+		<div className="w-full fixed">
 
-				{/* Página 1 - Capa */}
+			<PDFViewer style={styles?.viewer}>
 
-				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
-					<View style={styles?.pageContent}>
-						<Section style={styles}>
-							<View style={{ padding: '10mm', paddingBottom: '0' }}>
-								<Text style={styles?.h1}>{title}</Text>
-							</View>
-						</Section>
-						<Section style={styles}>
-							<Image src={image_1} style={styles?.imageCover} />
-						</Section>
-						<Section style={styles}>
-							<ContainerColumn style={styles} descriptionOrder={'initial'}>
+				<Document style={{ margin: 0, width: "210mm", height: '297mm' }}>
+
+					{/* Página 1 - Capa */}
+
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+						<View style={styles?.pageContent}>
+							<Section style={styles}>
+								<View style={{ padding: '10mm', paddingBottom: '0' }}>
+									<Text style={styles?.h1}>{title}</Text>
+								</View>
+							</Section>
+							<Section style={styles}>
+								<Image src={image_1} style={styles?.imageCover} />
+							</Section>
+							<Section style={styles}>
+								<ContainerColumn style={styles} descriptionOrder={'initial'}>
+									<Column style={styles}>
+										<Text style={styles?.p}>{description}</Text>
+									</Column>
+								</ContainerColumn>
+							</Section>
+						</View>
+					</Page>
+
+					{/* Obras */}
+
+					{works?.map((work: { id: any; }) =>
+						<WorkPagePdf key={work?.id} portfolio={work} styles={styles} page_layout_from_portifolio={orientation} />
+					)}
+
+					{/* 2ª Contra Capa */}
+
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+						<View style={styles?.pageContent}>
+							<Section style={styles}>
 								<Column style={styles}>
-									<Text style={styles?.p}>{description}</Text>
+									<Text style={styles?.h3}>Biografia</Text>
+									<Text style={styles?.p}>{bio}</Text>
 								</Column>
-							</ContainerColumn>
-						</Section>
-					</View>
-				</Page>
+								<Column style={styles}>
+									<Text style={styles?.h3}>Curriculum Vitae</Text>
+									<Text style={styles?.p}>{cv}</Text>
+								</Column>
+							</Section>
+						</View>
+					</Page>
 
-				{/* Obras */}
+					{/* Contra Capa */}
 
-				{works?.map((work: { id: any; }) =>
-					<WorkPagePdf key={work?.id} portfolio={work} styles={styles} page_layout_from_portifolio={orientation} />
-				)}
-
-				{/* 2ª Contra Capa */}
-
-				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
-					<View style={styles?.pageContent}>
-						<Section style={styles}>
-							<Column style={styles}>
-								<Text style={styles?.h3}>Biografia</Text>
-								<Text style={styles?.p}>{bio}</Text>
-							</Column>
-							<Column style={styles}>
-								<Text style={styles?.h3}>Curriculum Vitae</Text>
-								<Text style={styles?.p}>{cv}</Text>
-							</Column>
-						</Section>
-					</View>
-				</Page>
-
-				{/* Contra Capa */}
-
-				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
-					<View style={styles?.pageContent}>
-						<Section style={styles}>
-							<Image src={image_2_src} style={styles?.image} />
-						</Section>
-						<Section style={styles}>
-							<Column style={styles}>
-								<Text style={styles?.h3}>Contato</Text>
-								<Text style={styles?.p}>{contact}</Text>
-							</Column>
-							<Column style={styles}>
-							</Column>
-						</Section>
-					</View>
-				</Page>
-			</Document>
-		</PDFViewer>
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+						<View style={styles?.pageContent}>
+							<Section style={styles}>
+								<Image src={image_2_src} style={styles?.image} />
+							</Section>
+							<Section style={styles}>
+								<Column style={styles}>
+									<Text style={styles?.h3}>Contato</Text>
+									<Text style={styles?.p}>{contact}</Text>
+								</Column>
+								<Column style={styles}>
+								</Column>
+							</Section>
+						</View>
+					</Page>
+				</Document>
+			</PDFViewer>
+		</div>
 	)
 }

@@ -1,6 +1,26 @@
 import { supabaseClient } from '@/utils/supabase';
 import { StyleSheet } from '@react-pdf/renderer';
-import { PortifolioType } from '../react-admin/portifolio/Aside';
+
+export type PortifolioType = {
+	id: string
+	title: string
+	description: string
+	work_id?: string[]
+	use_profile_info?: boolean
+	download_count?: number
+	bio?: string
+	cv?: string
+	contact?: string
+	user_id: string
+	image_1?: string
+	image_2?: string
+	image_1_src?: string
+	image_2_src?: string
+	page_layout?: 'portrait' | 'landscape',
+	typography_theme_id: string
+	color_theme_id: string
+	spacing_theme_id: string
+}
 
 export type ThemeStyles = {
 	portfolio: PortifolioType
@@ -38,6 +58,7 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 
 	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = portfolio
 	if (!color_theme_id || !typography_theme_id || !spacing_theme_id || !page_layout) {
+		console.log(color_theme_id, typography_theme_id, spacing_theme_id, page_layout)
 		return
 	}
 	const { data: color_theme } = await supabaseClient.from('color_theme').select().match({ id: color_theme_id }).single()

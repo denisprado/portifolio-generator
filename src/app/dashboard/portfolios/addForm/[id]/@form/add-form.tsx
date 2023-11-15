@@ -1,5 +1,7 @@
 'use client'
-import { createTodo } from '@/app/dashboard/portfolios/actions'
+import { createPortfolio, editPortfolio } from '@/app/dashboard/portfolios/actions'
+import { PortifolioType } from '@/components/pdf/styles'
+import LoadingDots from '@/components/ui/LoadingDots'
 import { supabaseClient } from '@/utils/supabase'
 import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Typography } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
@@ -11,29 +13,26 @@ const initialState = {
 	message: '',
 }
 
+
+
 function SubmitButton() {
 	const { pending } = useFormStatus()
 
 	return (
-		<Button type="submit" aria-disabled={pending}>
+		<Button type="submit" variant='contained' aria-disabled={pending}>
 			Criar
 		</Button>
 	)
 }
 
-interface TabPanelProps {
-	children?: React.ReactNode;
-	index: number;
-	value: number;
-}
+export function AddForm({ params }: {
+	params: { id: string },
+}) {
 
-export function AddForm() {
-	const [state, formAction] = useFormState(createTodo, initialState)
-	const [value, setValue] = useState(0);
-	const [isLoading, setIsLoading] = useState(true)
-	const [works, setWorks] = useState<any>([])
-	const [userId, setUserId] = useState<any>('')
-	const [formData, setFormData] = useState({
+	const { id } = params
+
+	const [portfolioValues, setPortfolioValues] = useState<PortifolioType>({
+		id: id,
 		title: '',
 		description: '',
 		contact: '',
@@ -45,79 +44,136 @@ export function AddForm() {
 		typography_theme_id: '',
 		spacing_theme_id: '',
 		user_id: '',
-		work_id: ''
-
+		work_id: []
 	});
-	const [focusedField, setFocusedField] = useState("");
-	const [colorThemeData, setcolorThemeData] = useState<any>()
-	const [spacingThemeData, setSpacingThemeData] = useState<any>()
-	const [typographyThemeData, setTypographyThemeData] = useState<any>()
-
-
-	const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-		setFocusedField(name)
-	};
-
-	const handleCheckboxChange = (id: string) => {
-		setWorks((prevState: any) =>
-			prevState.map((work: any) =>
-				work.id === id ? { ...work, checked: !work.checked } : work
-			)
-		);
-	};
 
 	useEffect(() => {
-		const fetchUserId = async () => {
-			const { data: userDetails } = await supabaseClient
-				.from('users')
+		const fetchPortfolioValues = async () => {
+			const { data: portfolioDetails } = await supabaseClient
+				.from('portfolio')
 				.select('*')
+				.match({ id: id })
 				.single();
+			setPortfolioValues(portfolioDetails)
 
-			setUserId(userDetails.id)
-			setIsLoading(false)
 		}
-		fetchUserId()
+		id && fetchPortfolioValues()
 	}, [])
+
+	/* Edit works 
+	
+	- Lista completa de trabalhos - gravar no estado works */
+	const [works, setWorks] = useState<any>([])
 
 	useEffect(() => {
 		const fetchWorks = async () => {
 			const { data: workData } = await supabaseClient
 				.from('work')
 				.select('*')
-
 			setWorks(workData)
-			setIsLoading(false)
 		}
 		fetchWorks()
-
 	}, [])
+
+	// - Lista trabalhos delecionados */
+
+	if (!portfolioValues.work_id) {
+		return null
+	}
+
+	const [worksSelecteds, setWorksSelecteds] = useState<string[]>(portfolioValues.work_id as string[])
+	console.log(worksSelecteds)
+	/*
+		- Listar quais trabalhos estão selecionados no portfolio - portfolioValues.work_id
+	*/
+	useEffect(() => {
+
+		if (!portfolioValues) {
+			throw Error
+		}
+
+		if (!works) {
+			throw Error
+		}
+
+		if (!worksSelecteds) {
+			throw Error
+		}
+		console.log(worksSelecteds)
+
+		worksSelecteds && worksSelecteds?.map((id: string) => {
+			setWorks((prevState: any) =>
+				prevState.map((work: any) =>
+					work.id === id ? { ...work, checked: true } : { ...work, checked: false }
+				)
+			);
+		})
+	}, [worksSelecteds])
+
+
+	/*
+		- Sempre que clicar em um trabalho, gravar em portfoliosValues.work_id
+	*/
+	useEffect(() => {
+		setPortfolioValues({ ...portfolioValues, work_id: worksSelecteds });
+	}, [worksSelecteds])
+
+	useEffect(() => {
+		if (!portfolioValues.work_id) {
+			throw Error
+		}
+		setWorksSelecteds(portfolioValues.work_id);
+	}, [portfolioValues.work_id])
+
+
+	const handleCheckboxChange = (id: string) => {
+
+		setWorksSelecteds((worksSelecteds: any) => {
+			console.log("here", id, worksSelecteds, [...worksSelecteds, id])
+			return worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
+		});
+	};
+
+	const workIsChecked = (id: string) => worksSelecteds.includes(id)
+
+	const [addState, addFormAction] = useFormState(createPortfolio, initialState)
+	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
+	const [isLoading, setIsLoading] = useState(true)
+	const [userId, setUserId] = useState<any>('')
+	const [focusedField, setFocusedField] = useState("");
+	const [colorThemeData, setcolorThemeData] = useState<any>()
+	const [spacingThemeData, setSpacingThemeData] = useState<any>()
+	const [typographyThemeData, setTypographyThemeData] = useState<any>()
+
+	const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+
+		setPortfolioValues({
+			...portfolioValues,
+			[name]: value,
+		});
+
+		setFocusedField(name)
+	};
+
+	/** Themes */
 
 	useEffect(() => {
 		const fetchcolorTheme = async () => {
 			const { data: colorThemeData } = await supabaseClient
 				.from('color_theme')
 				.select('*')
-
-
 			setcolorThemeData(colorThemeData)
 			setIsLoading(false)
 		}
 		fetchcolorTheme()
 	}, [])
 
-
 	useEffect(() => {
 		const fetchSpacingTheme = async () => {
 			const { data: spacingThemeData } = await supabaseClient
 				.from('spacing_theme')
 				.select('*')
-
-
 			setSpacingThemeData(spacingThemeData)
 			setIsLoading(false)
 		}
@@ -129,13 +185,14 @@ export function AddForm() {
 			const { data: typographyThemeData } = await supabaseClient
 				.from('typography_theme')
 				.select('*')
-
-
 			setTypographyThemeData(typographyThemeData)
 			setIsLoading(false)
 		}
 		fetchTypographyTheme()
 	}, [])
+
+
+	/** User */
 
 	useEffect(() => {
 		const fetchUserId = async () => {
@@ -149,39 +206,22 @@ export function AddForm() {
 		fetchUserId()
 	}, [])
 
-
-	return (
-		<form action={formAction}>
+	return !isLoading ? (
+		<form action={id ? editFormAction : addFormAction}>
+			{id && <input id='id' name='id' hidden defaultValue={id} />}
 			<input id='user_id' name='user_id' hidden defaultValue={userId} />
-			<input type='hidden' value={workCheckedArray()} name='work_id' id="work_id"></input>
+			<input type='hidden' value={portfolioValues.work_id} name='work_id' id="work_id"></input>
 			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-
 				<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+
 					{/** Campos de texto*/}
 					<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
 						<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-							<TextField
-								label="Título"
-								variant="outlined"
-								type="text"
-								id="title"
-								name="title"
-								required
-								value={formData.title}
-								onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handleChangeValue(event) }}
-								autoFocus={focusedField === "title"}
-							/>
-							<TextField label='Descrição' variant="outlined" type="text" id="description" name="description" value={formData.description} onChange={handleChangeValue} required
-								autoFocus={focusedField === "description"} multiline
-								rows={3}
-							/>
-
-							<TextField variant="outlined" label='Mini Bio' type="text" id="bio" name="bio" value={formData.bio} onChange={handleChangeValue} autoFocus={focusedField === "bio"} multiline
-								rows={3} />
-							<TextField variant="outlined" label="Curriculum Vitae" type="text" id="cv" name="cv" value={formData.cv} onChange={handleChangeValue} autoFocus={focusedField === "cv"} multiline
-								rows={3} />
-							<TextField variant="outlined" label='Contato' type="text" id="contact" name="contact" value={formData.contact} onChange={handleChangeValue} autoFocus={focusedField === "contact"} multiline
-								rows={3} />
+							{MuiTextField("Título", "title", 1)}
+							{MuiTextField("Descrição", "description", 3)}
+							{MuiTextField("Mini Bio", "bio", 3)}
+							{MuiTextField("Curriculum Vitae", "cv", 3)}
+							{MuiTextField("Contact", "contact", 3)}
 						</Box>
 					</Box>
 
@@ -190,6 +230,7 @@ export function AddForm() {
 						<Button
 							variant="contained"
 							component="label"
+							className='my-4'
 						>
 							Upload de Imagem de Capa
 							<input
@@ -198,6 +239,7 @@ export function AddForm() {
 								id="image_1" name="image_1" accept="image/*"
 							/>
 						</Button>
+						<img className={'rounded-sm'} src={portfolioValues.image_1} width={'250px'} />
 					</Box>
 
 					{/* Works */}
@@ -208,7 +250,7 @@ export function AddForm() {
 							sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
 						>
 
-							{works?.map((work: any) => {
+							{works && works.map((work: any) => {
 								return (
 									<Card sx={{ display: 'flex' }} key={work.id}>
 										<Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -219,7 +261,7 @@ export function AddForm() {
 												<Typography variant="subtitle1" color="text.secondary" component="div">
 													{work.description}
 												</Typography>
-												<Checkbox checked={work.checked || false}
+												<Checkbox checked={workIsChecked(work.id)}
 													onChange={() => handleCheckboxChange(work.id)}
 													inputProps={{ 'aria-label': 'controlled' }} value={work.id} />
 											</CardContent>
@@ -249,8 +291,8 @@ export function AddForm() {
 								defaultValue="portrait"
 								name="page_layout"
 								id="page_layout"
-
-								value={formData.page_layout} onChange={handleChangeValue}
+								value={portfolioValues.page_layout}
+								onChange={handleChangeValue}
 							>
 								<FormControlLabel value="portrait" control={<Radio />} label="Retrato" />
 								<FormControlLabel value="landscape" control={<Radio />} label="Paisagem" />
@@ -269,7 +311,7 @@ export function AddForm() {
 								aria-labelledby="Orientation"
 								name="color_theme_id"
 								id="color_theme_id"
-								value={formData.color_theme_id} onChange={handleChangeValue}
+								value={portfolioValues.color_theme_id} onChange={handleChangeValue}
 								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
 							>
 								{colorThemeData?.map((colorTheme: any, i: number) => {
@@ -299,7 +341,7 @@ export function AddForm() {
 								defaultValue="portrait"
 								name="typography_theme_id"
 								id="typography_theme_id"
-								value={formData.typography_theme_id} onChange={handleChangeValue}
+								value={portfolioValues.typography_theme_id} onChange={handleChangeValue}
 								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
 							>
 								{typographyThemeData?.map((typographyTheme: any, i: number) => {
@@ -328,7 +370,7 @@ export function AddForm() {
 								aria-labelledby="Spacing Thme"
 								name="spacing_theme_id"
 								id="spacing_theme_id"
-								value={formData.spacing_theme_id} onChange={handleChangeValue}
+								value={portfolioValues.spacing_theme_id} onChange={handleChangeValue}
 								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
 							>
 								{spacingThemeData?.map((spacingTheme: any, i: number) => {
@@ -348,17 +390,28 @@ export function AddForm() {
 			</Box>
 			<SubmitButton />
 			<p aria-live="polite" className="sr-only" role="status">
-				{state?.message}
+				{id ? editState?.message : addState?.message}
 			</p>
 		</form >
-	)
+	) : <div className='h-52 flex justify-center items-center w-full'><LoadingDots></LoadingDots></div>
 
-	function workCheckedArray(): readonly string[] {
-		const checkedWorks = works.filter((w: { checked: boolean; id: string }) => w.checked).map((w: any) => w.id)
-		if (!checkedWorks) {
-			throw Error
-		}
-		console.log(checkedWorks.toString())
-		return checkedWorks
+
+	function MuiTextField(label: string, fieldId: keyof PortifolioType, rows: number) {
+		return <TextField
+			label={label}
+			variant="outlined"
+			type="text"
+			id={fieldId}
+			name={fieldId}
+			required
+			value={portfolioValues[fieldId]}
+			onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handleChangeValue(event) }}
+			autoFocus={focusedField === fieldId}
+			multiline={rows > 1}
+			rows={rows}
+		/>
+
 	}
 }
+
+

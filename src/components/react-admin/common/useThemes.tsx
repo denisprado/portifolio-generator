@@ -1,5 +1,6 @@
+import { PortifolioType } from '@/components/pdf/styles';
 import { Identifier, RaRecord, useGetOne } from 'react-admin';
-import { PortifolioType } from '../portifolio/Aside';
+
 
 // import { Container } from './styles';
 type RecordType = {

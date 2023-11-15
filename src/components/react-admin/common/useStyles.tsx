@@ -1,7 +1,5 @@
-import { useThemeStyles } from '@/components/pdf/styles';
-import { PortifolioType } from '../portifolio/Aside';
-import useThemes from './useThemes';
-import { useGetOne } from 'react-admin';
+import { PortifolioType, useThemeStyles } from '@/components/pdf/styles';
+
 import { useEffect, useState } from 'react';
 
 export type RecordType = {

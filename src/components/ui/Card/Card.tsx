@@ -3,17 +3,18 @@ import MuiCard from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { CardActionArea, CardActions } from '@mui/material';
 import Link from 'next/link';
 
 type CardType = {
 	title: string,
 	description: string,
 	imageSrc: string,
-	id: string
+	id: string,
+	cardActions: React.ReactNode
 }
 
-export default function Card({ id, title, description, imageSrc }: CardType) {
+export default function Card({ id, title, description, imageSrc, cardActions }: CardType) {
 	return (
 		<Link href={`/dashboard/portfolios/addForm/${id}`} className='btn'>
 			<MuiCard sx={{ maxWidth: 345 }}>
@@ -32,6 +33,9 @@ export default function Card({ id, title, description, imageSrc }: CardType) {
 							{description}
 						</Typography>
 					</CardContent>
+					<CardActions disableSpacing>
+						{cardActions}
+					</CardActions>
 				</CardActionArea>
 			</MuiCard>
 		</Link>

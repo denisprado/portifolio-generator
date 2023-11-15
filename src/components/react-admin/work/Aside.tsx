@@ -1,8 +1,5 @@
+import { PortifolioType, useThemeStyles } from '@/components/pdf/styles';
 import { useRecordContext } from 'react-admin';
-
-import { PortifolioType } from '../portifolio/Aside';
-
-import { useThemeStyles } from '@/components/pdf/styles';
 // const WorkPDF = dynamic(() => import("@/components/pdf/work"), {
 // 	loading: () => <p>Loading...</p>,
 // });
