@@ -15,10 +15,10 @@ export const useRegisterReactPDFFont = () => {
 				family: fontFamily,
 				fonts: [
 					{
-						src: `fonts/${fontFamily}-Regular.ttf`,
+						src: `/fonts/${fontFamily}-Regular.ttf`,
 					},
 					{
-						src: `fonts/${fontFamily}-Bold.ttf`,
+						src: `/fonts/${fontFamily}-Bold.ttf`,
 						fontWeight: "bold",
 					},
 				],

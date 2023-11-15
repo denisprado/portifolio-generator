@@ -18,7 +18,7 @@ export default async function Portfolio({ params, children }: {
 }) {
 	const { id } = params
 
-	const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id }).single()
+	const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ 'id': id }).single()
 
 	if (!portfolio) {
 		notFound()

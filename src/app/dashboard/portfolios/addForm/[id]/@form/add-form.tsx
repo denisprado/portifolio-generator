@@ -49,13 +49,14 @@ export function AddForm({ params }: {
 
 	useEffect(() => {
 		const fetchPortfolioValues = async () => {
-			const { data: portfolioDetails } = await supabaseClient
-				.from('portfolio')
-				.select('*')
-				.match({ id: id })
-				.single();
-			setPortfolioValues(portfolioDetails)
-
+			if (id) {
+				const { data: portfolioDetails } = await supabaseClient
+					.from('portfolio')
+					.select('*')
+					.match({ id: id })
+					.single();
+				setPortfolioValues(portfolioDetails)
+			}
 		}
 		id && fetchPortfolioValues()
 	}, [])
@@ -82,7 +83,6 @@ export function AddForm({ params }: {
 	}
 
 	const [worksSelecteds, setWorksSelecteds] = useState<string[]>(portfolioValues.work_id as string[])
-	console.log(worksSelecteds)
 	/*
 		- Listar quais trabalhos estão selecionados no portfolio - portfolioValues.work_id
 	*/
@@ -99,7 +99,6 @@ export function AddForm({ params }: {
 		if (!worksSelecteds) {
 			throw Error
 		}
-		console.log(worksSelecteds)
 
 		worksSelecteds && worksSelecteds?.map((id: string) => {
 			setWorks((prevState: any) =>
@@ -129,7 +128,6 @@ export function AddForm({ params }: {
 	const handleCheckboxChange = (id: string) => {
 
 		setWorksSelecteds((worksSelecteds: any) => {
-			console.log("here", id, worksSelecteds, [...worksSelecteds, id])
 			return worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
 		});
 	};

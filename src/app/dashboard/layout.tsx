@@ -23,6 +23,7 @@ import { AppBar } from '@/components/ui/AppBar/AppBar';
 import { Drawer } from '@/components/ui/Drawer/Drawer';
 import { DrawerHeader } from '@/components/ui/DrawerHeader/DrawerHeader';
 import Link from 'next/link';
+import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
 
 export const revalidate = 0
 
@@ -58,6 +59,7 @@ export default function DashboardLayout({
 }: {
 	children: React.ReactNode
 }) {
+	useRegisterReactPDFFont()
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(true);
 

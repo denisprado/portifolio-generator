@@ -1,7 +1,5 @@
 'use client'
 
-import { getSession } from "@/app/supabase-server";
-import { useRegisterReactPDFFont } from "@/components/fonts/hooks";
 import { WorkPagePdf } from "@/components/pdf/WorkPagePdf";
 import { Column } from "@/components/pdf/components/column";
 import { ContainerColumn } from "@/components/pdf/components/columnSection";
@@ -9,15 +7,9 @@ import { Section } from "@/components/pdf/components/section";
 import { Orientation } from "@/components/pdf/portifolio";
 import { useThemeStyles } from "@/components/pdf/styles";
 import { supabaseClient } from "@/utils/supabase";
-import ReactPDF, { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
+import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
-
-
-// const PortifolioPDF = dynamic(() => import("@/components/pdf/portifolio"), {
-// 	loading: () => <p>Loading...</p>,
-// 	ssr: false
-// });
 
 export default function PdfView({ params, }: {
 	params: { id: string },
@@ -25,31 +17,26 @@ export default function PdfView({ params, }: {
 	const { id } = params
 
 	if (!id) {
-		console.log("id", id)
 		return null
 	}
-
-	useRegisterReactPDFFont()
 
 	const [works, setWorks] = useState<any>([])
 	const [portfolio, setPortfolio] = useState<any>([])
 	const [user, setUser] = useState<any>([])
 	const [styles, setStyles] = useState<any>()
 
-
-
 	useEffect(() => {
-		const fetchWorks = async () => {
-			const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id: id }).single()
-
-			setPortfolio(portfolio)
+		const fetchPortfolios = async () => {
+			if (id) {
+				const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id: id }).single()
+				setPortfolio(portfolio)
+			}
 		}
-		fetchWorks()
+		fetchPortfolios()
 	}, [])
 
 	useEffect(() => {
 		const fetchStyles = async () => {
-			console.log("portfolio", portfolio)
 			const portStyles = await useThemeStyles({ portfolio: portfolio });
 
 			setStyles(portStyles)
@@ -91,18 +78,17 @@ export default function PdfView({ params, }: {
 	}, [])
 
 	useEffect(() => {
-		const fetchWorks = async () => {
-			const { data: workData } = await supabaseClient.from('portfolio').select().match({ work_id }).single()
-
-			if (!workData) {
-				return null
+		if (work_id) {
+			const fetchWorks = async () => {
+				const { data: workData } = await supabaseClient.from('work').select().match({ 'id': work_id }).single()
+				if (!workData) {
+					return null
+				}
+				setWorks(workData)
 			}
-			setWorks(workData)
+			fetchWorks()
 		}
-		fetchWorks()
 	}, [])
-
-
 	if (!styles) {
 		return null
 	}
