@@ -9,7 +9,6 @@ type RecordType = {
 
 const useThemes = ({ record }: RecordType) => {
 
-	console.log(record)
 	const { data: color_theme } = useGetOne('color_theme', { id: record?.color_theme_id });
 	const { data: typography_theme } = useGetOne('typography_theme', { id: record?.typography_theme_id });
 	const { data: spacing_theme } = useGetOne('spacing_theme', { id: record?.spacing_theme_id });

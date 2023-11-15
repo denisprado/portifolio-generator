@@ -58,7 +58,6 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 
 	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = portfolio
 	if (!color_theme_id || !typography_theme_id || !spacing_theme_id || !page_layout) {
-		console.log(color_theme_id, typography_theme_id, spacing_theme_id, page_layout)
 		return
 	}
 	const { data: color_theme } = await supabaseClient.from('color_theme').select().match({ id: color_theme_id }).single()

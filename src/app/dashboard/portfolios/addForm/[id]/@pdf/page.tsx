@@ -59,10 +59,6 @@ export default function PdfView({ params, }: {
 
 	const { work_id } = portfolio
 
-	if (!works) {
-		return null
-	}
-
 	useEffect(() => {
 		const fetchUserId = async () => {
 			const { data: userDetails } = await supabaseClient
@@ -78,18 +74,27 @@ export default function PdfView({ params, }: {
 	}, [])
 
 	useEffect(() => {
+
 		if (work_id) {
+
 			const fetchWorks = async () => {
-				const { data: workData } = await supabaseClient.from('work').select().match({ 'id': work_id }).single()
+				const { data: workData } = await supabaseClient.from('work').select().in('id', work_id)
 				if (!workData) {
 					return null
 				}
+
 				setWorks(workData)
 			}
 			fetchWorks()
 		}
-	}, [])
+	}, [work_id])
+
 	if (!styles) {
+		return null
+	}
+
+
+	if (!works) {
 		return null
 	}
 
@@ -125,7 +130,7 @@ export default function PdfView({ params, }: {
 					{/* Obras */}
 
 					{works?.map((work: { id: any; }) =>
-						<WorkPagePdf key={work?.id} portfolio={work} styles={styles} page_layout_from_portifolio={orientation} />
+						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={orientation} />
 					)}
 
 					{/* 2ª Contra Capa */}

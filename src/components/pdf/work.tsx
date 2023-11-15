@@ -8,11 +8,7 @@ import { useThemeStyles } from './styles';
 
 
 const WorkPDF = ({ record, styles, page_layout }: any) => {
-
-	useRegisterReactPDFFont()
-
 	const orientation = page_layout !== undefined ? page_layout as Orientation : record?.page_layout as Orientation
-
 
 	return (
 		<PDFViewer style={styles?.viewer}>

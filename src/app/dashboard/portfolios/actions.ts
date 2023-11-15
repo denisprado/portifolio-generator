@@ -32,7 +32,6 @@ export async function createPortfolio(prevState: any, formData: FormData) {
     work_id: z.string().array().min(1).or(z.string().min(1)),
     user_id: z.string().min(1)
   });
-  console.log(formData);
 
   const data = schema.parse({
     title: formData.get('title'),
@@ -73,7 +72,6 @@ export async function createPortfolio(prevState: any, formData: FormData) {
       file.path
     : '';
   data.image_1 = imageUrl;
-  console.log(data);
 
   try {
     const { data: dataOk, error } = await supabaseClient
@@ -81,7 +79,6 @@ export async function createPortfolio(prevState: any, formData: FormData) {
       .insert(data)
       .select();
 
-    console.log(dataOk, error);
     if (!dataOk) {
       throw Error;
     }
@@ -108,7 +105,6 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     work_id: z.string().array().min(1).or(z.string().min(1)),
     user_id: z.string().min(1)
   });
-  console.log(formData);
 
   const data = schema.parse({
     id: formData.get('id'),
@@ -150,15 +146,12 @@ export async function editPortfolio(prevState: any, formData: FormData) {
       file.path
     : '';
   data.image_1 = imageUrl;
-  console.log(data.work_id);
 
   try {
     const { data: dataOk, error } = await supabaseClient
       .from('portfolio')
       .update(data)
       .eq('id', data.id);
-
-    console.log(dataOk, error);
 
     revalidatePath(`/dashboard/portfolios/`);
     redirect(`/`);
