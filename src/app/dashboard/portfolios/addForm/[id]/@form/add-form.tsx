@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
+import { unknown } from 'zod'
 
 const initialState = {
 	message: '',
@@ -19,8 +20,9 @@ function SubmitButton() {
 	const { pending } = useFormStatus()
 
 	return (
-		<Button type="submit" variant='contained' aria-disabled={pending}>
-			Criar
+		<Button component="a" href="#"
+			className='my-4 w-full' type="submit" variant='contained' aria-disabled={pending}>
+			Salvar
 		</Button>
 	)
 }
@@ -39,6 +41,7 @@ export function AddForm({ params }: {
 		bio: '',
 		cv: '',
 		image_1: '',
+		image_2: '',
 		page_layout: 'portrait',
 		color_theme_id: '',
 		typography_theme_id: '',
@@ -46,6 +49,7 @@ export function AddForm({ params }: {
 		user_id: '',
 		work_id: []
 	});
+
 
 	useEffect(() => {
 		const fetchPortfolioValues = async () => {
@@ -204,8 +208,12 @@ export function AddForm({ params }: {
 		fetchUserId()
 	}, [])
 
+	const editForm = async (formData: FormData) => {
+		editFormAction(formData);
+	}
+
 	return !isLoading ? (
-		<form action={id ? editFormAction : addFormAction}>
+		<form action={id ? editForm : addFormAction} id="portfolioForm">
 			{id && <input id='id' name='id' hidden defaultValue={id} />}
 			<input id='user_id' name='user_id' hidden defaultValue={userId} />
 			<input type='hidden' value={portfolioValues.work_id} name='work_id' id="work_id"></input>
@@ -225,19 +233,10 @@ export function AddForm({ params }: {
 
 					{/** Upload de imagens */}
 					<Box>
-						<Button
-							variant="contained"
-							component="label"
-							className='my-4'
-						>
-							Upload de Imagem de Capa
-							<input
-								type="file"
-								hidden
-								id="image_1" name="image_1" accept="image/*"
-							/>
-						</Button>
-						<img className={'rounded-sm'} src={portfolioValues.image_1} width={'250px'} />
+						<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
+							{imageUpload("image_1", "image_1", "Upload da Capa")}
+							{imageUpload("image_2", "image_2", "Upload da contra capa")}
+						</Box>
 					</Box>
 
 					{/* Works */}
@@ -394,6 +393,33 @@ export function AddForm({ params }: {
 	) : <div className='h-52 flex justify-center items-center w-full'><LoadingDots></LoadingDots></div>
 
 
+	function imageUpload(imageId: string, index: "image_1" | "image_2", labelButton: string) {
+		return <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+			<Button
+				variant="contained"
+				component="label"
+				className='my-4 w-full'
+			>
+				{labelButton}
+				<input
+					type="file"
+					hidden
+					id={imageId} name={imageId} accept="image/*" />
+			</Button>
+			<img className={'rounded-sm'} src={portfolioValues[index]} width={'250px'} />
+		</Box>
+	}
+
+	function objectToFormData(obj: { [s: string]: any } | ArrayLike<unknown>) {
+		const formData = new FormData();
+
+		Object.entries(obj).forEach(([key, value]) => {
+			formData.append(key, value);
+		});
+
+		return formData;
+	}
+
 	function MuiTextField(label: string, fieldId: keyof PortifolioType, rows: number) {
 		return <TextField
 			label={label}
@@ -407,6 +433,12 @@ export function AddForm({ params }: {
 			autoFocus={focusedField === fieldId}
 			multiline={rows > 1}
 			rows={rows}
+			inputProps={{
+				onBlur: () => {
+					editForm(objectToFormData(portfolioValues))
+				}
+			}}
+
 		/>
 
 	}

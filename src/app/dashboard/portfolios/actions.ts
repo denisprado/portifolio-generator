@@ -22,6 +22,7 @@ export async function createPortfolio(prevState: any, formData: FormData) {
     title: z.string().min(1),
     description: z.string().min(1),
     image_1: z.string().min(1),
+    image_2: z.string().min(1),
     bio: z.string().min(1),
     cv: z.string().min(1),
     contact: z.string().min(1),
@@ -42,24 +43,48 @@ export async function createPortfolio(prevState: any, formData: FormData) {
     page_layout: formData.get('page_layout'),
     user_id: formData.get('user_id'),
     image_1: 'initial',
+    image_2: 'initial',
     spacing_theme_id: formData.get('spacing_theme_id'),
     color_theme_id: formData.get('color_theme_id'),
     typography_theme_id: formData.get('typography_theme_id'),
     work_id: formData.get('work_id')
   });
 
-  const imageFile = formData.get('image_1');
-  if (imageFile === null) {
+  data.work_id = data.work_id.toString().split(',');
+
+  // Upload de imagens
+
+  data.image_1 = await uploadImage(formData, 'image_1');
+  data.image_2 = await uploadImage(formData, 'image_2');
+
+  /** Update */
+
+  try {
+    const { data: dataOk, error } = await supabaseClient
+      .from('portfolio')
+      .insert(data)
+      .select();
+    console.log(dataOk);
+    if (!dataOk) {
+      throw Error;
+    }
+    revalidatePath(`/dashboard/portfolios/${dataOk[0].id}`);
+    redirect(`/dashboard/portfolios`);
+  } catch (e) {
+    console.log(e);
+    return { message: 'Failed to create portfolio' };
+  }
+}
+
+async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
+  const imageFile1 = formData.get(label);
+  if (imageFile1 === null) {
     throw Error;
   }
 
-  data.work_id = data.work_id.toString().split(',');
-
-  // Upload de imagem
-
   const { data: file, error } = await supabaseClient.storage
     .from('images')
-    .upload(`images/image_${Date.now()}.png`, imageFile, {
+    .upload(`images/image_${Date.now()}.png`, imageFile1, {
       cacheControl: '3600',
       upsert: true
     });
@@ -71,30 +96,16 @@ export async function createPortfolio(prevState: any, formData: FormData) {
     ? 'https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/' +
       file.path
     : '';
-  data.image_1 = imageUrl;
-
-  try {
-    const { data: dataOk, error } = await supabaseClient
-      .from('portfolio')
-      .insert(data)
-      .select();
-
-    if (!dataOk) {
-      throw Error;
-    }
-    revalidatePath(`/dashboard/portfolios/${dataOk[0].id}`);
-    redirect(`/dashboard/portfolios`);
-  } catch (e) {
-    console.log(e);
-    return { message: 'Failed to create portfolio' };
-  }
+  return imageUrl;
 }
+
 export async function editPortfolio(prevState: any, formData: FormData) {
   const schema = z.object({
     id: z.string().min(1),
     title: z.string().min(1),
     description: z.string().min(1),
     image_1: z.string().min(1),
+    image_2: z.string().min(1),
     bio: z.string().min(1),
     cv: z.string().min(1),
     contact: z.string().min(1),
@@ -116,14 +127,15 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     page_layout: formData.get('page_layout'),
     user_id: formData.get('user_id'),
     image_1: 'initial',
+    image_2: 'initial',
     spacing_theme_id: formData.get('spacing_theme_id'),
     color_theme_id: formData.get('color_theme_id'),
     typography_theme_id: formData.get('typography_theme_id'),
     work_id: formData.get('work_id')
   });
 
-  const imageFile = formData.get('image_1');
-  if (imageFile === null) {
+  const imageFile1 = formData.get('image_1');
+  if (imageFile1 === null) {
     throw Error;
   }
 
@@ -131,30 +143,19 @@ export async function editPortfolio(prevState: any, formData: FormData) {
 
   // Upload de imagem
 
-  const { data: file, error } = await supabaseClient.storage
-    .from('images')
-    .upload(`images/image_${Date.now()}.png`, imageFile, {
-      cacheControl: '3600',
-      upsert: true
-    });
-
-  if (error) {
-    console.error('Erro ao fazer upload da imagem:', error);
-  }
-  const imageUrl = file
-    ? 'https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/' +
-      file.path
-    : '';
-  data.image_1 = imageUrl;
+  data.image_1 = await uploadImage(formData, 'image_1');
+  data.image_2 = await uploadImage(formData, 'image_2');
 
   try {
     const { data: dataOk, error } = await supabaseClient
       .from('portfolio')
       .update(data)
       .eq('id', data.id);
-
-    revalidatePath(`/dashboard/portfolios/`);
-    redirect(`/`);
+    console.log(dataOk);
+    if (!dataOk) {
+      throw Error;
+    }
+    revalidatePath(`/dashboard/portfolios/${dataOk[0]}`);
   } catch (e) {
     console.log(e);
     return { message: 'Failed to update portfolio' };

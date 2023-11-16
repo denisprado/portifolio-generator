@@ -25,6 +25,21 @@ export default function PdfView({ params, }: {
 	const [user, setUser] = useState<any>([])
 	const [styles, setStyles] = useState<any>()
 
+
+
+	useEffect(() => {
+		const fetchPortfolios = async () => {
+			if (id) {
+				const channels = await supabaseClient.channel('room1')
+					.on('postgres_changes', { event: '*', schema: '*' }, payload => {
+						setPortfolio(payload.new)
+					})
+					.subscribe()
+			}
+		}
+		fetchPortfolios()
+	}, [portfolio])
+
 	useEffect(() => {
 		const fetchPortfolios = async () => {
 			if (id) {
@@ -48,16 +63,14 @@ export default function PdfView({ params, }: {
 		notFound()
 	}
 
-	const image_1 = portfolio?.image_1
-	const image_2_src = portfolio?.image_2_src
-	const title = portfolio?.title
-	const description = portfolio?.description
-	const bio = portfolio?.bio
-	const cv = portfolio?.cv
-	const contact = portfolio?.contact
-	const orientation = portfolio?.page_layout as Orientation
-
-	const { work_id } = portfolio
+	const { work_id, image_1,
+		image_2,
+		title,
+		description,
+		bio,
+		cv,
+		contact,
+		page_layout } = portfolio
 
 	useEffect(() => {
 		const fetchUserId = async () => {
@@ -98,6 +111,7 @@ export default function PdfView({ params, }: {
 		return null
 	}
 
+
 	return (
 		<div className="w-full fixed">
 
@@ -107,7 +121,7 @@ export default function PdfView({ params, }: {
 
 					{/* Página 1 - Capa */}
 
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
 						<View style={styles?.pageContent}>
 							<Section style={styles}>
 								<View style={{ padding: '10mm', paddingBottom: '0' }}>
@@ -130,12 +144,12 @@ export default function PdfView({ params, }: {
 					{/* Obras */}
 
 					{works?.map((work: { id: any; }) =>
-						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={orientation} />
+						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={page_layout} />
 					)}
 
 					{/* 2ª Contra Capa */}
 
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
 						<View style={styles?.pageContent}>
 							<Section style={styles}>
 								<Column style={styles}>
@@ -152,10 +166,10 @@ export default function PdfView({ params, }: {
 
 					{/* Contra Capa */}
 
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
+					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
 						<View style={styles?.pageContent}>
 							<Section style={styles}>
-								<Image src={image_2_src} style={styles?.image} />
+								<Image src={image_2} style={styles?.image} />
 							</Section>
 							<Section style={styles}>
 								<Column style={styles}>

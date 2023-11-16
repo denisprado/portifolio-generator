@@ -12,8 +12,8 @@ export type PortifolioType = {
 	cv?: string
 	contact?: string
 	user_id: string
-	image_1?: string
-	image_2?: string
+	image_1: string
+	image_2: string
 	image_1_src?: string
 	image_2_src?: string
 	page_layout?: 'portrait' | 'landscape',
