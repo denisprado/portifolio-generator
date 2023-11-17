@@ -10,11 +10,11 @@ import { Orientation } from './portifolio';
 
 export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any) => {
 	if (!styles) {
-		return
+		return null
 	}
 
 	if (!record) {
-		return
+		return null
 	}
 
 	const orientation = page_layout_from_portifolio !== undefined ? page_layout_from_portifolio as Orientation : record?.page_layout as Orientation;
@@ -44,33 +44,36 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 		}
 	];
 
-	return pages && pages.map((page, i) => <Page size={"A4"} style={styles.page} orientation={orientation} key={i}>
-		{page.image && <WorkPageContent style={styles} imageOrder={page?.image_order}>
+	if (!pages) return null
 
-			<Section style={styles}>
-				<Image src={page.image} style={styles.image} />
-			</Section>
+	return <>{pages.map((page, i) =>
+		<Page size={"A4"} style={styles.page} orientation={orientation} key={i}>
+			<WorkPageContent style={styles} imageOrder={page?.image_order}>
 
-			<Section style={styles}>
-				<ContainerColumn style={styles} descriptionOrder={page.description_order}>
-					<Column style={styles}>
-						{i === 0 &&
-							<Text style={styles.h2}>{title}</Text>}
+				<Section style={styles}>
+					<Image src={page.image} style={styles.image} />
+				</Section>
 
-						<Text style={styles.p}>
-							{page?.description}
-						</Text>
-					</Column>
-					<Column style={styles}>
-						<Html stylesheet={styles}>
-							{page?.tech_description}
-						</Html>
-					</Column>
-				</ContainerColumn>
-			</Section>
+				<Section style={styles}>
+					<ContainerColumn style={styles} descriptionOrder={page.description_order}>
+						<Column style={styles}>
+							{i === 0 &&
+								<Text style={styles.h2}>{title}</Text>}
 
-		</WorkPageContent>}
-	</Page>
+							<Text style={styles.p}>
+								{page?.description}
+							</Text>
+						</Column>
+						<Column style={styles}>
+							<Html stylesheet={styles}>
+								{page?.tech_description}
+							</Html>
+						</Column>
+					</ContainerColumn>
+				</Section>
+
+			</WorkPageContent>
+		</Page>
 	)
-
+	}</>
 };

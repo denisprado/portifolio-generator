@@ -143,7 +143,7 @@ export default function PdfView({ params, }: {
 
 					{/* Obras */}
 
-					{works?.map((work: { id: any; }) =>
+					{works && works?.map((work: { id: any; }) =>
 						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={page_layout} />
 					)}
 
