@@ -50,7 +50,7 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 							</View>
 						</Section>
 						<Section style={styles}>
-							<Image src={image_1_src} style={styles?.imageCover} />
+							{/* <Image src={image_1_src} style={styles?.imageCover} /> */}
 						</Section>
 						<Section style={styles}>
 							<ContainerColumn style={styles} descriptionOrder={'initial'}>
@@ -93,7 +93,7 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
 						<Section style={styles}>
-							<Image src={image_2_src} style={styles?.image} />
+							{/* <Image src={image_2_src} style={styles?.image} /> */}
 						</Section>
 						<Section style={styles}>
 							<Column style={styles}>

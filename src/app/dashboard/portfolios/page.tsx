@@ -48,7 +48,7 @@ export default function portfolios() {
 
 				</Grid>
 			))}
-			<Fab color="primary" aria-label="edit">
+			<Fab color="primary" aria-label="edit" onClick={() => router.push('portfolios/addForm/new')}>
 				<Add color="primary" />
 			</Fab>
 		</Grid>

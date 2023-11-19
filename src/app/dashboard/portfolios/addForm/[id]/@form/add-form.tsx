@@ -1,20 +1,23 @@
 'use client'
-import { createPortfolio, editPortfolio } from '@/app/dashboard/portfolios/actions'
-import { PortifolioType } from '@/components/pdf/styles'
+
+import { create, editPortfolio } from '@/app/dashboard/portfolios/actions'
+import { PortifolioType, WorkType } from '@/components/pdf/styles'
 import LoadingDots from '@/components/ui/LoadingDots'
 import { supabaseClient } from '@/utils/supabase'
 import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Typography } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
+import { redirect } from 'next/navigation'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
-import { unknown } from 'zod'
+import { v4 } from 'uuid'
+
+const NEW = 'new'
 
 const initialState = {
 	message: '',
+	id: NEW
 }
-
-
 
 function SubmitButton() {
 	const { pending } = useFormStatus()
@@ -27,15 +30,33 @@ function SubmitButton() {
 	)
 }
 
-export function AddForm({ params }: {
-	params: { id: string },
-}) {
+const PORTFOLIO = 'portfolio'
 
-	const { id } = params
+export function AddForm({ params: { id } }: { params: { id: string } }) {
+
+	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
+
+	const [isLoading, setIsLoading] = useState(true)
+	const [userId, setUserId] = useState<any>('')
+	const [focusedField, setFocusedField] = useState("");
+	const [colorThemeData, setcolorThemeData] = useState<any>()
+	const [spacingThemeData, setSpacingThemeData] = useState<any>()
+	const [typographyThemeData, setTypographyThemeData] = useState<any>()
+
+	useEffect(() => {
+		id === 'new' && create()
+	}, [])
+
 
 	const [portfolioValues, setPortfolioValues] = useState<PortifolioType>({
 		id: id,
 		title: '',
+		created_at: '',
+		download_count: 0,
+		image_1_src: '',
+		image_2_src: '',
+		updated_at: '',
+		use_profile_info: true,
 		description: '',
 		contact: '',
 		bio: '',
@@ -51,24 +72,26 @@ export function AddForm({ params }: {
 	});
 
 
+
+
 	useEffect(() => {
 		const fetchPortfolioValues = async () => {
-			if (id) {
+			if (id !== NEW) {
 				const { data: portfolioDetails } = await supabaseClient
-					.from('portfolio')
+					.from(PORTFOLIO)
 					.select('*')
 					.match({ id: id })
 					.single();
-				setPortfolioValues(portfolioDetails)
+				setPortfolioValues(portfolioDetails as PortifolioType)
 			}
 		}
-		id && fetchPortfolioValues()
+		id !== NEW && fetchPortfolioValues()
 	}, [])
 
 	/* Edit works 
-	
+		
 	- Lista completa de trabalhos - gravar no estado works */
-	const [works, setWorks] = useState<any>([])
+	const [works, setWorks] = useState<WorkType[] | null>([])
 
 	useEffect(() => {
 		const fetchWorks = async () => {
@@ -80,29 +103,11 @@ export function AddForm({ params }: {
 		fetchWorks()
 	}, [])
 
-	// - Lista trabalhos delecionados */
-
-	if (!portfolioValues.work_id) {
-		return null
-	}
-
-	const [worksSelecteds, setWorksSelecteds] = useState<string[]>(portfolioValues.work_id as string[])
+	const [worksSelecteds, setWorksSelecteds] = useState<string[]>(portfolioValues?.work_id as string[])
 	/*
 		- Listar quais trabalhos estão selecionados no portfolio - portfolioValues.work_id
 	*/
 	useEffect(() => {
-
-		if (!portfolioValues) {
-			throw Error
-		}
-
-		if (!works) {
-			throw Error
-		}
-
-		if (!worksSelecteds) {
-			throw Error
-		}
 
 		worksSelecteds && worksSelecteds?.map((id: string) => {
 			setWorks((prevState: any) =>
@@ -123,14 +128,13 @@ export function AddForm({ params }: {
 
 	useEffect(() => {
 		if (!portfolioValues.work_id) {
-			throw Error
+			return
 		}
 		setWorksSelecteds(portfolioValues.work_id);
 	}, [portfolioValues.work_id])
 
 
 	const handleCheckboxChange = (id: string) => {
-
 		setWorksSelecteds((worksSelecteds: any) => {
 			return worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
 		});
@@ -138,25 +142,22 @@ export function AddForm({ params }: {
 
 	const workIsChecked = (id: string) => worksSelecteds.includes(id)
 
-	const [addState, addFormAction] = useFormState(createPortfolio, initialState)
-	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
-	const [isLoading, setIsLoading] = useState(true)
-	const [userId, setUserId] = useState<any>('')
-	const [focusedField, setFocusedField] = useState("");
-	const [colorThemeData, setcolorThemeData] = useState<any>()
-	const [spacingThemeData, setSpacingThemeData] = useState<any>()
-	const [typographyThemeData, setTypographyThemeData] = useState<any>()
+
 
 	const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-
-		setPortfolioValues({
-			...portfolioValues,
-			[name]: value,
-		});
-
 		setFocusedField(name)
+		setPortfolioValues((portfolioAtual) => {
+			const updatedPortfolio = { ...portfolioAtual, [name]: value };
+
+			return updatedPortfolio;
+		})
 	};
+
+	// useEffect(() => {
+	// 	// Editar o formulário após a atualização do estado
+	// 	editForm(objectToFormData(portfolioValues));
+	// }, [portfolioValues]);
 
 	/** Themes */
 
@@ -202,7 +203,9 @@ export function AddForm({ params }: {
 				.from('users')
 				.select('*')
 				.single();
-			setUserId(userDetails.id)
+			if (userDetails) {
+				setUserId(userDetails.id)
+			}
 			setIsLoading(false)
 		}
 		fetchUserId()
@@ -212,11 +215,23 @@ export function AddForm({ params }: {
 		editFormAction(formData);
 	}
 
+	// useEffect(() => {
+	// 	portfolioValues.id !== NEW && editState.id !== NEW && redirect(`/dashboard/portfolios/addForm/${portfolioValues.id}`)
+
+	// }, [editState.id, portfolioValues.id])
+
+	useEffect(() => {
+		setPortfolioValues((portfolioValues: PortifolioType) => {
+			console.log(editState.id)
+			return { ...portfolioValues, id: editState.id != NEW ? editState.id : portfolioValues.id }
+		})
+
+	}, [editState, editState.id])
+
 	return !isLoading ? (
-		<form action={id ? editForm : addFormAction} id="portfolioForm">
-			{id && <input id='id' name='id' hidden defaultValue={id} />}
-			<input id='user_id' name='user_id' hidden defaultValue={userId} />
-			<input type='hidden' value={portfolioValues.work_id} name='work_id' id="work_id"></input>
+		<form action={editForm} id="portfolioForm">
+			<input id='id' name='id' hidden defaultValue={id} />
+			<input type='hidden' value={portfolioValues.work_id!} name='work_id' id="work_id"></input>
 			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
 				<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
 
@@ -260,7 +275,7 @@ export function AddForm({ params }: {
 												</Typography>
 												<Checkbox checked={workIsChecked(work.id)}
 													onChange={() => handleCheckboxChange(work.id)}
-													inputProps={{ 'aria-label': 'controlled' }} value={work.id} />
+													inputProps={{ 'aria-label': 'controlled' }} value={work.id} required />
 											</CardContent>
 										</Box>
 										<CardMedia
@@ -360,8 +375,6 @@ export function AddForm({ params }: {
 							aria-labelledby="Works"
 							sx={{ paddingY: 2 }}
 						>
-
-
 							<FormLabel id="page_layout_label">Espaçamento</FormLabel>
 							<RadioGroup
 								aria-labelledby="Spacing Thme"
@@ -387,13 +400,17 @@ export function AddForm({ params }: {
 			</Box>
 			<SubmitButton />
 			<p aria-live="polite" className="sr-only" role="status">
-				{id ? editState?.message : addState?.message}
+				{id && editState?.message}
 			</p>
 		</form >
 	) : <div className='h-52 flex justify-center items-center w-full'><LoadingDots></LoadingDots></div>
 
 
 	function imageUpload(imageId: string, index: "image_1" | "image_2", labelButton: string) {
+		const src = portfolioValues[index]
+		if (!index) {
+			return null
+		}
 		return <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 			<Button
 				variant="contained"
@@ -404,9 +421,12 @@ export function AddForm({ params }: {
 				<input
 					type="file"
 					hidden
-					id={imageId} name={imageId} accept="image/*" />
+					id={imageId} name={imageId} accept="image/*"
+					onChange={() => {
+						editForm(objectToFormData(portfolioValues))
+					}} />
 			</Button>
-			<img className={'rounded-sm'} src={portfolioValues[index]} width={'250px'} />
+			{src && <img className={'rounded-sm'} src={src} width={'250px'} />}
 		</Box>
 	}
 

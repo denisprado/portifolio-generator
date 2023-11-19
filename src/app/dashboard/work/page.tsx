@@ -1,3 +1,4 @@
+import { WorkType } from '@/components/pdf/styles'
 import { supabaseClient } from '@/utils/supabase'
 import Link from 'next/link'
 
@@ -9,7 +10,7 @@ export default async function works() {
 		return <p>No works found.</p>
 	}
 
-	return works.map((work) => (
+	return works.map((work: WorkType) => (
 		<p key={work.id}>
 			<Link href={`/${work.id}`} className='btn'>{work.title}</Link>
 		</p>

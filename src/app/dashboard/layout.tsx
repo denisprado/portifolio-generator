@@ -30,7 +30,7 @@ export const revalidate = 0
 export const drawerWidth = 240;
 
 export const openedMixin = (theme: Theme): CSSObject => ({
-	width: drawerWidth,
+	width: 240,
 	transition: theme.transitions.create('width', {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.enteringScreen,

@@ -17,7 +17,7 @@ export default async function PricingPage() {
 
 
 	return (
-		<>
+		<div>
 			{	/* @ts-expect-error */}
 			<Navbar />
 			<main
@@ -31,6 +31,6 @@ export default async function PricingPage() {
 					subscription={subscription}
 				/>
 			</main>
-		</>
+		</div>
 	);
 }

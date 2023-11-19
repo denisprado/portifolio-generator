@@ -3,7 +3,7 @@ import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies, headers } from 'next/headers';
-import { Database } from 'types_db';
+import { Database } from 'types';
 
 export async function POST(req: Request) {
   if (req.method === 'POST') {

@@ -5,16 +5,13 @@ import { Column } from "@/components/pdf/components/column";
 import { ContainerColumn } from "@/components/pdf/components/columnSection";
 import { Section } from "@/components/pdf/components/section";
 import { Orientation } from "@/components/pdf/portifolio";
-import { useThemeStyles } from "@/components/pdf/styles";
+import { PortifolioType, useThemeStyles } from "@/components/pdf/styles";
 import { supabaseClient } from "@/utils/supabase";
 import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function PdfView({ params, }: {
-	params: { id: string },
-}) {
-	const { id } = params
+export default function PdfView({ params: { id } }: { params: { id: string } }) {
 
 	if (!id) {
 		return null
@@ -30,9 +27,9 @@ export default function PdfView({ params, }: {
 	useEffect(() => {
 		const fetchPortfolios = async () => {
 			if (id) {
-				const channels = await supabaseClient.channel('room1')
-					.on('postgres_changes', { event: '*', schema: '*' }, payload => {
-						setPortfolio(payload.new)
+				const channels = supabaseClient.channel('room1')
+					.on('postgres_changes', { event: '*', schema: '*' }, (payload) => {
+						setPortfolio(payload.new as PortifolioType);
 					})
 					.subscribe()
 			}
@@ -42,13 +39,13 @@ export default function PdfView({ params, }: {
 
 	useEffect(() => {
 		const fetchPortfolios = async () => {
-			if (id) {
+			if (id !== 'new') {
 				const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ id: id }).single()
 				setPortfolio(portfolio)
 			}
 		}
 		fetchPortfolios()
-	}, [])
+	}, [id])
 
 	useEffect(() => {
 		const fetchStyles = async () => {
@@ -111,6 +108,9 @@ export default function PdfView({ params, }: {
 		return null
 	}
 
+	if (id === 'new') {
+		return null
+	}
 
 	return (
 		<div className="w-full fixed">

@@ -1,6 +1,6 @@
 'use client';
 
-import type { Database } from '../../types_db';
+import type { Database } from 'types';
 import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
@@ -23,7 +23,7 @@ export default function SupabaseProvider({
 	useEffect(() => {
 		const {
 			data: { subscription }
-		} = supabase.auth.onAuthStateChange((event) => {
+		} = supabase.auth.onAuthStateChange((event: string) => {
 			if (event === 'SIGNED_IN') router.refresh();
 		});
 
@@ -34,7 +34,7 @@ export default function SupabaseProvider({
 
 	return (
 		<Context.Provider value={{ supabase }}>
-			<>{children}</>
+			<div>{children}</div>
 		</Context.Provider>
 	);
 }

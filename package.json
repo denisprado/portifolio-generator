@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
-    "generate-types": "npx supabase gen types typescript --project-id kwndzieuudlxdvvqoigx --schema public > types_db.ts"
+    "generate-types": "npx supabase gen types typescript --project-id \"kwndzieuudlxdvvqoigx\" --schema public > types_db.ts"
   },
   "dependencies": {
     "@mui/icons-material": "latest",
@@ -17,10 +17,10 @@
     "@react-pdf/renderer": "^3.1.12",
     "@sentry/nextjs": "^7.80.0",
     "@stripe/stripe-js": "^1.53.0",
-    "@supabase/auth-helpers-nextjs": "^0.7.0",
+    "@supabase/auth-helpers-nextjs": "^0.7.4",
     "@supabase/auth-ui-react": "^0.4.2",
     "@supabase/auth-ui-shared": "^0.1.6",
-    "@supabase/supabase-js": "^2.23.0",
+    "@supabase/supabase-js": "^2.38.4",
     "classnames": "^2.3.2",
     "next": "^14.0.2",
     "ra-input-rich-text": "^4.13.2",

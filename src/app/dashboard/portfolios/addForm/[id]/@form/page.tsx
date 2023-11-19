@@ -7,22 +7,15 @@ import { AddForm } from './add-form'
 
 export async function generateStaticParams() {
 	const { data: portfolios } = await supabaseClient.from('portfolio').select('id')
-	return portfolios ? portfolios.map(({ id }) => ({
+	return portfolios ? portfolios.map((id) => ({
 		id,
 	})) : []
 }
 
-export default async function Portfolio({ params, children }: {
-	params: { id: string },
-	children: React.ReactNode
+export default async function Portfolio({ params }: {
+	params: { id: string }
 }) {
 	const { id } = params
-
-	const { data: portfolio } = await supabaseClient.from('portfolio').select().match({ 'id': id }).single()
-
-	if (!portfolio) {
-		notFound()
-	}
 
 	return (
 
