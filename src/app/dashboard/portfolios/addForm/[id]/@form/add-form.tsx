@@ -12,11 +12,11 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
 import { v4 } from 'uuid'
 
-const NEW = 'new'
+const NEW: string = 'new'
 
 const initialState = {
 	message: '',
-	id: NEW
+
 }
 
 function SubmitButton() {
@@ -44,7 +44,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	const [typographyThemeData, setTypographyThemeData] = useState<any>()
 
 	useEffect(() => {
-		id === 'new' && create()
+		id === NEW && create()
 	}, [])
 
 
@@ -220,13 +220,13 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	// }, [editState.id, portfolioValues.id])
 
-	useEffect(() => {
-		setPortfolioValues((portfolioValues: PortifolioType) => {
-			console.log(editState.id)
-			return { ...portfolioValues, id: editState.id != NEW ? editState.id : portfolioValues.id }
-		})
+	// useEffect(() => {
+	// 	setPortfolioValues((portfolioValues: PortifolioType) => {
+	// 		console.log(editState.id)
+	// 		return { ...portfolioValues, id: editState.id != NEW ? editState.id : portfolioValues.id }
+	// 	})
 
-	}, [editState, editState.id])
+	// }, [editState, editState.id])
 
 	return !isLoading ? (
 		<form action={editForm} id="portfolioForm">
