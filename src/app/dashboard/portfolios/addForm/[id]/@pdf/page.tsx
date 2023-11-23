@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 export default function PdfView({ params: { id } }: { params: { id: string } }) {
 
 	if (!id) {
+		console.log(id)
 		return null
 	}
 

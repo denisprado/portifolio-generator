@@ -6,7 +6,6 @@ import polyglotI18nProvider from 'ra-i18n-polyglot'
 import ptBrMessages from 'ra-language-pt-br'
 import { LoginPage } from 'ra-supabase'
 import { Admin, Resource, defaultDarkTheme, defaultTheme } from 'react-admin'
-import { useRegisterReactPDFFont } from "./fonts/hooks"
 
 const WorkCreate = dynamic(() => import("./react-admin/work/create"))
 const WorkList = dynamic(() => import("./react-admin/work/list"))

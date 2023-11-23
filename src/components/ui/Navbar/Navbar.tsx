@@ -24,12 +24,12 @@ export default async function Navbar() {
 							<Logo />
 						</Link>
 						<nav className="hidden ml-6 space-x-2 lg:block">
-							<Link href="/" className={s.link}>
-								Pricing
+							<Link href="/dashboard/portfolios" className={s.link}>
+								Criar portfolio
 							</Link>
 							{user && (
 								<Link href="/account" className={s.link}>
-									Account
+									Conta
 								</Link>
 							)}
 						</nav>
@@ -39,7 +39,7 @@ export default async function Navbar() {
 							<SignOutButton />
 						) : (
 							<Link href="/signin" className={s.link}>
-								Sign in
+								Entrar
 							</Link>
 						)}
 					</div>

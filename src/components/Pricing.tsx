@@ -100,11 +100,10 @@ export default function Pricing({
 				<div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
 					<div className="sm:flex sm:flex-col sm:align-center">
 						<h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
-							Pricing Plans
+							Nossos planos
 						</h1>
 						<p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-							Start building for free, then add a site plan to go live. Account
-							plans unlock additional features.
+							Você pode experimentar gratuitamente nosso criador de portfolios e assinar nossos planos para utilizar ilimitadamente.
 						</p>
 						<div className="relative flex self-center mt-12 border rounded-lg bg-zinc-900 border-zinc-800">
 							<div className="border border-pink-500 border-opacity-50 divide-y rounded-lg shadow-sm bg-zinc-900 divide-zinc-600">
@@ -130,7 +129,7 @@ export default function Pricing({
 									>
 										<div className="p-6">
 											<p>
-												<span className="text-5xl font-extrabold white">
+												<span className="text-5xl font-extrabold text-white">
 													{priceString}
 												</span>
 												<span className="text-base font-medium text-zinc-100">
@@ -148,8 +147,8 @@ export default function Pricing({
 											>
 												{products[0].name ===
 													subscription?.prices?.products?.name
-													? 'Manage'
-													: 'Subscribe'}
+													? 'Gerenciar'
+													: 'Assinar'}
 											</Button>
 										</div>
 									</div>
@@ -167,11 +166,10 @@ export default function Pricing({
 			<div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
 				<div className="sm:flex sm:flex-col sm:align-center">
 					<h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
-						Pricing Plans
+						Nossos planos
 					</h1>
 					<p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-						Start building for free, then add a site plan to go live. Account
-						plans unlock additional features.
+						Você pode experimentar gratuitamente nosso criador de portfolios e assinar nossos planos para utilizar ilimitadamente.
 					</p>
 					<div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
 						{intervals.includes('month') && (
@@ -183,7 +181,7 @@ export default function Pricing({
 									: 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
 									} rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
 							>
-								Monthly billing
+								mensalidade
 							</button>
 						)}
 						{intervals.includes('year') && (
@@ -195,7 +193,7 @@ export default function Pricing({
 									: 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
 									} rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
 							>
-								Yearly billing
+								anuidade
 							</button>
 						)}
 					</div>
@@ -261,7 +259,7 @@ function LogoCloud() {
 	return (
 		<div>
 			<p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
-				Brought to you by
+				Nós utilizamos as seguintes tecnologias
 			</p>
 			<div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
 				<div className="flex items-center justify-start">

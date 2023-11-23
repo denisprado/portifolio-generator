@@ -1,16 +1,19 @@
 'use server';
 
+import { PortifolioType } from '@/components/pdf/styles';
 import { supabaseClient } from '@/utils/supabase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-export async function create() {
+export async function create(data: PortifolioType) {
+  const { id, ...newData } = data;
   const { data: newPortfolio, error } = await supabaseClient
     .from('portfolio')
-    .insert({})
+    .insert(newData)
     .select()
     .single();
+  console.log('newPortfolio', newData, error);
   newPortfolio &&
     newPortfolio.id &&
     redirect(`/dashboard/portfolios/addForm/${newPortfolio.id}`);
@@ -79,20 +82,14 @@ export async function editPortfolio(prevState: any, formData: FormData) {
   data.image_1 = await uploadImage(formData, 'image_1');
   data.image_2 = await uploadImage(formData, 'image_2');
 
-  console.log(data);
-
-  const { id, ...newData } = data;
-
-  const upsertData = id !== 'undefined' ? data : newData;
-  console.log({ ...upsertData });
   try {
     const { data: dataOk, error } = await supabaseClient
       .from('portfolio')
-      .upsert({ ...upsertData })
+      .upsert({ ...data })
       .select()
       .single();
 
-    console.log(error);
+    console.log('editPortfolio error', error);
 
     revalidateTag('id'); // Update cached posts
     return { id: dataOk?.id };

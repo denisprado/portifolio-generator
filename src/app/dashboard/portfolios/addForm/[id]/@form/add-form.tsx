@@ -14,6 +14,20 @@ import { v4 } from 'uuid'
 
 const NEW: string = 'new'
 
+interface ThemeData {
+	id: string; // ou o tipo apropriado para o ID
+	// outros campos necessários
+}
+
+interface ThemeProps {
+	tableName: string;
+	data?: ThemeData[];
+	selected?: string | null;
+	setData?: React.Dispatch<React.SetStateAction<ThemeData[]>>;
+	setSelected?: React.Dispatch<React.SetStateAction<string | null>>;
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const initialState = {
 	message: '',
 
@@ -24,7 +38,7 @@ function SubmitButton() {
 
 	return (
 		<Button component="a" href="#"
-			className='my-4 w-full' type="submit" variant='contained' aria-disabled={pending}>
+			className='my-4 w-full text-blue-800' type="submit" variant='contained' aria-disabled={pending}>
 			Salvar
 		</Button>
 	)
@@ -35,42 +49,63 @@ const PORTFOLIO = 'portfolio'
 export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
-
-	const [isLoading, setIsLoading] = useState(true)
-	const [userId, setUserId] = useState<any>('')
 	const [focusedField, setFocusedField] = useState("");
-	const [colorThemeData, setcolorThemeData] = useState<any>()
-	const [spacingThemeData, setSpacingThemeData] = useState<any>()
-	const [typographyThemeData, setTypographyThemeData] = useState<any>()
+	const [colorThemeData, setColorThemeData] = useState<ThemeData[]>([]);
+	const [colorThemeSelected, setColorThemeSelected] = useState<string | null>(null);
+	const [spacingThemeData, setSpacingThemeData] = useState<ThemeData[]>([]);
+	const [spacingThemeSelected, setSpacingThemeSelected] = useState<string | null>(null);
+	const [typographyThemeData, setTypographyThemeData] = useState<ThemeData[]>([]);
+	const [typographyThemeSelected, setTypographyThemeSelected] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		id === NEW && create()
+		console.log(portfolioValues)
+		id === NEW && create(portfolioValues)
 	}, [])
 
 
 	const [portfolioValues, setPortfolioValues] = useState<PortifolioType>({
 		id: id,
-		title: '',
-		created_at: '',
-		download_count: 0,
-		image_1_src: '',
-		image_2_src: '',
-		updated_at: '',
-		use_profile_info: true,
-		description: '',
-		contact: '',
-		bio: '',
-		cv: '',
-		image_1: '',
-		image_2: '',
+		title: null,
+		created_at: null,
+		download_count: null,
+		image_1_src: null,
+		image_2_src: null,
+		updated_at: null,
+		use_profile_info: null,
+		description: null,
+		contact: null,
+		bio: null,
+		cv: null,
+		image_1: null,
+		image_2: null,
 		page_layout: 'portrait',
-		color_theme_id: '',
-		typography_theme_id: '',
-		spacing_theme_id: '',
-		user_id: '',
+		color_theme_id: null,
+		typography_theme_id: null,
+		spacing_theme_id: null,
+		user_id: null,
 		work_id: []
 	});
 
+	const handleInputChange = (
+		fieldName: string,
+	) => (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		console.log(name, value, fieldName)
+		setFocusedField(name);
+		setPortfolioValues((portfolioAtual) => {
+			const spacing = name === 'spacing_theme_id' ? value : portfolioAtual['spacing_theme_id'] ?? spacingThemeSelected;
+			const color = name === 'color_theme_id' ? value : portfolioAtual['color_theme_id'] ?? colorThemeSelected;
+			const typography = name === 'typography_theme_id' ? value : portfolioAtual['typography_theme_id'] ?? typographyThemeSelected;
+
+			const updatedPortfolio = {
+				...portfolioAtual, [name]: value, 'spacing_theme_id': spacing, 'color_theme_id': color, 'typography_theme_id': typography
+			};
+
+			console.log(updatedPortfolio)
+			return updatedPortfolio;
+		});
+	};
 
 
 
@@ -131,7 +166,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			return
 		}
 		setWorksSelecteds(portfolioValues.work_id);
-	}, [portfolioValues.work_id])
+	}, [portfolioValues?.work_id])
 
 
 	const handleCheckboxChange = (id: string) => {
@@ -140,93 +175,60 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		});
 	};
 
-	const workIsChecked = (id: string) => worksSelecteds.includes(id)
+	const workIsChecked = (id: string) => worksSelecteds ? worksSelecteds.includes(id) : false
 
-
-
-	const handleChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFocusedField(name)
-		setPortfolioValues((portfolioAtual) => {
-			const updatedPortfolio = { ...portfolioAtual, [name]: value };
-
-			return updatedPortfolio;
-		})
-	};
-
-	// useEffect(() => {
-	// 	// Editar o formulário após a atualização do estado
-	// 	editForm(objectToFormData(portfolioValues));
-	// }, [portfolioValues]);
 
 	/** Themes */
 
-	useEffect(() => {
-		const fetchcolorTheme = async () => {
-			const { data: colorThemeData } = await supabaseClient
-				.from('color_theme')
-				.select('*')
-			setcolorThemeData(colorThemeData)
-			setIsLoading(false)
-		}
-		fetchcolorTheme()
-	}, [])
+	const useThemeEffect = ({ tableName, setData, setSelected, setLoading }: ThemeProps) => {
+		useEffect(() => {
+			const fetchData = async () => {
+				const { data } = await supabaseClient
+					.from(tableName)
+					.select('*');
 
-	useEffect(() => {
-		const fetchSpacingTheme = async () => {
-			const { data: spacingThemeData } = await supabaseClient
-				.from('spacing_theme')
-				.select('*')
-			setSpacingThemeData(spacingThemeData)
-			setIsLoading(false)
-		}
-		fetchSpacingTheme()
-	}, [])
+				if (setData && data) {
+					setData(data);
+				}
 
-	useEffect(() => {
-		const fetchTypographyTheme = async () => {
-			const { data: typographyThemeData } = await supabaseClient
-				.from('typography_theme')
-				.select('*')
-			setTypographyThemeData(typographyThemeData)
-			setIsLoading(false)
-		}
-		fetchTypographyTheme()
-	}, [])
-
-
-	/** User */
-
-	useEffect(() => {
-		const fetchUserId = async () => {
-			const { data: userDetails } = await supabaseClient
-				.from('users')
-				.select('*')
-				.single();
-			if (userDetails) {
-				setUserId(userDetails.id)
+				if (setSelected && data && data.length > 0) {
+					const selectedTheme = portfolioValues[`${tableName}_id` as keyof PortifolioType];
+					if (selectedTheme === null) {
+						setSelected(data[0].id);
+					}
+					setLoading(false);
+				};
 			}
-			setIsLoading(false)
-		}
-		fetchUserId()
-	}, [])
+			fetchData();
+		}, [tableName, setData, setSelected, setLoading])
+	};
+
+	// Efeitos customizados para cada tabela
+	useThemeEffect({
+		tableName: 'color_theme',
+		setData: setColorThemeData,
+		setSelected: setColorThemeSelected,
+		setLoading: setIsLoading,
+	});
+
+	useThemeEffect({
+		tableName: 'spacing_theme',
+		setData: setSpacingThemeData,
+		setSelected: setSpacingThemeSelected,
+		setLoading: setIsLoading,
+	});
+
+	useThemeEffect({
+		tableName: 'typography_theme',
+		setData: setTypographyThemeData,
+		setSelected: setTypographyThemeSelected,
+		setLoading: setIsLoading,
+	});
+
 
 	const editForm = async (formData: FormData) => {
-		editFormAction(formData);
+		id !== NEW && editFormAction(formData);
 	}
-
-	// useEffect(() => {
-	// 	portfolioValues.id !== NEW && editState.id !== NEW && redirect(`/dashboard/portfolios/addForm/${portfolioValues.id}`)
-
-	// }, [editState.id, portfolioValues.id])
-
-	// useEffect(() => {
-	// 	setPortfolioValues((portfolioValues: PortifolioType) => {
-	// 		console.log(editState.id)
-	// 		return { ...portfolioValues, id: editState.id != NEW ? editState.id : portfolioValues.id }
-	// 	})
-
-	// }, [editState, editState.id])
 
 	return !isLoading ? (
 		<form action={editForm} id="portfolioForm">
@@ -256,145 +258,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 					{/* Works */}
 					<Box>
-						<FormLabel id="page_layout_label">Trabalhos neste portfolio</FormLabel>
-						<FormGroup
-							aria-labelledby="Works"
-							sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
-						>
-
-							{works && works.map((work: any) => {
-								return (
-									<Card sx={{ display: 'flex' }} key={work.id}>
-										<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-											<CardContent sx={{ flex: '1 0 auto' }}>
-												<Typography component="div" variant="h5">
-													{work.title}
-												</Typography>
-												<Typography variant="subtitle1" color="text.secondary" component="div">
-													{work.description}
-												</Typography>
-												<Checkbox checked={workIsChecked(work.id)}
-													onChange={() => handleCheckboxChange(work.id)}
-													inputProps={{ 'aria-label': 'controlled' }} value={work.id} required />
-											</CardContent>
-										</Box>
-										<CardMedia
-											component="img"
-											sx={{ width: 151 }}
-											image={work.image_1_src}
-											alt={work.title}
-										/>
-									</Card>
-								)
-							})}
-						</FormGroup>
+						{renderWorkCards()}
 					</Box>
 
 					{/* Orientação */}
-					<FormControl>
-						<FormGroup
-							aria-labelledby="Works"
-							sx={{ paddingY: 2 }}
-						>
-							<FormLabel id="page_layout_label">Orientação da página</FormLabel>
-							<RadioGroup
-								row
-								aria-labelledby="Orientation"
-								defaultValue="portrait"
-								name="page_layout"
-								id="page_layout"
-								value={portfolioValues.page_layout}
-								onChange={handleChangeValue}
-							>
-								<FormControlLabel value="portrait" control={<Radio />} label="Retrato" />
-								<FormControlLabel value="landscape" control={<Radio />} label="Paisagem" />
-							</RadioGroup>
-						</FormGroup>
-					</FormControl>
+					{renderPageLayoutSelection()}
 
-					{/** Color Themes */}
-					<FormControl>
-						<FormGroup
-							aria-labelledby="Works"
-							sx={{ paddingY: 2 }}
-						>
-							<FormLabel id="page_layout_label">Tema de cores</FormLabel>
-							<RadioGroup
-								aria-labelledby="Orientation"
-								name="color_theme_id"
-								id="color_theme_id"
-								value={portfolioValues.color_theme_id} onChange={handleChangeValue}
-								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
-							>
-								{colorThemeData?.map((colorTheme: any, i: number) => {
-									return (
-										<Card sx={{ display: 'flex', backgroundColor: 'transparent', flexDirection: 'row', flexGrow: '0' }} key={colorTheme.id}>
-											<Box sx={{ display: 'flex', flexDirection: 'row', backgroundColor: 'transparent' }}>
-												<FormControlLabel value={colorTheme.id} control={<Radio />} label={colorTheme.title} sx={{ marginLeft: 1 }} />
-												<Box sx={{ flexDirection: 'row', backgroundColor: colorTheme.background_primary_color, width: "64px", height: "64px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: colorTheme.text_primary_color }}>{colorTheme.title}</Typography></Box>
-												<Box sx={{ flexDirection: 'row', backgroundColor: colorTheme.background_secondary_color, width: "64px", height: "64px", display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography sx={{ color: colorTheme.text_secondary_color }}>{colorTheme.title}</Typography></Box>
-											</Box>
-										</Card>
-									)
-								})}
-							</RadioGroup>
-						</FormGroup>
-					</FormControl>
-
-					{/** Typography Themes */}
-					<Box>
-						<FormGroup
-							aria-labelledby="Works"
-							sx={{ paddingY: 2 }}
-						>
-							<FormLabel id="page_layout_label">Tema de tipografia</FormLabel>
-							<RadioGroup
-								aria-labelledby="Orientation"
-								defaultValue="portrait"
-								name="typography_theme_id"
-								id="typography_theme_id"
-								value={portfolioValues.typography_theme_id} onChange={handleChangeValue}
-								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
-							>
-								{typographyThemeData?.map((typographyTheme: any, i: number) => {
-									return (
-										<Card sx={{ display: 'flex', backgroundColor: 'transparent', flexDirection: 'row', flexGrow: '0' }} key={typographyTheme.id}>
-											<Box sx={{ display: 'flex', flexDirection: 'row', backgroundColor: 'transparent' }}>
-												<FormControlLabel value={typographyTheme.id} control={<Radio />} label={typographyTheme.title} sx={{ marginLeft: 1 }} />
-											</Box>
-										</Card>
-									)
-								})}
-							</RadioGroup>
-						</FormGroup>
-					</Box>
-
-					{/** Spacing Themes */}
-					<Box>
-						<FormGroup
-							aria-labelledby="Works"
-							sx={{ paddingY: 2 }}
-						>
-							<FormLabel id="page_layout_label">Espaçamento</FormLabel>
-							<RadioGroup
-								aria-labelledby="Spacing Thme"
-								name="spacing_theme_id"
-								id="spacing_theme_id"
-								value={portfolioValues.spacing_theme_id} onChange={handleChangeValue}
-								sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
-							>
-								{spacingThemeData?.map((spacingTheme: any, i: number) => {
-									return (
-										<Card sx={{ display: 'flex', backgroundColor: 'transparent', flexDirection: 'row', flexGrow: '0' }} key={spacingTheme.id}>
-											<Box sx={{ display: 'flex', flexDirection: 'row', backgroundColor: 'transparent' }}>
-												<FormControlLabel value={spacingTheme.id} control={<Radio />} label={spacingTheme.title} sx={{ marginLeft: 1 }} />
-											</Box>
-										</Card>
-									)
-								})}
-							</RadioGroup>
-						</FormGroup>
-					</Box>
+					{renderThemeSelection('Tema de cores', 'color_theme_id', colorThemeData, portfolioValues['color_theme_id'], handleInputChange('color_theme_id'))}
+					{renderThemeSelection('Tema de tipografia', 'typography_theme_id', typographyThemeData, portfolioValues['typography_theme_id'], handleInputChange('typography_theme_id'))}
+					{renderThemeSelection('Espaçamento', 'spacing_theme_id', spacingThemeData, portfolioValues['spacing_theme_id'], handleInputChange('spacing_theme_id'))}
 
 				</Box>
 			</Box>
@@ -405,6 +277,71 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		</form >
 	) : <div className='h-52 flex justify-center items-center w-full'><LoadingDots></LoadingDots></div>
 
+
+	function renderPageLayoutSelection() {
+		return <FormControl>
+			<FormGroup
+				aria-labelledby="Orientação"
+				sx={{ paddingY: 2 }}
+			>
+				<FormLabel id="page_layout_label">
+					Orientação da página
+				</FormLabel>
+				<RadioGroup
+					row
+					aria-labelledby="Orientation"
+					defaultValue="portrait"
+					name="page_layout"
+					id="page_layout"
+					value={portfolioValues.page_layout}
+					onChange={handleInputChange('page_layout')}
+				>
+					<FormControlLabel value="portrait" control={<Radio />} label="Retrato" />
+					<FormControlLabel value="landscape" control={<Radio />} label="Paisagem" />
+				</RadioGroup>
+			</FormGroup>
+		</FormControl>
+	}
+
+	function renderWorkCards() {
+		return <>
+			<FormLabel id="works_id">Trabalhos neste portfolio</FormLabel>
+			<FormGroup
+				aria-labelledby="Works"
+				sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
+			>
+
+				{works && works.map((work: any) => {
+					return (
+						workCard(work)
+					)
+				})}
+			</FormGroup>
+		</>
+	}
+
+	function workCard(work: any): React.JSX.Element {
+		return <Card sx={{ display: 'flex' }} key={work.id}>
+			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+				<CardContent sx={{ flex: '1 0 auto' }}>
+					<Typography component="div" variant="h5">
+						{work.title}
+					</Typography>
+					<Typography variant="subtitle1" color="text.secondary" component="div">
+						{work.description}
+					</Typography>
+					<Checkbox checked={workIsChecked(work.id)}
+						onChange={() => handleCheckboxChange(work.id)}
+						inputProps={{ 'aria-label': 'controlled' }} value={work.id} required />
+				</CardContent>
+			</Box>
+			<CardMedia
+				component="img"
+				sx={{ width: 151 }}
+				image={work.image_1_src}
+				alt={work.title} />
+		</Card>
+	}
 
 	function imageUpload(imageId: string, index: "image_1" | "image_2", labelButton: string) {
 		const src = portfolioValues[index]
@@ -449,7 +386,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			name={fieldId}
 			required
 			value={portfolioValues[fieldId]}
-			onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handleChangeValue(event) }}
+			onChange={handleInputChange(fieldId)}
 			autoFocus={focusedField === fieldId}
 			multiline={rows > 1}
 			rows={rows}
@@ -460,7 +397,48 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			}}
 
 		/>
+	}
 
+	function renderThemeSelection(label: string,
+		fieldName: string,
+		themeData: ThemeData[],
+		selectedTheme: string | null,
+		handleChange: (e: ChangeEvent<HTMLInputElement>) => void) {
+		return (
+			<FormControl>
+				<FormGroup aria-labelledby={`${fieldName} ID`} sx={{ paddingY: 2 }}>
+					<FormLabel id={`${fieldName}_label`}>{label}</FormLabel>
+					<RadioGroup
+						aria-labelledby={fieldName}
+						name={fieldName}
+						id={fieldName}
+						value={portfolioValues[fieldName as keyof PortifolioType]}
+						onChange={handleChange}
+						sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
+					>
+						{themeData?.map((theme: any) => (
+							<Card
+								sx={{ display: 'flex', backgroundColor: 'transparent', flexDirection: 'row', flexGrow: '0' }}
+								key={theme.id}
+							>
+								<Box sx={{ display: 'flex', flexDirection: 'row', backgroundColor: 'transparent' }}>
+									<FormControlLabel value={theme.id} control={<Radio />} label={theme.title} sx={{ marginLeft: 1 }} />
+									{fieldName === 'color_theme_id' &&
+										<>
+											<Box sx={{ flexDirection: 'row', backgroundColor: theme.background_primary_color, width: '64px', height: '64px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+												<Typography sx={{ color: theme.text_primary_color }}>{theme.title}</Typography>
+											</Box>
+											<Box sx={{ flexDirection: 'row', backgroundColor: theme.background_secondary_color, width: '64px', height: '64px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+												<Typography sx={{ color: theme.text_secondary_color }}>{theme.title}</Typography>
+											</Box>
+										</>}
+								</Box>
+							</Card>
+						))}
+					</RadioGroup>
+				</FormGroup>
+			</FormControl>
+		)
 	}
 }
 
