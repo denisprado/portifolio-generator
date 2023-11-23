@@ -8,6 +8,7 @@ import { Orientation } from "@/components/pdf/portifolio";
 import { PortifolioType, useThemeStyles } from "@/components/pdf/styles";
 import { supabaseClient } from "@/utils/supabase";
 import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
+import { channel } from "diagnostics_channel";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -36,6 +37,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 			}
 		}
 		fetchPortfolios()
+
 	}, [portfolio])
 
 	useEffect(() => {

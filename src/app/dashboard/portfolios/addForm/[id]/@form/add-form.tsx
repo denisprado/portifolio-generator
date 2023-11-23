@@ -161,17 +161,18 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		setPortfolioValues({ ...portfolioValues, work_id: worksSelecteds });
 	}, [worksSelecteds])
 
-	useEffect(() => {
-		if (!portfolioValues.work_id) {
-			return
-		}
-		setWorksSelecteds(portfolioValues.work_id);
-	}, [portfolioValues?.work_id])
-
 
 	const handleCheckboxChange = (id: string) => {
 		setWorksSelecteds((worksSelecteds: any) => {
-			return worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
+			const worksIds = worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
+			setPortfolioValues((portfolioAtual) => {
+				const updatedPortfolio = {
+					...portfolioAtual, 'work_id': worksIds
+				};
+				console.log(updatedPortfolio)
+				return updatedPortfolio;
+			});
+			return worksIds
 		});
 	};
 
@@ -310,7 +311,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				aria-labelledby="Works"
 				sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
 			>
-
 				{works && works.map((work: any) => {
 					return (
 						workCard(work)
