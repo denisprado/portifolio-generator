@@ -1,14 +1,14 @@
 'use server';
 
 import { PortifolioType } from '@/components/pdf/styles';
-import { supabaseClient } from '@/utils/supabase';
+import { supabaseServer } from '@/utils/supabase-server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export async function create(data: PortifolioType) {
   const { id, ...newData } = data;
-  const { data: newPortfolio, error } = await supabaseClient
+  const { data: newPortfolio, error } = await supabaseServer
     .from('portfolio')
     .insert(newData)
     .select()
@@ -83,7 +83,7 @@ export async function editPortfolio(prevState: any, formData: FormData) {
   data.image_2 = await uploadImage(formData, 'image_2');
 
   try {
-    const { data: dataOk, error } = await supabaseClient
+    const { data: dataOk, error } = await supabaseServer
       .from('portfolio')
       .upsert({ ...data })
       .select()
@@ -109,7 +109,7 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
   });
 
   try {
-    const { data: dataOk, error } = await supabaseClient
+    const { data: dataOk, error } = await supabaseServer
       .from('portfolio')
       .delete()
       .eq('id', data.id);
@@ -122,7 +122,7 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
 }
 
 export async function getUserId() {
-  const { data: userDetails } = await supabaseClient
+  const { data: userDetails } = await supabaseServer
     .from('users')
     .select('*')
     .single();
@@ -139,7 +139,7 @@ async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
     throw Error;
   }
 
-  const { data: file, error } = await supabaseClient.storage
+  const { data: file, error } = await supabaseServer.storage
     .from('images')
     .upload(`images/image_${Date.now()}.png`, imageFile1, {
       cacheControl: '3600',

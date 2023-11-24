@@ -5,7 +5,7 @@ export default function Layout(props: {
 }) {
 
 	return (
-		<div className='grid w-full grid-cols-12 gap-4 p-2'>
+		<div className='grid w-full grid-cols-12 gap-4 p-4'>
 
 			<div className='w-full col-span-6'>
 				{props.form}
