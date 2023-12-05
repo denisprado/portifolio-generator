@@ -1,22 +1,21 @@
 'use client';
 
-import { useSupabase } from '@/app/supabase-provider';
+import s from './Navbar.module.css';
+import { supabaseClient as supabase } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
-import s from './Navbar.module.css';
-
 export default function SignOutButton() {
-	const router = useRouter();
-	const { supabase } = useSupabase();
-	return (
-		<button
-			className={s.link}
-			onClick={async () => {
-				await supabase.auth.signOut();
-				router.push('/signin');
-			}}
-		>
-			Sair
-		</button>
-	);
+  const router = useRouter();
+
+  return (
+    <button
+      className={s.link}
+      onClick={async () => {
+        await supabase.auth.signOut();
+        router.push('/signin');
+      }}
+    >
+      Sair
+    </button>
+  );
 }

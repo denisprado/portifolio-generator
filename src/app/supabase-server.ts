@@ -1,17 +1,7 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { cache } from 'react';
-import { Database } from 'types';
-
-export const createServerSupabaseClient = cache(() => {
-  const cookieStore = cookies();
-
-  return createServerComponentClient<Database>({ cookies: () => cookieStore });
-});
+import { supabaseServer as supabase } from '@/utils/supabase/server';
 
 export async function getSession() {
   'use server';
-  const supabase = createServerSupabaseClient();
   try {
     const {
       data: { session }
@@ -24,7 +14,6 @@ export async function getSession() {
 }
 
 export async function getUserDetails() {
-  const supabase = createServerSupabaseClient();
   try {
     const { data: userDetails } = await supabase
       .from('users')
@@ -38,7 +27,6 @@ export async function getUserDetails() {
 }
 
 export async function getSubscription() {
-  const supabase = createServerSupabaseClient();
   try {
     const { data: subscription } = await supabase
       .from('subscriptions')
@@ -54,7 +42,6 @@ export async function getSubscription() {
 }
 
 export const getActiveProductsWithPrices = async () => {
-  const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from('products')
     .select('*, prices(*)')
