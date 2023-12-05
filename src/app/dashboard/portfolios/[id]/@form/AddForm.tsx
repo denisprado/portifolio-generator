@@ -1,41 +1,26 @@
 'use client'
 
 import { create, editPortfolio } from '@/app/dashboard/portfolios/actions'
-import { PortifolioType, WorkType } from '@/components/pdf/styles'
+import { PortifolioType, WorkType } from '../../types'
 import LoadingDots from '@/components/ui/LoadingDots'
 import { supabaseClient } from '@/utils/supabase'
 import { Box, Button, Card, CardContent, CardMedia, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, TextField, Typography } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
-import { redirect } from 'next/navigation'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
-import { v4 } from 'uuid'
+import { ThemeData, ThemeProps, inputFieldsTypes, imageFieldsTypes, imagesIds, FieldId } from '../../types'
 
+const PORTFOLIO = 'portfolio'
 const NEW: string = 'new'
-
-interface ThemeData {
-	id: string; // ou o tipo apropriado para o ID
-	// outros campos necessários
-}
-
-interface ThemeProps {
-	tableName: string;
-	data?: ThemeData[];
-	selected?: string | null;
-	setData?: React.Dispatch<React.SetStateAction<ThemeData[]>>;
-	setSelected?: React.Dispatch<React.SetStateAction<string | null>>;
-	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+export const revalidate = 60
 
 const initialState = {
 	message: '',
-
 }
 
 function SubmitButton() {
-	const { pending } = useFormStatus()
-
+	const { pending } = useFormStatus();
 	return (
 		<Button component="a" href="#"
 			className='my-4 w-full text-blue-800' type="submit" variant='contained' aria-disabled={pending}>
@@ -44,11 +29,33 @@ function SubmitButton() {
 	)
 }
 
-const PORTFOLIO = 'portfolio'
 
 export function AddForm({ params: { id } }: { params: { id: string } }) {
 
-	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
+	const initialPortfolioState: PortifolioType = {
+		id: id,
+		work_id: [],
+		bio: '',
+		color_theme_id: '',
+		contact: '',
+		created_at: null,
+		cv: '',
+		description: '',
+		download_count: null,
+		image_1: '',
+		image_1_src: '',
+		image_2: '',
+		image_2_src: '',
+		page_layout: '',
+		spacing_theme_id: null,
+		title: '',
+		typography_theme_id: null,
+		updated_at: null,
+		use_profile_info: null,
+		user_id: null
+	}
+
+	const [editState, editFormAction] = useFormState(editPortfolio, initialState);
 	const [focusedField, setFocusedField] = useState("");
 	const [colorThemeData, setColorThemeData] = useState<ThemeData[]>([]);
 	const [colorThemeSelected, setColorThemeSelected] = useState<string | null>(null);
@@ -57,71 +64,43 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	const [typographyThemeData, setTypographyThemeData] = useState<ThemeData[]>([]);
 	const [typographyThemeSelected, setTypographyThemeSelected] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [portfolioValues, setPortfolioValues] = useState<PortifolioType>(initialPortfolioState);
 
 	useEffect(() => {
-		console.log(portfolioValues)
-		id === NEW && create(portfolioValues)
-	}, [])
+		const fetchPortfolioValues = async () => {
+			const { data: portfolioDetails } = await supabaseClient
+				.from(PORTFOLIO)
+				.select('*')
+				.match({ id: id })
+				.single();
+			setPortfolioValues(portfolioDetails as PortifolioType)
+		}
+		id !== NEW ? fetchPortfolioValues() : create(portfolioValues)
+	}, [id])
 
-
-	const [portfolioValues, setPortfolioValues] = useState<PortifolioType>({
-		id: id,
-		title: null,
-		created_at: null,
-		download_count: null,
-		image_1_src: null,
-		image_2_src: null,
-		updated_at: null,
-		use_profile_info: null,
-		description: null,
-		contact: null,
-		bio: null,
-		cv: null,
-		image_1: null,
-		image_2: null,
-		page_layout: 'portrait',
-		color_theme_id: null,
-		typography_theme_id: null,
-		spacing_theme_id: null,
-		user_id: null,
-		work_id: []
-	});
 
 	const handleInputChange = (
 		fieldName: string,
 	) => (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		console.log(name, value, fieldName)
+
 		setFocusedField(name);
+
 		setPortfolioValues((portfolioAtual) => {
 			const spacing = name === 'spacing_theme_id' ? value : portfolioAtual['spacing_theme_id'] ?? spacingThemeSelected;
 			const color = name === 'color_theme_id' ? value : portfolioAtual['color_theme_id'] ?? colorThemeSelected;
 			const typography = name === 'typography_theme_id' ? value : portfolioAtual['typography_theme_id'] ?? typographyThemeSelected;
-
+			if (!portfolioAtual) {
+				return portfolioValues
+			}
 			const updatedPortfolio = {
-				...portfolioAtual, [name]: value, 'spacing_theme_id': spacing, 'color_theme_id': color, 'typography_theme_id': typography
+				...portfolioAtual, [name]: value || '', 'spacing_theme_id': spacing, 'color_theme_id': color, 'typography_theme_id': typography
 			};
 
-			console.log(updatedPortfolio)
 			return updatedPortfolio;
 		});
 	};
 
-
-
-	useEffect(() => {
-		const fetchPortfolioValues = async () => {
-			if (id !== NEW) {
-				const { data: portfolioDetails } = await supabaseClient
-					.from(PORTFOLIO)
-					.select('*')
-					.match({ id: id })
-					.single();
-				setPortfolioValues(portfolioDetails as PortifolioType)
-			}
-		}
-		id !== NEW && fetchPortfolioValues()
-	}, [])
 
 	/* Edit works 
 		
@@ -161,7 +140,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		setPortfolioValues({ ...portfolioValues, work_id: worksSelecteds });
 	}, [worksSelecteds])
 
-
 	const handleCheckboxChange = (id: string) => {
 		setWorksSelecteds((worksSelecteds: any) => {
 			const worksIds = worksSelecteds.includes(id) ? worksSelecteds.filter((workId: string) => workId !== id) : [...worksSelecteds, id]
@@ -169,7 +147,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				const updatedPortfolio = {
 					...portfolioAtual, 'work_id': worksIds
 				};
-				console.log(updatedPortfolio)
 				return updatedPortfolio;
 			});
 			return worksIds
@@ -177,7 +154,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	};
 
 	const workIsChecked = (id: string) => worksSelecteds ? worksSelecteds.includes(id) : false
-
 
 	/** Themes */
 
@@ -231,6 +207,19 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW && editFormAction(formData);
 	}
 
+	const inputFields: inputFieldsTypes = [
+		{ label: "Título", fieldId: "title", rows: 1 },
+		{ label: "Descrição", fieldId: "description", rows: 3 },
+		{ label: "Mini Bio", fieldId: "bio", rows: 3 },
+		{ label: "Curriculum Vitae", fieldId: "cv", rows: 3 },
+		{ label: "Contact", fieldId: "contact", rows: 3 }
+	]
+
+	const imageFields: imageFieldsTypes = [
+		{ index: "image_1", labelButton: "Upload da Capa" },
+		{ index: "image_2", labelButton: "Upload da contra capa" }
+	]
+
 	return !isLoading ? (
 		<form action={editForm} id="portfolioForm">
 			<input id='id' name='id' hidden defaultValue={id} />
@@ -241,19 +230,18 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					{/** Campos de texto*/}
 					<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
 						<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-							{MuiTextField("Título", "title", 1)}
-							{MuiTextField("Descrição", "description", 3)}
-							{MuiTextField("Mini Bio", "bio", 3)}
-							{MuiTextField("Curriculum Vitae", "cv", 3)}
-							{MuiTextField("Contact", "contact", 3)}
+							{inputFields.map(({ label, fieldId, rows }) => (
+								MuiTextField({ label, fieldId, rows })
+							))}
 						</Box>
 					</Box>
 
 					{/** Upload de imagens */}
 					<Box>
 						<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
-							{imageUpload("image_1", "image_1", "Upload da Capa")}
-							{imageUpload("image_2", "image_2", "Upload da contra capa")}
+							{imageFields.map(({ index, labelButton }) => (
+								imageUpload({ index, labelButton })
+							))}
 						</Box>
 					</Box>
 
@@ -265,9 +253,14 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					{/* Orientação */}
 					{renderPageLayoutSelection()}
 
-					{renderThemeSelection('Tema de cores', 'color_theme_id', colorThemeData, portfolioValues['color_theme_id'], handleInputChange('color_theme_id'))}
-					{renderThemeSelection('Tema de tipografia', 'typography_theme_id', typographyThemeData, portfolioValues['typography_theme_id'], handleInputChange('typography_theme_id'))}
-					{renderThemeSelection('Espaçamento', 'spacing_theme_id', spacingThemeData, portfolioValues['spacing_theme_id'], handleInputChange('spacing_theme_id'))}
+					{["color", "typography", "spacing"].map((theme, index) => (
+						renderThemeSelection({
+							label: `Tema de ${theme === 'spacing' ? 'espaçamento' : theme === 'typography' ? "Tipografia" : "Cores"}`,
+							fieldName: `${theme}_theme_id`,
+							themeData: theme === 'color' ? colorThemeData : theme === 'typography' ? typographyThemeData : spacingThemeData,
+							handleChange: handleInputChange(`${theme}_theme_id`)
+						})
+					))}
 
 				</Box>
 			</Box>
@@ -343,31 +336,37 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		</Card>
 	}
 
-	function imageUpload(imageId: string, index: "image_1" | "image_2", labelButton: string) {
+	function imageUpload({ index, labelButton }: { index: imagesIds; labelButton: string }): React.JSX.Element | null {
 		const src = portfolioValues[index]
-		if (!index) {
+		if (!index || portfolioValues || portfolioValues[index]) {
 			return null
 		}
-		return <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+
+		return <Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
 			<Button
 				variant="contained"
 				component="label"
 				className='my-4 w-full'
 			>
 				{labelButton}
+
 				<input
 					type="file"
 					hidden
-					id={imageId} name={imageId} accept="image/*"
+					id={index} name={index} accept="image/*"
+					value={portfolioValues[index]}
 					onChange={() => {
-						editForm(objectToFormData(portfolioValues))
-					}} />
+						handleInputChange;
+						editForm(objectToFormData({ obj: portfolioValues }))
+					}}
+				/>
 			</Button>
+
 			{src && <img className={'rounded-sm'} src={src} width={'250px'} />}
 		</Box>
 	}
 
-	function objectToFormData(obj: { [s: string]: any } | ArrayLike<unknown>) {
+	function objectToFormData({ obj }: { obj: { [s: string]: any } | ArrayLike<unknown> }): FormData {
 		const formData = new FormData();
 
 		Object.entries(obj).forEach(([key, value]) => {
@@ -377,13 +376,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		return formData;
 	}
 
-	function MuiTextField(label: string, fieldId: keyof PortifolioType, rows: number) {
+
+	function MuiTextField({ label, fieldId, rows }: { label: string; fieldId: FieldId; rows: number }): React.JSX.Element {
 		return <TextField
 			label={label}
 			variant="outlined"
 			type="text"
 			id={fieldId}
 			name={fieldId}
+			key={fieldId}
 			required
 			value={portfolioValues[fieldId]}
 			onChange={handleInputChange(fieldId)}
@@ -392,20 +393,16 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			rows={rows}
 			inputProps={{
 				onBlur: () => {
-					editForm(objectToFormData(portfolioValues))
+					editForm(objectToFormData({ obj: portfolioValues }))
 				}
 			}}
 
 		/>
 	}
 
-	function renderThemeSelection(label: string,
-		fieldName: string,
-		themeData: ThemeData[],
-		selectedTheme: string | null,
-		handleChange: (e: ChangeEvent<HTMLInputElement>) => void) {
+	function renderThemeSelection({ label, fieldName, themeData, handleChange }: { label: string; fieldName: string; themeData: ThemeData[]; handleChange: (e: ChangeEvent<HTMLInputElement>) => void }): React.JSX.Element {
 		return (
-			<FormControl>
+			<FormControl key={fieldName}>
 				<FormGroup aria-labelledby={`${fieldName} ID`} sx={{ paddingY: 2 }}>
 					<FormLabel id={`${fieldName}_label`}>{label}</FormLabel>
 					<RadioGroup

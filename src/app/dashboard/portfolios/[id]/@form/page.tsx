@@ -1,9 +1,5 @@
-
-
 import { supabaseClient } from '@/utils/supabase'
-
-import { notFound } from 'next/navigation'
-import { AddForm } from './add-form'
+import { AddForm } from './AddForm'
 
 export async function generateStaticParams() {
 	const { data: portfolios } = await supabaseClient.from('portfolio').select('id')

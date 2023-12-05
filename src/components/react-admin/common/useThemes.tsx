@@ -1,4 +1,4 @@
-import { PortifolioType } from '@/components/pdf/styles';
+import { PortifolioType } from '@/app/dashboard/portfolios/types';
 import { Identifier, RaRecord, useGetOne } from 'react-admin';
 
 

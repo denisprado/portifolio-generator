@@ -1,6 +1,6 @@
 'use server';
 
-import { PortifolioType } from '@/components/pdf/styles';
+import { PortifolioType } from './types';
 import { supabaseServer } from '@/utils/supabase-server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -16,7 +16,7 @@ export async function create(data: PortifolioType) {
   console.log('newPortfolio', newData, error);
   newPortfolio &&
     newPortfolio.id &&
-    redirect(`/dashboard/portfolios/addForm/${newPortfolio.id}`);
+    redirect(`/dashboard/portfolios/${newPortfolio.id}`);
 }
 
 export async function editPortfolio(prevState: any, formData: FormData) {
@@ -119,18 +119,6 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
     console.log(e);
     return { message: 'Failed to delete portfolio' };
   }
-}
-
-export async function getUserId() {
-  const { data: userDetails } = await supabaseServer
-    .from('users')
-    .select('*')
-    .single();
-  const userId = userDetails ? userDetails.id : '';
-  if (!userId) {
-    return;
-  }
-  return userId;
 }
 
 async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {

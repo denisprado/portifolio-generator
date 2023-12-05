@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from "react";
 import { Font } from "@react-pdf/renderer";
 import { ENGLISH_FONT_FAMILIES } from "@/components/fonts/constants";

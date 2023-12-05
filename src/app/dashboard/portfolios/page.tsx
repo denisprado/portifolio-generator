@@ -19,11 +19,6 @@ export default function portfolios() {
 		message: '',
 	}
 	const [deteleState, deleteFormAction] = useFormState(deletePortfolio, initialState)
-	const [editState, editFormAction] = useFormState(editPortfolio, initialState)
-	const [formData, setFormData] = useState({
-		id: '',
-	});
-
 	const [portfolios, setPortfolios] = useState<any>()
 
 	useEffect(() => {
@@ -34,21 +29,20 @@ export default function portfolios() {
 		}
 		fetchPortfolios()
 	}, [])
+	const router = useRouter()
 
 	if (!portfolios) {
 		return null
 	}
-	const router = useRouter()
 
 	return (
-		<Grid container spacing={2} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+		<Grid container spacing={2} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
 			{portfolios.map((portfolio: any) => (
-				<Grid key={portfolio.id} xs={2} md={2}>
-					<Card key={portfolio.id} id={portfolio.id} title={portfolio.title} description={portfolio.description} imageSrc={portfolio.image_1} cardActions={getCardCations(portfolio)} />
-
+				<Grid key={portfolio.id} xs={12} md={4} >
+					<Card id={portfolio.id} title={portfolio.title} description={portfolio.description} imageSrc={portfolio.image_1} cardActions={getCardCations(portfolio)} />
 				</Grid>
 			))}
-			<Fab color="primary" aria-label="edit" onClick={() => router.push('portfolios/addForm/new')}>
+			<Fab color="primary" aria-label="edit" onClick={() => router.push('portfolios/new')}>
 				<Add color="primary" />
 			</Fab>
 		</Grid>

@@ -1,17 +1,6 @@
+import { ThemeStyles, PageLayoutType } from '@/app/dashboard/portfolios/types';
 import { supabaseClient } from '@/utils/supabase';
 import { StyleSheet } from '@react-pdf/renderer';
-import { Tables } from 'types';
-
-export type PortifolioType = Tables<'portfolio'>
-export type WorkType = Tables<'work'>
-
-export type ThemeStyles = { portfolio: PortifolioType }
-
-export type SpacingTheme = Tables<'spacing_theme'>
-export type ColorTheme = Tables<'color_theme'>
-export type TypographyTheme = Tables<'typography_theme'>
-
-type PageLayoutType = 'portrait' | 'landscape'
 
 export async function useThemeStyles({ portfolio }: ThemeStyles) {
 

@@ -1,10 +1,10 @@
 'use client';
 
-import type { Database } from 'types';
-import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
+import type { Database } from 'types';
 
 type SupabaseContext = {
 	supabase: SupabaseClient<Database>;
@@ -36,6 +36,7 @@ export default function SupabaseProvider({
 		<Context.Provider value={{ supabase }}>
 			<div>{children}</div>
 		</Context.Provider>
+
 	);
 }
 

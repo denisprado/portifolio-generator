@@ -10,7 +10,7 @@ const meta = {
 	cardImage: '/og.png',
 	robots: 'follow, index',
 	favicon: '/favicon.ico',
-	url: 'https://subscription-starter.vercel.app',
+	url: 'https://portfolio-generator.vercel.com',
 	type: 'website'
 };
 
@@ -22,21 +22,21 @@ export const metadata = {
 	favicon: meta.favicon,
 	url: meta.url,
 	type: meta.type,
-	openGraph: {
-		url: meta.url,
-		title: meta.title,
-		description: meta.description,
-		cardImage: meta.cardImage,
-		type: meta.type,
-		site_name: meta.title
-	},
-	twitter: {
-		card: 'summary_large_image',
-		site: '@vercel',
-		title: meta.title,
-		description: meta.description,
-		cardImage: meta.cardImage
-	}
+	// openGraph: {
+	// 	url: meta.url,
+	// 	title: meta.title,
+	// 	description: meta.description,
+	// 	cardImage: meta.cardImage,
+	// 	type: meta.type,
+	// 	site_name: meta.title
+	// },
+	// twitter: {
+	// 	card: 'summary_large_image',
+	// 	site: '@vercel',
+	// 	title: meta.title,
+	// 	description: meta.description,
+	// 	cardImage: meta.cardImage
+	// }
 };
 
 
@@ -49,9 +49,11 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className="loading">
+
 				<SupabaseProvider>
-					{children}
+					<div>{children}</div>
 				</SupabaseProvider>
+
 			</body>
 		</html>
 	);

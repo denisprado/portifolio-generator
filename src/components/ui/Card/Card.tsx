@@ -18,25 +18,25 @@ export default function Card({ id, title, description, imageSrc, cardActions }: 
 	return (
 		// <Link href={`/dashboard/portfolios/addForm/${id}`} className='btn'>
 		<MuiCard sx={{ maxWidth: 345 }}>
-			<CardActionArea>
-				<CardMedia
-					component="img"
-					height="140"
-					image={imageSrc}
-					alt={title}
-				/>
-				<CardContent>
-					<Typography gutterBottom variant="h5" component="div">
-						{title}
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-						{description}
-					</Typography>
-				</CardContent>
-				<CardActions disableSpacing>
-					{cardActions}
-				</CardActions>
-			</CardActionArea>
+
+			<CardMedia
+				component="img"
+				height="140"
+				image={imageSrc}
+				alt={title}
+			/>
+			<CardContent>
+				<Typography gutterBottom variant="h5" component="div">
+					{title}
+				</Typography>
+				<Typography variant="body2" color="text.secondary">
+					{description}
+				</Typography>
+			</CardContent>
+			<CardActions disableSpacing>
+				{cardActions}
+			</CardActions>
+
 		</MuiCard>
 		// </Link>
 	);

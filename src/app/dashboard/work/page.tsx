@@ -1,4 +1,4 @@
-import { WorkType } from '@/components/pdf/styles'
+import { WorkType } from '../portfolios/types'
 import { supabaseClient } from '@/utils/supabase'
 import Link from 'next/link'
 

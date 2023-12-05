@@ -5,7 +5,6 @@ import {
 	getActiveProductsWithPrices
 } from '@/app/supabase-server';
 import Navbar from '@/components/ui/Navbar';
-import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
 
 export default async function PricingPage() {
 	const [session, products, subscription] = await Promise.all([
@@ -17,7 +16,7 @@ export default async function PricingPage() {
 
 
 	return (
-		<div>
+		<>
 			{	/* @ts-expect-error */}
 			<Navbar />
 			<main
@@ -31,6 +30,6 @@ export default async function PricingPage() {
 					subscription={subscription}
 				/>
 			</main>
-		</div>
+		</>
 	);
 }

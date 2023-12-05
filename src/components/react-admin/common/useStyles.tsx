@@ -1,4 +1,5 @@
-import { PortifolioType, useThemeStyles } from '@/components/pdf/styles';
+import { useThemeStyles } from '@/components/pdf/styles';
+import { PortifolioType } from '@/app/dashboard/portfolios/types';
 
 import { useEffect, useState } from 'react';
 
