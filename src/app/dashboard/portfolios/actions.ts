@@ -7,7 +7,13 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export async function create(data: PortifolioType) {
-  const { id, ...newData } = data;
+  const {
+    id,
+    color_theme_id,
+    spacing_theme_id,
+    typography_theme_id,
+    ...newData
+  } = data;
   const { data: newPortfolio, error } = await supabase
     .from('portfolio')
     .insert(newData)
@@ -54,18 +60,9 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     page_layout: formData.get('page_layout'),
     image_1: 'initial',
     image_2: 'initial',
-    spacing_theme_id:
-      formData.get('spacing_theme_id') === ''
-        ? null
-        : formData.get('spacing_theme_id'),
-    color_theme_id:
-      formData.get('color_theme_id') === ''
-        ? null
-        : formData.get('color_theme_id'),
-    typography_theme_id:
-      formData.get('typography_theme_id') === ''
-        ? null
-        : formData.get('typography_theme_id'),
+    spacing_theme_id: formData.get('spacing_theme_id') ?? '',
+    color_theme_id: formData.get('color_theme_id') ?? '',
+    typography_theme_id: formData.get('typography_theme_id') ?? '',
     work_id: workId
   });
 
@@ -89,7 +86,7 @@ export async function editPortfolio(prevState: any, formData: FormData) {
       .select()
       .single();
 
-    console.log('editPortfolio error', error);
+    console.log('editPortfolio error', data, error);
 
     revalidateTag('id'); // Update cached posts
     return { id: dataOk?.id };
@@ -129,7 +126,7 @@ async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
 
   const { data: file, error } = await supabase.storage
     .from('images')
-    .upload(`images/image_${Date.now()}.png`, imageFile1, {
+    .upload(`images/image_${Date.now()}`, imageFile1, {
       cacheControl: '3600',
       upsert: true
     });

@@ -1,13 +1,14 @@
 'use client';
 
-import { PortifolioType, WorkType } from '../../types';
 import {
+  FieldId,
+  PortifolioType,
   ThemeData,
   ThemeProps,
-  inputFieldsTypes,
+  WorkType,
   imageFieldsTypes,
   imagesIds,
-  FieldId
+  inputFieldsTypes
 } from '../../types';
 import { create, editPortfolio } from '@/app/dashboard/portfolios/actions';
 import LoadingDots from '@/components/ui/LoadingDots';
@@ -28,6 +29,7 @@ import {
 } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Image from 'next/image';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
@@ -71,9 +73,9 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
     image_2: '',
     image_2_src: '',
     page_layout: '',
-    spacing_theme_id: null,
+    spacing_theme_id: '',
     title: '',
-    typography_theme_id: null,
+    typography_theme_id: '',
     updated_at: null,
     use_profile_info: null,
     user_id: null
@@ -137,9 +139,9 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
         const updatedPortfolio = {
           ...portfolioAtual,
           [name]: value || '',
-          spacing_theme_id: spacing,
-          color_theme_id: color,
-          typography_theme_id: typography
+          spacing_theme_id: spacing || '',
+          color_theme_id: color || '',
+          typography_theme_id: typography || ''
         };
 
         return updatedPortfolio;
@@ -446,9 +448,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
     labelButton: string;
   }): React.JSX.Element | null {
     const src = portfolioValues[index];
-    if (!index || portfolioValues || portfolioValues[index]) {
-      return null;
-    }
 
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
@@ -461,7 +460,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
             id={index}
             name={index}
             accept="image/*"
-            value={portfolioValues[index]}
+            value={src || ''}
             onChange={() => {
               handleInputChange;
               editForm(objectToFormData({ obj: portfolioValues }));
@@ -469,7 +468,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
           />
         </Button>
 
-        {src && <img className={'rounded-sm'} src={src} width={'250px'} />}
+        {src && (
+          <Image
+            className={'rounded-sm'}
+            src={src}
+            width={250}
+            sizes="(max-width: 250px) 100vw, (max-width: 125px) 50vw, 33vw"
+            alt={''}
+          />
+        )}
       </Box>
     );
   }
