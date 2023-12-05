@@ -1,8 +1,8 @@
 import { stripe } from '@/utils/stripe';
 import {
-  upsertProductRecord,
+  manageSubscriptionStatusChange,
   upsertPriceRecord,
-  manageSubscriptionStatusChange
+  upsertProductRecord
 } from '@/utils/supabase-admin';
 import Stripe from 'stripe';
 
