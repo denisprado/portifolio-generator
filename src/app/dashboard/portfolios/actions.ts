@@ -1,19 +1,16 @@
 'use server';
 
 import { PortifolioType } from './types';
-import { supabaseServer as supabase } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export async function create(data: PortifolioType) {
-  const {
-    id,
-    color_theme_id,
-    spacing_theme_id,
-    typography_theme_id,
-    ...newData
-  } = data;
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { id, ...newData } = data;
   const { data: newPortfolio, error } = await supabase
     .from('portfolio')
     .insert(newData)
@@ -26,6 +23,8 @@ export async function create(data: PortifolioType) {
 }
 
 export async function editPortfolio(prevState: any, formData: FormData) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const schema = z.object({
     id: z.optional(z.string()),
     title: z.string().nullable(),
@@ -80,6 +79,8 @@ export async function editPortfolio(prevState: any, formData: FormData) {
   data.image_2 = await uploadImage(formData, 'image_2');
 
   try {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
     const { data: dataOk, error } = await supabase
       .from('portfolio')
       .upsert({ ...data })
@@ -97,6 +98,8 @@ export async function editPortfolio(prevState: any, formData: FormData) {
 }
 
 export async function deletePortfolio(prevState: any, formData: FormData) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const schema = z.object({
     id: z.string().min(1)
   });
@@ -119,7 +122,10 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
 }
 
 async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const imageFile1 = formData.get(label);
+  console.log(imageFile1);
   if (imageFile1 === null) {
     throw Error;
   }

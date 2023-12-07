@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  ConfigType,
   FieldId,
   PortifolioType,
   ThemeData,
@@ -30,6 +31,7 @@ import {
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Image from 'next/image';
+import { config } from 'process';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
@@ -58,11 +60,34 @@ function SubmitButton() {
 }
 
 export function AddForm({ params: { id } }: { params: { id: string } }) {
+  const [configData, setConfigData] = useState<ConfigType>({
+    id: '',
+    created_at: null,
+    color_theme_id: '',
+    spacing_theme_id: '',
+    typography_theme_id: '',
+    page_layout: ''
+  });
+  useEffect(() => {
+    const fetchConfigData = async () => {
+      const { data: configData, error } = await supabase
+        .from('config')
+        .select('*')
+        .single();
+
+      if (error) throw error;
+
+      setConfigData(configData as unknown as ConfigType);
+    };
+
+    fetchConfigData();
+  }, []);
+
   const initialPortfolioState: PortifolioType = {
     id: id,
+    title: '',
     work_id: [],
     bio: '',
-    color_theme_id: '',
     contact: '',
     created_at: null,
     cv: '',
@@ -72,15 +97,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
     image_1_src: '',
     image_2: '',
     image_2_src: '',
-    page_layout: '',
-    spacing_theme_id: '',
-    title: '',
-    typography_theme_id: '',
+    page_layout: configData['page_layout'],
+    spacing_theme_id: configData['spacing_theme_id'],
+    color_theme_id: configData['color_theme_id'],
+    typography_theme_id: configData['typography_theme_id'],
     updated_at: null,
     use_profile_info: null,
     user_id: null
   };
-
+  console.log(initialPortfolioState);
   const [editState, editFormAction] = useFormState(editPortfolio, initialState);
   const [focusedField, setFocusedField] = useState('');
   const [colorThemeData, setColorThemeData] = useState<ThemeData[]>([]);
@@ -111,8 +136,11 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
         .single();
       setPortfolioValues(portfolioDetails as PortifolioType);
     };
-    id !== NEW ? fetchPortfolioValues() : create(portfolioValues);
-  }, [id]);
+    console.log(portfolioValues);
+    id !== NEW
+      ? fetchPortfolioValues()
+      : portfolioValues.spacing_theme_id !== '' && create(portfolioValues);
+  }, [id, configData.id, portfolioValues.spacing_theme_id]);
 
   const handleInputChange =
     (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,15 +150,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
       setPortfolioValues((portfolioAtual) => {
         const spacing =
-          name === 'spacing_theme_id'
+          fieldName === 'spacing_theme_id'
             ? value
             : portfolioAtual['spacing_theme_id'] ?? spacingThemeSelected;
         const color =
-          name === 'color_theme_id'
+          fieldName === 'color_theme_id'
             ? value
             : portfolioAtual['color_theme_id'] ?? colorThemeSelected;
         const typography =
-          name === 'typography_theme_id'
+          fieldName === 'typography_theme_id'
             ? value
             : portfolioAtual['typography_theme_id'] ?? typographyThemeSelected;
         if (!portfolioAtual) {
@@ -147,6 +175,20 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
         return updatedPortfolio;
       });
     };
+
+  useEffect(() => {
+    setPortfolioValues((portfolioAtual) => {
+      const { id, created_at, ...initialConfig } = configData;
+      console.log(initialConfig);
+      const updatedPortfolio = {
+        ...portfolioAtual,
+
+        ...initialConfig
+      };
+      console.log(updatedPortfolio);
+      return updatedPortfolio;
+    });
+  }, [configData.id]);
 
   /* Edit works 
 		
@@ -215,7 +257,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
     setLoading
   }: ThemeProps) => {
     useEffect(() => {
-      const fetchData = async () => {
+      async function fetchData(): Promise<void> {
         const { data } = await supabase.from(tableName).select('*');
 
         if (setData && data) {
@@ -225,14 +267,25 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
         if (setSelected && data && data.length > 0) {
           const selectedTheme =
             portfolioValues[`${tableName}_id` as keyof PortifolioType];
-          if (selectedTheme === null) {
+          if (
+            selectedTheme ===
+            initialPortfolioState[tableName as keyof PortifolioType]
+          ) {
             setSelected(data[0].id);
           }
           setLoading(false);
         }
-      };
+      }
       fetchData();
-    }, [tableName, setData, setSelected, setLoading]);
+    }, [
+      tableName,
+      setData,
+      setSelected,
+      setLoading,
+      portfolioValues,
+      id,
+      configData.id
+    ]);
   };
 
   // Efeitos customizados para cada tabela
@@ -274,7 +327,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
     { index: 'image_2', labelButton: 'Upload da contra capa' }
   ];
 
-  return !isLoading ? (
+  return !isLoading && initialPortfolioState.color_theme_id !== '' ? (
     <form action={editForm} id="portfolioForm">
       <input id="id" name="id" hidden defaultValue={id} />
       <input

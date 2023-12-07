@@ -1,6 +1,8 @@
 import { toDateTime } from './helpers';
 import { stripe } from './stripe';
-import { supabaseServer } from '@/utils/supabase/server';
+import { ConfigType } from '@/app/dashboard/portfolios/types';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import type { Database } from 'types';
 
@@ -8,6 +10,8 @@ type Product = Database['public']['Tables']['products']['Row'];
 type Price = Database['public']['Tables']['prices']['Row'];
 
 const upsertProductRecord = async (product: Stripe.Product) => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const productData: Product = {
     id: product.id,
     active: product.active,
@@ -17,7 +21,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     metadata: product.metadata
   };
 
-  const { error } = await supabaseServer.from('products').upsert([productData]);
+  const { error } = await supabase.from('products').upsert([productData]);
   if (error) throw error;
   console.log(`Product inserted/updated: ${product.id}`);
 };
@@ -36,8 +40,10 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     trial_period_days: price.recurring?.trial_period_days ?? null,
     metadata: price.metadata
   };
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  const { error } = await supabaseServer.from('prices').upsert([priceData]);
+  const { error } = await supabase.from('prices').upsert([priceData]);
   if (error) throw error;
   console.log(`Price inserted/updated: ${price.id}`);
 };
@@ -49,7 +55,9 @@ const createOrRetrieveCustomer = async ({
   email: string;
   uuid: string;
 }) => {
-  const { data, error } = await supabaseServer
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data, error } = await supabase
     .from('customers')
     .select('stripe_customer_id')
     .eq('id', uuid)
@@ -65,7 +73,7 @@ const createOrRetrieveCustomer = async ({
     if (email) customerData.email = email;
     const customer = await stripe.customers.create(customerData);
     // Now insert the customer ID into our Supabase mapping table.
-    const { error: supabaseError } = await supabaseServer
+    const { error: supabaseError } = await supabase
       .from('customers')
       .insert([{ id: uuid, stripe_customer_id: customer.id }]);
     if (supabaseError) throw supabaseError;
@@ -88,7 +96,9 @@ const copyBillingDetailsToCustomer = async (
   if (!name || !phone || !address) return;
   //@ts-ignore
   await stripe.customers.update(customer, { name, phone, address });
-  const { error } = await supabaseServer
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { error } = await supabase
     .from('users')
     .update({
       billing_address: { ...address },
@@ -104,7 +114,9 @@ const manageSubscriptionStatusChange = async (
   createAction = false
 ) => {
   // Get customer's UUID from mapping table.
-  const { data: customerData, error: noCustomerError } = await supabaseServer
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: customerData, error: noCustomerError } = await supabase
     .from('customers')
     .select('id')
     .eq('stripe_customer_id', customerId)
@@ -152,7 +164,7 @@ const manageSubscriptionStatusChange = async (
         : null
     };
 
-  const { error } = await supabaseServer
+  const { error } = await supabase
     .from('subscriptions')
     .upsert([subscriptionData]);
   if (error) throw error;

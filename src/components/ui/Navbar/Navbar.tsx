@@ -1,10 +1,13 @@
 import s from './Navbar.module.css';
 import SignOutButton from './SignOutButton';
 import Logo from '@/components/icons/Logo';
-import { supabaseServer as supabase } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 export default async function Navbar() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const {
     data: { user }
   } = await supabase.auth.getUser();

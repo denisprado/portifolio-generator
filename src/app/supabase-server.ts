@@ -1,7 +1,10 @@
-import { supabaseServer as supabase } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 export async function getSession() {
-  'use server';
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  ('use server');
   try {
     const {
       data: { session }
@@ -14,6 +17,8 @@ export async function getSession() {
 }
 
 export async function getUserDetails() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   try {
     const { data: userDetails } = await supabase
       .from('users')
@@ -27,6 +32,8 @@ export async function getUserDetails() {
 }
 
 export async function getSubscription() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   try {
     const { data: subscription } = await supabase
       .from('subscriptions')
@@ -42,6 +49,8 @@ export async function getSubscription() {
 }
 
 export const getActiveProductsWithPrices = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const { data, error } = await supabase
     .from('products')
     .select('*, prices(*)')

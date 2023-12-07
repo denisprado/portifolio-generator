@@ -1,7 +1,10 @@
 import { AddForm } from './AddForm';
-import { supabaseServer as supabase } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 export async function generateStaticParams() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const { data: portfolios } = await supabase.from('portfolio').select('id');
   return portfolios
     ? portfolios.map((id) => ({

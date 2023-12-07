@@ -1,7 +1,7 @@
 import { getURL } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe';
 import { createOrRetrieveCustomer } from '@/utils/supabase-admin';
-import { createClient, supabaseServer } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
       const {
         data: { user }
-      } = await supabaseServer.auth.getUser();
+      } = await supabase.auth.getUser();
 
       // 3. Retrieve or create the customer in Stripe
       const customer = await createOrRetrieveCustomer({

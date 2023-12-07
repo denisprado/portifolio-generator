@@ -31,6 +31,8 @@ export type imageFieldsTypes = {
   labelButton: string;
 }[];
 
+export type ConfigType = Tables<'config'>;
+
 export type PortifolioType = Tables<'portfolio'>;
 
 export type WorkType = Tables<'work'>;

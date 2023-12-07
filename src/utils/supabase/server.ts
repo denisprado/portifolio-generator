@@ -32,7 +32,3 @@ export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
     }
   );
 };
-
-const cookieStore = cookies();
-
-export const supabaseServer = createClient(cookieStore);
