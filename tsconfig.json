@@ -33,5 +33,5 @@
     "src/utils/dataProvider.ts",
     "src/app/api/admin/[...slug]/page.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

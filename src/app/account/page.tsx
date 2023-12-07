@@ -5,7 +5,7 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
-import { supabaseServer as supabase } from '@/utils/supabase/server';
+import { createClient} from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -14,6 +14,8 @@ import { ReactNode } from 'react';
 import { Database } from 'types';
 
 export default async function Account() {
+  const cookiesStore = cookies()
+  const supabase = createClient(cookiesStore)
   const [session, userDetails, subscription] = await Promise.all([
     getSession(),
     getUserDetails(),

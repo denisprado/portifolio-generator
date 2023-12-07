@@ -1,8 +1,8 @@
 'use client';
 
 import { useRegisterReactPDFFont } from '@/components/fonts/hooks';
-import { ArtTrack } from '@mui/icons-material';
-import MailIcon from '@mui/icons-material/Mail';
+// import { ArtTrack } from '@mui/icons-material';
+// import MailIcon from '@mui/icons-material/Mail';
 import CssBaseline from '@mui/material/CssBaseline';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -57,7 +57,7 @@ export default function DashboardLayout({
                   }}
                   href={item.href}
                 >
-                  <ListItemIcon
+                  {/* <ListItemIcon
                     sx={{
                       minWidth: 0,
                       mr: 3,
@@ -65,7 +65,7 @@ export default function DashboardLayout({
                     }}
                   >
                     {index % 2 === 0 ? <ArtTrack /> : <MailIcon />}
-                  </ListItemIcon>
+                  </ListItemIcon> */}
                   <ListItemText primary={item.label} sx={{ opacity: 1 }} />
                 </ListItemButton>
               </ListItem>
