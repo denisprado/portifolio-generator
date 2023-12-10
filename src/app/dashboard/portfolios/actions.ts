@@ -132,7 +132,7 @@ async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
 
   const { data: file, error } = await supabase.storage
     .from('images')
-    .upload(`images/image_${Date.now()}`, imageFile1, {
+    .upload(`images/image_${Date.now()}.png`, imageFile1, {
       cacheControl: '3600',
       upsert: true
     });

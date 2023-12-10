@@ -179,13 +179,11 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
   useEffect(() => {
     setPortfolioValues((portfolioAtual) => {
       const { id, created_at, ...initialConfig } = configData;
-      console.log(initialConfig);
       const updatedPortfolio = {
         ...portfolioAtual,
 
         ...initialConfig
       };
-      console.log(updatedPortfolio);
       return updatedPortfolio;
     });
   }, [configData.id]);
@@ -513,7 +511,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
             id={index}
             name={index}
             accept="image/*"
-            value={src || ''}
             onChange={() => {
               handleInputChange;
               editForm(objectToFormData({ obj: portfolioValues }));
@@ -526,6 +523,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
             className={'rounded-sm'}
             src={src}
             width={250}
+            height={500}
             sizes="(max-width: 250px) 100vw, (max-width: 125px) 50vw, 33vw"
             alt={''}
           />
