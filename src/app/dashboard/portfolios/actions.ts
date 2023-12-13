@@ -21,16 +21,55 @@ export async function create(data: PortifolioType) {
     newPortfolio.id &&
     redirect(`/dashboard/portfolios/${newPortfolio.id}`);
 }
+// Define um tipo personalizado para representar arquivos
+type FileValue = {
+  file: File;
+};
+
+function isFileValue(value: any): value is FileValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'file' in value &&
+    value.file instanceof File
+  );
+}
 
 export async function editPortfolio(prevState: any, formData: FormData) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
   const schema = z.object({
     id: z.optional(z.string()),
     title: z.string().nullable(),
     description: z.string().nullable(),
-    image_1: z.string().nullable(),
-    image_2: z.string().nullable(),
+    image_1: z
+      .object({
+        file: z.object({
+          name: z.string(),
+          lastModified: z.number(),
+          type: z.string(),
+          size: z.number()
+        })
+      })
+      .nullable()
+      .optional()
+      .refine((value) => isFileValue(value), {
+        message: 'Invalid file format for image_1'
+      }),
+    image_2: z
+      .object({
+        file: z.object({
+          name: z.string(),
+          lastModified: z.number(),
+          type: z.string(),
+          size: z.number()
+        })
+      })
+      .optional()
+      .nullable()
+      .refine((value) => isFileValue(value), {
+        message: 'Invalid file format for image_2'
+      }),
+    image_1_src: z.string().nullable(),
+    image_2_src: z.string().nullable(),
     bio: z.string().nullable(),
     cv: z.string().nullable(),
     contact: z.string().nullable(),
@@ -57,26 +96,18 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     cv: formData.get('cv'),
     contact: formData.get('contact'),
     page_layout: formData.get('page_layout'),
-    image_1: 'initial',
-    image_2: 'initial',
+    image_1: formData.get('image_1'),
+    image_2: formData.get('image_2'),
+    image_1_src: await uploadImage(formData, 'image_1'),
+    image_2_src: await uploadImage(formData, 'image_2'),
     spacing_theme_id: formData.get('spacing_theme_id') ?? '',
     color_theme_id: formData.get('color_theme_id') ?? '',
     typography_theme_id: formData.get('typography_theme_id') ?? '',
     work_id: workId
   });
 
-  const imageFile1 = formData.get('image_1');
-  if (imageFile1 === null) {
-    throw Error;
-  }
-
   data.work_id =
     data && data.work_id ? data.work_id.toString().split(',') : null;
-
-  // Upload de imagem
-
-  data.image_1 = await uploadImage(formData, 'image_1');
-  data.image_2 = await uploadImage(formData, 'image_2');
 
   try {
     const cookieStore = cookies();
@@ -114,35 +145,45 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
       .delete()
       .eq('id', data.id);
 
-    revalidatePath(`/dashboard/portfolios/`, 'page');
+    revalidatePath(`/dashboard/portfolios`, 'layout');
   } catch (e) {
     console.log(e);
     return { message: 'Failed to delete portfolio' };
   }
 }
 
-async function uploadImage(formData: FormData, label: 'image_1' | 'image_2') {
+async function uploadImage<T extends Blob>(
+  formData: FormData,
+  label: 'image_1' | 'image_2'
+) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-  const imageFile1 = formData.get(label);
-  console.log(imageFile1);
-  if (imageFile1 === null) {
-    throw Error;
+  const imageFile = formData.get(label);
+  console.log([typeof imageFile, label, imageFile]);
+  if (!imageFile) return null;
+
+  if (!(imageFile instanceof Blob)) {
+    throw new Error('Invalid file format');
   }
+
+  const originalFileName =
+    'name' in imageFile ? (imageFile as File).name : 'unknown';
 
   const { data: file, error } = await supabase.storage
     .from('images')
-    .upload(`images/image_${Date.now()}.png`, imageFile1, {
+    .upload(`images/${originalFileName}`, imageFile as unknown as T, {
       cacheControl: '3600',
       upsert: true
     });
 
   if (error) {
     console.error('Erro ao fazer upload da imagem:', error);
+    throw error;
   }
+
   const imageUrl = file
-    ? 'https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/' +
-      file.path
+    ? `https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/${file.path}`
     : '';
+
   return imageUrl;
 }

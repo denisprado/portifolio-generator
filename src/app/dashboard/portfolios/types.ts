@@ -24,10 +24,12 @@ export type inputFieldsTypes = {
   rows: number;
 }[];
 
-export type imagesIds = 'image_1' | 'image_2';
+export type imagesFiles = 'image_1' | 'image_2';
+export type imagesSrcs = 'image_1_src' | 'image_2_src';
 
 export type imageFieldsTypes = {
-  index: imagesIds;
+  file: imagesFiles;
+  src: imagesSrcs;
   labelButton: string;
 }[];
 
