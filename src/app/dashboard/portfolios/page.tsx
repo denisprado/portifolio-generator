@@ -21,6 +21,7 @@ export default function portfolios() {
 		deletePortfolio,
 		initialState
 	);
+	const [shouldUpdatePortfolios, setShouldUpdatePotfolios] = useState(true)
 	const [portfolios, setPortfolios] = useState<any>();
 
 	useEffect(() => {
@@ -28,9 +29,10 @@ export default function portfolios() {
 			const { data: portfolios } = await supabase.from('portfolio').select('*');
 
 			setPortfolios(portfolios);
+			setShouldUpdatePotfolios(false)
 		};
-		fetchPortfolios();
-	}, []);
+		shouldUpdatePortfolios && fetchPortfolios();
+	}, [shouldUpdatePortfolios]);
 	const router = useRouter();
 
 	return (
@@ -74,7 +76,7 @@ export default function portfolios() {
 				</IconButton>
 
 				<form action={deleteFormAction}>
-					<input type="hidden" value={portfolio.id} name={'id'} id={'id'} onClick={() => router.push(`/dashboard/portfolios/`)} />
+					<input type="hidden" value={portfolio.id} name={'id'} id={'id'} onClick={() => setShouldUpdatePotfolios(true)} />
 					<IconButton aria-label="delete portfolio" type="submit" >
 						<Delete color={'error'} />
 					</IconButton>

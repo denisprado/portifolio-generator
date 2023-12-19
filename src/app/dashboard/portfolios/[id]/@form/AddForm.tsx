@@ -131,6 +131,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		initialPortfolioState
 	);
 
+
 	useEffect(() => {
 		const fetchPortfolioValues = async () => {
 			const { data: portfolioDetails } = await supabase
@@ -141,12 +142,20 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			setPortfolioValues(portfolioDetails as PortifolioType);
 		};
 
-		console.log(portfolioValues.image_1)
-
 		id !== NEW
 			? fetchPortfolioValues()
 			: portfolioValues.spacing_theme_id !== '' && create(portfolioValues);
-	}, [id, configData.id, portfolioValues.spacing_theme_id, portfolioValues.image_1, portfolioValues.image_2, portfolioValues.image_1_src, portfolioValues.image_2_src, portfolioValues.work_id, portfolioValues.color_theme_id, portfolioValues.typography_theme_id]);
+	}, [id, configData.id,
+		portfolioValues.spacing_theme_id,
+		portfolioValues.image_1,
+		portfolioValues.image_2,
+		portfolioValues.image_1_src,
+		portfolioValues.image_2_src,
+		editState.image_1_src,
+		editState.image_2_src,
+		portfolioValues.work_id,
+		portfolioValues.color_theme_id,
+		portfolioValues.typography_theme_id]);
 
 	const handleInputChange =
 		({ fieldName }: { fieldName: keyof PortifolioType }) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +188,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					typography_theme_id: typography || ''
 				};
 				setShouldSubmitForm(true);
-				console.log(updatedPortfolio['image_1'])
+
 				return updatedPortfolio;
 			});
 		};
@@ -194,13 +203,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			setShouldSubmitForm(false);
 		}
 	}, [shouldSubmitForm, portfolioValues]);
-
-	// // Use useEffect to handle the form submission
-	// useEffect(() => {
-	// 	console.log("render", portfolioValues['image_1_src'])
-	// 	portfolioValues['image_1_src'] && ShowImageUploaded(portfolioValues['image_1_src'] as imagesSrcs)
-	// 	portfolioValues['image_2_src'] && ShowImageUploaded(portfolioValues['image_2_src'] as imagesSrcs)
-	// }, [portfolioValues.image_1_src, portfolioValues.image_2_src]);
 
 	useEffect(() => {
 		setPortfolioValues((portfolioAtual) => {
@@ -338,8 +340,12 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW && editFormAction(formData);
 	};
 
-	function ShowImageUploaded(src: string): React.JSX.Element | null {
-		return !!src ? (
+	const ShowImageUploaded = ({ src }: { src: string | null }): React.JSX.Element | null => {
+
+		if (!src) {
+			return null
+		}
+		return (
 			<Image
 				key={src}
 				className={'rounded-sm'}
@@ -349,7 +355,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				alt={''}
 			/>
 
-		) : <></>
+		)
 	}
 
 
@@ -377,7 +383,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 						onChange={handleInputChange({ fieldName: file })}
 					/>
 				</Button>
-				{ShowImageUploaded(portfolioValues[src] as imagesSrcs)}
+				<ShowImageUploaded src={portfolioValues[src as imagesSrcs]} />
 			</Box>
 		);
 	}

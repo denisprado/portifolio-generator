@@ -82,7 +82,11 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     console.log('editPortfolio', data, error);
 
     revalidatePath(`/dashboard/portfolios/${formData.get('id')}`, 'page'); // Update cached posts
-    return { id: dataOk?.id };
+    return {
+      id: dataOk?.id,
+      image_1_src: dataOk?.image_1_src,
+      image_2_src: dataOk?.image_2_src
+    };
   } catch (e) {
     console.log(e);
     return { message: 'Failed to update portfolio' };
