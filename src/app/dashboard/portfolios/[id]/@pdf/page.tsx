@@ -1,17 +1,16 @@
 'use client'
 
-import { WorkPagePdf } from "@/components/pdf/WorkPagePdf";
-import { Column } from "@/components/pdf/components/column";
-import { ContainerColumn } from "@/components/pdf/components/columnSection";
-import { Section } from "@/components/pdf/components/section";
-import { Orientation } from "@/components/pdf/portifolio";
-import { useThemeStyles } from "@/components/pdf/styles";
-import { PortifolioType } from '../../types';
-import { supabaseClient } from "@/utils/supabase";
-import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer';
-import { channel } from "diagnostics_channel";
-import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import { NEW } from '@/app/constants'
+import { WorkPagePdf } from "@/components/pdf/WorkPagePdf"
+import { Column } from "@/components/pdf/components/column"
+import { ContainerColumn } from "@/components/pdf/components/columnSection"
+import { Section } from "@/components/pdf/components/section"
+import { useThemeStyles } from "@/components/pdf/styles"
+import { supabaseClient } from "@/utils/supabase"
+import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer'
+import { notFound } from "next/navigation"
+import { useEffect, useState } from "react"
+import { PortifolioType } from '../../types'
 
 export default function PdfView({ params: { id } }: { params: { id: string } }) {
 
@@ -22,7 +21,6 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 
 	const [works, setWorks] = useState<any>([])
 	const [portfolio, setPortfolio] = useState<any>([])
-	const [user, setUser] = useState<any>([])
 	const [styles, setStyles] = useState<any>()
 
 
@@ -30,9 +28,9 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 	useEffect(() => {
 		const fetchPortfolios = async () => {
 			if (id) {
-				const channels = supabaseClient.channel('room1')
+				supabaseClient.channel('room1')
 					.on('postgres_changes', { event: '*', schema: '*' }, (payload) => {
-						setPortfolio(payload.new as PortifolioType);
+						setPortfolio(payload.new as PortifolioType)
 					})
 					.subscribe()
 			}
@@ -53,7 +51,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 
 	useEffect(() => {
 		const fetchStyles = async () => {
-			const portStyles = await useThemeStyles({ portfolio: portfolio });
+			const portStyles = await useThemeStyles({ portfolio: portfolio })
 
 			setStyles(portStyles)
 		}
@@ -64,28 +62,14 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		notFound()
 	}
 
-	const { work_id, image_1,
-		image_2,
+	const { work_id, image_1_src,
+		image_2_src,
 		title,
 		description,
 		bio,
 		cv,
 		contact,
 		page_layout } = portfolio
-
-	useEffect(() => {
-		const fetchUserId = async () => {
-			const { data: userDetails } = await supabaseClient
-				.from('users')
-				.select('*')
-				.single();
-			if (!userDetails) {
-				return null
-			}
-			setUser(userDetails)
-		}
-		fetchUserId()
-	}, [])
 
 	useEffect(() => {
 
@@ -112,12 +96,13 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		return null
 	}
 
-	if (id === 'new') {
+	if (id === NEW) {
 		return null
 	}
+	console.log(image_1_src)
 
 	return (
-		<div className="w-full fixed">
+		<div className="fixed w-full">
 
 			<PDFViewer style={styles?.viewer}>
 
@@ -133,7 +118,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 								</View>
 							</Section>
 							<Section style={styles}>
-								<Image src={image_1} style={styles?.imageCover} />
+								{image_1_src && <Image src={image_1_src} style={styles?.imageCover} />}
 							</Section>
 							<Section style={styles}>
 								<ContainerColumn style={styles} descriptionOrder={'initial'}>
@@ -147,7 +132,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 
 					{/* Obras */}
 
-					{works && works?.map((work: { id: any; }) =>
+					{works && works?.map((work: { id: any }) =>
 						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={page_layout} />
 					)}
 
@@ -173,14 +158,12 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
 						<View style={styles?.pageContent}>
 							<Section style={styles}>
-								<Image src={image_2} style={styles?.image} />
+								{image_2_src && <Image src={image_2_src} style={styles?.image} />}
 							</Section>
 							<Section style={styles}>
 								<Column style={styles}>
 									<Text style={styles?.h3}>Contato</Text>
 									<Text style={styles?.p}>{contact}</Text>
-								</Column>
-								<Column style={styles}>
 								</Column>
 							</Section>
 						</View>

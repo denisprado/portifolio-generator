@@ -1,21 +1,10 @@
 'use client';
 
-import {
-	ConfigType,
-	FieldId,
-	PortifolioType,
-	ThemeData,
-	ThemeProps,
-	WorkType,
-	imageFieldsTypes,
-	imagesFiles,
-	imagesSrcs,
-	inputFieldsTypes
-} from '../../types';
 import { create, editPortfolio } from '@/app/dashboard/portfolios/actions';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
+	Alert,
 	Box,
 	Button,
 	Card,
@@ -32,12 +21,24 @@ import {
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Image from 'next/image';
+import {
+	ConfigType,
+	FieldId,
+	PortifolioType,
+	ThemeData,
+	ThemeProps,
+	WorkType,
+	imageFieldsTypes,
+	imagesFiles,
+	imagesSrcs,
+	inputFieldsTypes
+} from '../../types';
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { PORTFOLIO, NEW } from '@/app/constants';
 
-const PORTFOLIO = 'portfolio';
-const NEW: string = 'new';
+
 export const revalidate = 60;
 
 const initialState = {
@@ -69,6 +70,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		typography_theme_id: '',
 		page_layout: ''
 	});
+
 	useEffect(() => {
 		const fetchConfigData = async () => {
 			const { data: configData, error } = await supabase
@@ -93,20 +95,21 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		created_at: null,
 		cv: '',
 		description: '',
-		download_count: null,
-		image_1: null,
+		download_count: 0,
+		image_1: '',
 		image_1_src: '',
-		image_2: null,
+		image_2: '',
 		image_2_src: '',
 		page_layout: configData['page_layout'],
 		spacing_theme_id: configData['spacing_theme_id'],
 		color_theme_id: configData['color_theme_id'],
 		typography_theme_id: configData['typography_theme_id'],
 		updated_at: null,
-		use_profile_info: null,
+		use_profile_info: true,
 		user_id: null
 	};
 
+	const [shouldSubmitForm, setShouldSubmitForm] = useState(false);
 	const [editState, editFormAction] = useFormState(editPortfolio, initialState);
 	const [focusedField, setFocusedField] = useState('');
 	const [colorThemeData, setColorThemeData] = useState<ThemeData[]>([]);
@@ -137,18 +140,19 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				.single();
 			setPortfolioValues(portfolioDetails as PortifolioType);
 		};
+
+		console.log(portfolioValues.image_1)
+
 		id !== NEW
 			? fetchPortfolioValues()
 			: portfolioValues.spacing_theme_id !== '' && create(portfolioValues);
-	}, [id, configData.id, portfolioValues.spacing_theme_id]);
+	}, [id, configData.id, portfolioValues.spacing_theme_id, portfolioValues.image_1, portfolioValues.image_2]);
 
 	const handleInputChange =
-		(fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+		({ fieldName }: { fieldName: keyof PortifolioType }) => (e: React.ChangeEvent<HTMLInputElement>) => {
 			const { name, value, files } = e.target;
-
+			console.log(fieldName, files && files[0])
 			setFocusedField(name);
-
-
 
 			setPortfolioValues((portfolioAtual) => {
 				console.log(portfolioAtual)
@@ -167,19 +171,36 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				if (!portfolioAtual) {
 					return portfolioValues;
 				}
-				const updatedPortfolio = {
+				const updatedPortfolio: PortifolioType = {
 					...portfolioAtual,
-					[name]: name.includes('image_') ? (files! && files[0]) : value || '',
+					[name]: name.includes('image_') ? (files! ? files[0] : value || '') : value || '',
 					spacing_theme_id: spacing || '',
 					color_theme_id: color || '',
 					typography_theme_id: typography || ''
 				};
-				console.log(updatedPortfolio)
-				//editForm(objectToFormData({ obj: portfolioValues }));
-
+				setShouldSubmitForm(true);
+				console.log(updatedPortfolio['image_1'])
 				return updatedPortfolio;
 			});
 		};
+
+	// Use useEffect to handle the form submission
+	useEffect(() => {
+		if (shouldSubmitForm) {
+			// Trigger the form submission here
+			editForm(objectToFormData({ obj: portfolioValues }));
+
+			// Reset the flag after submission
+			setShouldSubmitForm(false);
+		}
+	}, [shouldSubmitForm, portfolioValues]);
+
+	// // Use useEffect to handle the form submission
+	// useEffect(() => {
+	// 	console.log("render", portfolioValues['image_1_src'])
+	// 	portfolioValues['image_1_src'] && ShowImageUploaded(portfolioValues['image_1_src'] as imagesSrcs)
+	// 	portfolioValues['image_2_src'] && ShowImageUploaded(portfolioValues['image_2_src'] as imagesSrcs)
+	// }, [portfolioValues.image_1_src, portfolioValues.image_2_src]);
 
 	useEffect(() => {
 		setPortfolioValues((portfolioAtual) => {
@@ -317,183 +338,21 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW && editFormAction(formData);
 	};
 
-	const inputFields: inputFieldsTypes = [
-		{ label: 'Título', fieldId: 'title', rows: 1 },
-		{ label: 'Descrição', fieldId: 'description', rows: 3 },
-		{ label: 'Mini Bio', fieldId: 'bio', rows: 3 },
-		{ label: 'Curriculum Vitae', fieldId: 'cv', rows: 3 },
-		{ label: 'Contact', fieldId: 'contact', rows: 3 }
-	];
+	function ShowImageUploaded(src: string): React.JSX.Element | null {
+		return !!src ? (
+			<Image
+				key={src}
+				className={'rounded-sm'}
+				src={src}
+				width={125}
+				height={250}
+				alt={''}
+			/>
 
-	const imageFields: imageFieldsTypes = [
-		{ file: 'image_1', src: 'image_1_src', labelButton: 'Upload da Capa' },
-		{ file: 'image_2', src: 'image_2_src', labelButton: 'Upload da contra capa' }
-	];
-
-	return !isLoading && initialPortfolioState.color_theme_id !== '' ? (
-		<form action={editForm} id="portfolioForm">
-			<input id="id" name="id" hidden defaultValue={id} />
-			<input
-				type="hidden"
-				value={portfolioValues.work_id!}
-				name="work_id"
-				id="work_id"
-			></input>
-			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-				<Box
-					sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}
-				>
-					{/** Campos de texto*/}
-					<Box
-						sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}
-					>
-						<Box
-							sx={{
-								flexGrow: 1,
-								display: 'flex',
-								flexDirection: 'column',
-								gap: 2
-							}}
-						>
-							{inputFields.map(({ label, fieldId, rows }) =>
-								MuiTextField({ label, fieldId, rows })
-							)}
-						</Box>
-					</Box>
-
-					{/** Upload de imagens */}
-					<Box>
-						<Box
-							sx={{
-								flexGrow: 1,
-								display: 'flex',
-								flexDirection: 'row',
-								gap: 2
-							}}
-						>
-							{imageFields.map(({ file, src, labelButton }) =>
-								imageUpload({ file, src, labelButton })
-							)}
-						</Box>
-					</Box>
-
-					{/* Works */}
-					<Box>{renderWorkCards()}</Box>
-
-					{/* Orientação */}
-					{renderPageLayoutSelection()}
-
-					{['color', 'typography', 'spacing'].map((theme, index) =>
-						renderThemeSelection({
-							label: `Tema de ${theme === 'spacing'
-								? 'espaçamento'
-								: theme === 'typography'
-									? 'Tipografia'
-									: 'Cores'
-								}`,
-							fieldName: `${theme}_theme_id`,
-							themeData:
-								theme === 'color'
-									? colorThemeData
-									: theme === 'typography'
-										? typographyThemeData
-										: spacingThemeData,
-							handleChange: handleInputChange(`${theme}_theme_id`)
-						})
-					)}
-				</Box>
-			</Box>
-			<SubmitButton />
-			<p aria-live="polite" className="sr-only" role="status">
-				{id && editState?.message}
-			</p>
-		</form>
-	) : (
-		<div className="flex items-center justify-center w-full h-52">
-			<LoadingDots></LoadingDots>
-		</div>
-	);
-
-	function renderPageLayoutSelection() {
-		return (
-			<FormControl>
-				<FormGroup aria-labelledby="Orientação" sx={{ paddingY: 2 }}>
-					<FormLabel id="page_layout_label">Orientação da página</FormLabel>
-					<RadioGroup
-						row
-						aria-labelledby="Orientation"
-						defaultValue="portrait"
-						name="page_layout"
-						id="page_layout"
-						value={portfolioValues.page_layout}
-						onChange={handleInputChange('page_layout')}
-					>
-						<FormControlLabel
-							value="portrait"
-							control={<Radio />}
-							label="Retrato"
-						/>
-						<FormControlLabel
-							value="landscape"
-							control={<Radio />}
-							label="Paisagem"
-						/>
-					</RadioGroup>
-				</FormGroup>
-			</FormControl>
-		);
+		) : <></>
 	}
 
-	function renderWorkCards() {
-		return (
-			<>
-				<FormLabel id="works_id">Trabalhos neste portfolio</FormLabel>
-				<FormGroup
-					aria-labelledby="Works"
-					sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
-				>
-					{works &&
-						works.map((work: any) => {
-							return workCard(work);
-						})}
-				</FormGroup>
-			</>
-		);
-	}
 
-	function workCard(work: any): React.JSX.Element {
-		return (
-			<Card sx={{ display: 'flex' }} key={work.id}>
-				<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-					<CardContent sx={{ flex: '1 0 auto' }}>
-						<Typography component="div" variant="h5">
-							{work.title}
-						</Typography>
-						<Typography
-							variant="subtitle1"
-							color="text.secondary"
-							component="div"
-						>
-							{work.description}
-						</Typography>
-						<Checkbox
-							checked={workIsChecked(work.id)}
-							onChange={() => handleCheckboxChange(work.id)}
-							inputProps={{ 'aria-label': 'controlled' }}
-							value={work.id}
-							required
-						/>
-					</CardContent>
-				</Box>
-				<CardMedia
-					component="img"
-					sx={{ width: 151 }}
-					image={work.image_1_src}
-					alt={work.title}
-				/>
-			</Card>
-		);
-	}
 
 	function imageUpload({
 		file,
@@ -504,37 +363,21 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		src: imagesSrcs;
 		labelButton: string;
 	}): React.JSX.Element | null {
-		const imageSrc = portfolioValues[src];
 
 		return (
 			<Box sx={{ display: 'flex', flexDirection: 'column' }} key={src}>
 				<Button variant="contained" component="label" className="w-full my-4">
 					{labelButton}
-
 					<input
 						type="file"
 						hidden
 						id={file}
 						name={file}
 						accept="image/*"
-
-						onChange={
-							handleInputChange(file)
-							//editForm(objectToFormData({ obj: portfolioValues }));
-						}
+						onChange={handleInputChange({ fieldName: file })}
 					/>
 				</Button>
-
-				{imageSrc && (
-					<Image
-						className={'rounded-sm'}
-						src={imageSrc}
-						width={250}
-						height={500}
-						sizes="(max-width: 250px) 100vw, (max-width: 125px) 50vw, 33vw"
-						alt={''}
-					/>
-				)}
+				{ShowImageUploaded(portfolioValues[src] as imagesSrcs)}
 			</Box>
 		);
 	}
@@ -572,7 +415,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				key={fieldId}
 				required
 				value={portfolioValues[fieldId]}
-				onChange={handleInputChange(fieldId)}
+				onChange={handleInputChange({ fieldName: fieldId })}
 				autoFocus={focusedField === fieldId}
 				multiline={rows > 1}
 				rows={rows}
@@ -673,4 +516,184 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			</FormControl>
 		);
 	}
+
+	const inputFields: inputFieldsTypes = [
+		{ label: 'Título', fieldId: 'title', rows: 1 },
+		{ label: 'Descrição', fieldId: 'description', rows: 3 },
+		{ label: 'Mini Bio', fieldId: 'bio', rows: 3 },
+		{ label: 'Curriculum Vitae', fieldId: 'cv', rows: 3 },
+		{ label: 'Contact', fieldId: 'contact', rows: 3 }
+	];
+
+	const imageFields: imageFieldsTypes = [
+		{ file: 'image_1', src: 'image_1_src', labelButton: 'Upload da Capa' },
+		{ file: 'image_2', src: 'image_2_src', labelButton: 'Upload da contra capa' }
+	];
+
+	return !isLoading && initialPortfolioState.color_theme_id !== '' && id !== NEW ? (
+		<form action={editForm} id="portfolioForm">
+			<input id="id" name="id" hidden defaultValue={id} />
+			<input
+				type="hidden"
+				value={portfolioValues.work_id!}
+				name="work_id"
+				id="work_id"
+			></input>
+			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+				<Box
+					sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}
+				>
+					{/** Campos de texto*/}
+					<Box
+						sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}
+					>
+						<Box
+							sx={{
+								flexGrow: 1,
+								display: 'flex',
+								flexDirection: 'column',
+								gap: 2
+							}}
+						>
+							{inputFields.map(({ label, fieldId, rows }) =>
+								MuiTextField({ label, fieldId, rows })
+							)}
+						</Box>
+					</Box>
+
+					{/** Upload de imagens */}
+					<Box>
+						<Box
+							sx={{
+								flexGrow: 1,
+								display: 'flex',
+								flexDirection: 'row',
+								gap: 2
+							}}
+						>
+							{imageFields.map(({ file, src, labelButton }) =>
+								imageUpload({ file, src, labelButton })
+							)}
+						</Box>
+					</Box>
+
+					{/* Works */}
+					<Box>{renderWorkCards()}</Box>
+
+					{/* Orientação */}
+					{renderPageLayoutSelection()}
+
+					{['color', 'typography', 'spacing'].map((theme, index) =>
+						renderThemeSelection({
+							label: `Tema de ${theme === 'spacing'
+								? 'espaçamento'
+								: theme === 'typography'
+									? 'Tipografia'
+									: 'Cores'
+								}`,
+							fieldName: `${theme}_theme_id`,
+							themeData:
+								theme === 'color'
+									? colorThemeData
+									: theme === 'typography'
+										? typographyThemeData
+										: spacingThemeData,
+							handleChange: handleInputChange({ fieldName: `${theme}_theme_id` as keyof PortifolioType })
+						})
+					)}
+				</Box>
+			</Box>
+			<SubmitButton />
+			<p aria-live="polite" className="sr-only" role="status">
+				{id && editState?.message}
+			</p>
+		</form>
+	) : (
+		<div className="flex items-center justify-center w-full h-52">
+			<LoadingDots></LoadingDots>
+		</div>
+	);
+
+	function renderPageLayoutSelection() {
+		return (
+			<FormControl>
+				<FormGroup aria-labelledby="Orientação" sx={{ paddingY: 2 }}>
+					<FormLabel id="page_layout_label">Orientação da página</FormLabel>
+					<RadioGroup
+						row
+						aria-labelledby="Orientation"
+						defaultValue="portrait"
+						name="page_layout"
+						id="page_layout"
+						value={portfolioValues.page_layout}
+						onChange={handleInputChange({ fieldName: 'page_layout' })}
+					>
+						<FormControlLabel
+							value="portrait"
+							control={<Radio />}
+							label="Retrato"
+						/>
+						<FormControlLabel
+							value="landscape"
+							control={<Radio />}
+							label="Paisagem"
+						/>
+					</RadioGroup>
+				</FormGroup>
+			</FormControl>
+		);
+	}
+
+	function renderWorkCards() {
+		return (
+			<>
+				<FormLabel id="works_id">Trabalhos neste portfolio</FormLabel>
+				<FormGroup
+					aria-labelledby="Works"
+					sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
+				>
+					{works &&
+						works.map((work: any) => {
+							return workCard(work);
+						})}
+				</FormGroup>
+			</>
+		);
+	}
+
+	function workCard(work: any): React.JSX.Element {
+		return (
+			<Card sx={{ display: 'flex' }} key={work.id}>
+				<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+					<CardContent sx={{ flex: '1 0 auto' }}>
+						<Typography component="div" variant="h5">
+							{work.title}
+						</Typography>
+						<Typography
+							variant="subtitle1"
+							color="text.secondary"
+							component="div"
+						>
+							{work.description}
+						</Typography>
+						<Checkbox
+							checked={workIsChecked(work.id)}
+							onChange={() => handleCheckboxChange(work.id)}
+							inputProps={{ 'aria-label': 'controlled' }}
+							value={work.id}
+							required
+						/>
+					</CardContent>
+				</Box>
+				<CardMedia
+					component="img"
+					sx={{ width: 151 }}
+					image={work.image_1_src}
+					alt={work.title}
+				/>
+			</Card>
+		);
+	}
+
+
 }

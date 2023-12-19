@@ -1,10 +1,10 @@
 'use server';
 
-import { PortifolioType } from './types';
+import { PortifolioType, imagesFiles, imagesSrcs } from './types';
 import { createClient } from '@/utils/supabase/server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { z } from 'zod';
 
 export async function create(data: PortifolioType) {
@@ -22,54 +22,14 @@ export async function create(data: PortifolioType) {
     redirect(`/dashboard/portfolios/${newPortfolio.id}`);
 }
 // Define um tipo personalizado para representar arquivos
-type FileValue = {
-  file: File;
-};
-
-function isFileValue(value: any): value is FileValue {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'file' in value &&
-    value.file instanceof File
-  );
-}
 
 export async function editPortfolio(prevState: any, formData: FormData) {
   const schema = z.object({
     id: z.optional(z.string()),
     title: z.string().nullable(),
     description: z.string().nullable(),
-    image_1: z
-      .object({
-        file: z.object({
-          name: z.string(),
-          lastModified: z.number(),
-          type: z.string(),
-          size: z.number()
-        })
-      })
-      .nullable()
-      .optional()
-      .refine((value) => isFileValue(value), {
-        message: 'Invalid file format for image_1'
-      }),
-    image_2: z
-      .object({
-        file: z.object({
-          name: z.string(),
-          lastModified: z.number(),
-          type: z.string(),
-          size: z.number()
-        })
-      })
-      .optional()
-      .nullable()
-      .refine((value) => isFileValue(value), {
-        message: 'Invalid file format for image_2'
-      }),
-    image_1_src: z.string().nullable(),
-    image_2_src: z.string().nullable(),
+    image_1_src: z.string().nullable().optional(),
+    image_2_src: z.string().nullable().optional(),
     bio: z.string().nullable(),
     cv: z.string().nullable(),
     contact: z.string().nullable(),
@@ -77,15 +37,15 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     spacing_theme_id: z.string().nullable(),
     typography_theme_id: z.string().nullable(),
     page_layout: z.string(),
-    work_id: z.string().array().nullable()
+    work_id: z.string().array().nullable().optional().or(z.string())
   });
   const rawWorkId = formData.get('work_id');
-
+  console.log(rawWorkId);
   let workId =
     typeof rawWorkId === 'string'
-      ? rawWorkId === ''
+      ? rawWorkId === 'null'
         ? null
-        : Array(rawWorkId)
+        : rawWorkId && Array(rawWorkId)
       : rawWorkId;
 
   const data = schema.parse({
@@ -98,13 +58,14 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     page_layout: formData.get('page_layout'),
     image_1: formData.get('image_1'),
     image_2: formData.get('image_2'),
-    image_1_src: await uploadImage(formData, 'image_1'),
-    image_2_src: await uploadImage(formData, 'image_2'),
     spacing_theme_id: formData.get('spacing_theme_id') ?? '',
     color_theme_id: formData.get('color_theme_id') ?? '',
     typography_theme_id: formData.get('typography_theme_id') ?? '',
     work_id: workId
   });
+
+  data.image_1_src = await getImageSrc(formData, 'image_1');
+  data.image_2_src = await getImageSrc(formData, 'image_2');
 
   data.work_id =
     data && data.work_id ? data.work_id.toString().split(',') : null;
@@ -118,9 +79,9 @@ export async function editPortfolio(prevState: any, formData: FormData) {
       .select()
       .single();
 
-    console.log('editPortfolio error', data, error);
+    console.log('editPortfolio', data, error);
 
-    revalidateTag('id'); // Update cached posts
+    revalidatePath(`/dashboard/portfolios/${formData.get('id')}`, 'page'); // Update cached posts
     return { id: dataOk?.id };
   } catch (e) {
     console.log(e);
@@ -145,12 +106,32 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
       .delete()
       .eq('id', data.id);
 
-    revalidatePath(`/dashboard/portfolios`, 'layout');
+    revalidatePath(`/dashboard/portfolios`, 'page');
+    const router = useRouter();
+    router.refresh();
   } catch (e) {
     console.log(e);
     return { message: 'Failed to delete portfolio' };
   }
 }
+
+const getImageSrc = async (formData: FormData, fieldName: imagesFiles) => {
+  const newUploadImage = formData.get(fieldName);
+  const oldImageSrc = formData.get(`${fieldName}_src`) as imagesSrcs;
+
+  if (
+    newUploadImage === null ||
+    newUploadImage === undefined ||
+    newUploadImage === ''
+  ) {
+    return oldImageSrc;
+  }
+
+  const uploadImageSrc = async () => await uploadImage(formData, fieldName);
+  const newImageSrc = await uploadImageSrc();
+
+  return typeof newImageSrc === 'string' ? newImageSrc : null;
+};
 
 async function uploadImage<T extends Blob>(
   formData: FormData,
@@ -160,10 +141,11 @@ async function uploadImage<T extends Blob>(
   const supabase = createClient(cookieStore);
   const imageFile = formData.get(label);
   console.log([typeof imageFile, label, imageFile]);
-  if (!imageFile) return null;
+  if (!imageFile) return '';
 
   if (!(imageFile instanceof Blob)) {
-    throw new Error('Invalid file format');
+    console.log(typeof imageFile);
+    return '';
   }
 
   const originalFileName =
@@ -184,6 +166,7 @@ async function uploadImage<T extends Blob>(
   const imageUrl = file
     ? `https://kwndzieuudlxdvvqoigx.supabase.co/storage/v1/object/public/images/${file.path}`
     : '';
-
+  console.log(imageUrl);
+  revalidatePath(`/dashboard/portfolios/${formData.get('id')}`, 'page');
   return imageUrl;
 }
