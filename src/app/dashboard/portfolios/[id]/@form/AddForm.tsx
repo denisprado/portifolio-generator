@@ -146,7 +146,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW
 			? fetchPortfolioValues()
 			: portfolioValues.spacing_theme_id !== '' && create(portfolioValues);
-	}, [id, configData.id, portfolioValues.spacing_theme_id, portfolioValues.image_1, portfolioValues.image_2]);
+	}, [id, configData.id, portfolioValues.spacing_theme_id, portfolioValues.image_1, portfolioValues.image_2, portfolioValues.image_1_src, portfolioValues.image_2_src, portfolioValues.work_id, portfolioValues.color_theme_id, portfolioValues.typography_theme_id]);
 
 	const handleInputChange =
 		({ fieldName }: { fieldName: keyof PortifolioType }) => (e: React.ChangeEvent<HTMLInputElement>) => {

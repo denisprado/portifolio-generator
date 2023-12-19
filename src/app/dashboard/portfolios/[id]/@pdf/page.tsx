@@ -99,7 +99,6 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 	if (id === NEW) {
 		return null
 	}
-	console.log(image_1_src)
 
 	return (
 		<div className="fixed w-full">
