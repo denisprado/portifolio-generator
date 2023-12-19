@@ -15,15 +15,12 @@ import { PortifolioType } from '../../types'
 export default function PdfView({ params: { id } }: { params: { id: string } }) {
 
 	if (!id) {
-		console.log(id)
 		return null
 	}
 
 	const [works, setWorks] = useState<any>([])
 	const [portfolio, setPortfolio] = useState<any>([])
 	const [styles, setStyles] = useState<any>()
-
-
 
 	useEffect(() => {
 		const fetchPortfolios = async () => {
@@ -62,7 +59,9 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		notFound()
 	}
 
-	const { work_id, image_1_src,
+	const {
+		work_id,
+		image_1_src,
 		image_2_src,
 		title,
 		description,
@@ -101,74 +100,72 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 	}
 
 	return (
-		<div className="fixed w-full">
+		<PDFViewer style={styles?.viewer}>
 
-			<PDFViewer style={styles?.viewer}>
+			<Document style={{ margin: 0, width: "210mm", height: '297mm' }}>
 
-				<Document style={{ margin: 0, width: "210mm", height: '297mm' }}>
+				{/* Página 1 - Capa */}
 
-					{/* Página 1 - Capa */}
-
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
-						<View style={styles?.pageContent}>
-							<Section style={styles}>
-								<View style={{ padding: '10mm', paddingBottom: '0' }}>
-									<Text style={styles?.h1}>{title}</Text>
-								</View>
-							</Section>
-							<Section style={styles}>
-								{image_1_src && <Image src={image_1_src} style={styles?.imageCover} />}
-							</Section>
-							<Section style={styles}>
-								<ContainerColumn style={styles} descriptionOrder={'initial'}>
-									<Column style={styles}>
-										<Text style={styles?.p}>{description}</Text>
-									</Column>
-								</ContainerColumn>
-							</Section>
-						</View>
-					</Page>
-
-					{/* Obras */}
-
-					{works && works?.map((work: { id: any }) =>
-						<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={page_layout} />
-					)}
-
-					{/* 2ª Contra Capa */}
-
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
-						<View style={styles?.pageContent}>
-							<Section style={styles}>
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
+					<View style={styles?.pageContent}>
+						<Section style={styles}>
+							<View style={{ padding: '10mm', paddingBottom: '0' }}>
+								<Text style={styles?.h1}>{title}</Text>
+							</View>
+						</Section>
+						<Section style={styles}>
+							{image_1_src && <Image src={image_1_src} style={styles?.imageCover} />}
+						</Section>
+						<Section style={styles}>
+							<ContainerColumn style={styles} descriptionOrder={'initial'}>
 								<Column style={styles}>
-									<Text style={styles?.h3}>Biografia</Text>
-									<Text style={styles?.p}>{bio}</Text>
+									<Text style={styles?.p}>{description}</Text>
 								</Column>
-								<Column style={styles}>
-									<Text style={styles?.h3}>Curriculum Vitae</Text>
-									<Text style={styles?.p}>{cv}</Text>
-								</Column>
-							</Section>
-						</View>
-					</Page>
+							</ContainerColumn>
+						</Section>
+					</View>
+				</Page>
 
-					{/* Contra Capa */}
+				{/* Obras */}
 
-					<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
-						<View style={styles?.pageContent}>
-							<Section style={styles}>
-								{image_2_src && <Image src={image_2_src} style={styles?.image} />}
-							</Section>
-							<Section style={styles}>
-								<Column style={styles}>
-									<Text style={styles?.h3}>Contato</Text>
-									<Text style={styles?.p}>{contact}</Text>
-								</Column>
-							</Section>
-						</View>
-					</Page>
-				</Document>
-			</PDFViewer>
-		</div>
+				{works && works?.map((work: { id: any }) =>
+					<WorkPagePdf key={work?.id} record={work} styles={styles} page_layout_from_portifolio={page_layout} />
+				)}
+
+				{/* 2ª Contra Capa */}
+
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
+					<View style={styles?.pageContent}>
+						<Section style={styles}>
+							<Column style={styles}>
+								<Text style={styles?.h3}>Biografia</Text>
+								<Text style={styles?.p}>{bio}</Text>
+							</Column>
+							<Column style={styles}>
+								<Text style={styles?.h3}>Curriculum Vitae</Text>
+								<Text style={styles?.p}>{cv}</Text>
+							</Column>
+						</Section>
+					</View>
+				</Page>
+
+				{/* Contra Capa */}
+
+				<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
+					<View style={styles?.pageContent}>
+						<Section style={styles}>
+							{image_2_src && <Image src={image_2_src} style={styles?.image} />}
+						</Section>
+						<Section style={styles}>
+							<Column style={styles}>
+								<Text style={styles?.h3}>Contato</Text>
+								<Text style={styles?.p}>{contact}</Text>
+							</Column>
+						</Section>
+					</View>
+				</Page>
+			</Document>
+		</PDFViewer>
+
 	)
 }

@@ -202,7 +202,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			// Reset the flag after submission
 			setShouldSubmitForm(false);
 		}
-	}, [shouldSubmitForm, portfolioValues]);
+	}, [shouldSubmitForm, portfolioValues, portfolioValues.work_id]);
 
 	useEffect(() => {
 		setPortfolioValues((portfolioAtual) => {
@@ -252,6 +252,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		- Sempre que clicar em um trabalho, gravar em portfoliosValues.work_id
 	*/
 	useEffect(() => {
+		console.log(worksSelecteds)
 		setPortfolioValues({ ...portfolioValues, work_id: worksSelecteds });
 	}, [worksSelecteds]);
 
@@ -269,6 +270,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			});
 			return worksIds;
 		});
+		setShouldSubmitForm(true)
 	};
 
 	const workIsChecked = (id: string) =>

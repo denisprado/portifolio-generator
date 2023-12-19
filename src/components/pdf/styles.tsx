@@ -41,23 +41,25 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 	}
 
 	const columnSetup = {
-		height: pageSetup[pageLayout].height - imageSetup[pageLayout].height - (2 * imageMargin)
+		height: pageSetup[pageLayout].height - imageSetup[pageLayout].height - (2 * imageMargin) - (2 * margin)
 	}
+
+	const pageWidthAbsolute = ((100 / 12) * 9) / 2
+	const pageHeightAbsolute = 88
 
 	const page = StyleSheet.create({
 		viewer: {
-			margin: 0,
-			height: `${pageSetup[pageLayout].height}mm`,
-			display: 'flex',
-			width: `${pageSetup[pageLayout].width}mm`,
+			height: `${pageHeightAbsolute}vh`,
+			width: `${pageWidthAbsolute}vw`,
 			marginHorizontal: margin,
-			marginVertical: margin
+			marginVertical: margin,
+
 		},
 		page: {
 			flexDirection: `column`,
 			backgroundColor: color_theme?.background_primary_color ?? '',
 			flexGrow: 1,
-			margin: 0,
+			margin: 10,
 			display: 'none'
 		},
 		pageLoaded: {
@@ -101,7 +103,7 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 
 	const image = StyleSheet.create({
 		image: {
-			width: `${imageSetup[pageLayout].width}`,
+			width: `${imageSetup[pageLayout].width}mm`,
 			height: `${imageSetup[pageLayout].height}mm`,
 			margin: `${imageMargin}mm`,
 			objectFit: 'cover',

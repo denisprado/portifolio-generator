@@ -5,13 +5,15 @@ export default function Layout(props: {
 }) {
 
 	return (
-		<div className='grid w-full grid-cols-12 gap-4 p-4'>
+		<div className='grid grid-cols-12 gap-4 p-8'>
 
-			<div className='w-full col-span-6'>
+			<div className='col-span-6'>
 				{props.form}
 			</div>
-			<div className="w-full h-full col-span-6 bg-white relative">
-				{props.pdf}
+			<div className="col-span-6 bg-white relative px-4 ">
+				<div className="fixed ">
+					{props.pdf}
+				</div>
 			</div>
 		</div>
 	)

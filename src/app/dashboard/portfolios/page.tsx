@@ -49,7 +49,7 @@ export default function portfolios() {
 							id={portfolio.id}
 							title={portfolio.title}
 							description={portfolio.description}
-							imageSrc={portfolio.image_1}
+							imageSrc={portfolio.image_1_src}
 							cardActions={getCardCations(portfolio)}
 						/>
 					</Grid>
