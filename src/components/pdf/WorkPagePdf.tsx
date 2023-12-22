@@ -9,6 +9,8 @@ import { Orientation } from './portifolio';
 
 
 export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any) => {
+	console.log("🚀 ~ file: WorkPagePdf.tsx:12 ~ WorkPagePdf ~ record, page_layout_from_portifolio, styles:", record, page_layout_from_portifolio, styles)
+
 	if (!styles) {
 		return null
 	}
@@ -17,13 +19,15 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 		return null
 	}
 
+
+
 	const orientation = page_layout_from_portifolio !== undefined ? page_layout_from_portifolio as Orientation : record?.page_layout as Orientation;
 
 	const { title, image_1, image_2, image_1_order_image, image_1_orientation, text_1_vertical_align, description_1_order, image_1_src, image_2_src, description_1, description_2, tech_description_1, tech_description_2, image_2_orientation, image_2_order_image, text_1_horizontal_align, text_2_horizontal_align, description_2_order, text_2_vertical_align } = record;
 
 	let pages = [
 		{
-			image: image_1,
+			image: image_1_src,
 			description: description_1,
 			tech_description: tech_description_1,
 			image_order: image_1_order_image,
@@ -33,7 +37,7 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 			description_order: description_1_order
 		},
 		{
-			image: image_2,
+			image: image_2_src,
 			description: description_2,
 			tech_description: tech_description_2,
 			image_order: image_2_order_image,
@@ -45,21 +49,21 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 	];
 
 	if (!pages) return null
-
-	return <>{pages.map((page, i) =>
-		<Page size={"A4"} style={styles.page} orientation={orientation} key={i}>
+	console.log("🚀 ~ file: WorkPagePdf.tsx:82 ~ WorkPagePdf ~ pages:", pages)
+	return pages.map((page, i) =>
+		<Page size={"A4"} style={styles.pageLoaded} orientation={orientation} key={i}>
 			<WorkPageContent style={styles} imageOrder={page?.image_order}>
 
-				<Section style={styles}>
+				{page.image && <Section style={styles}>
 					<Image src={page.image} style={styles.image} />
-				</Section>
+				</Section>}
 
 				<Section style={styles}>
 					<ContainerColumn style={styles} descriptionOrder={page.description_order}>
 						<Column style={styles}>
 							{i === 0 &&
-								<Text style={styles.h2}>{title}</Text>}
-
+								<Text style={styles.h2}>{title}</Text>
+							}
 							<Text style={styles.p}>
 								{page?.description}
 							</Text>
@@ -75,5 +79,6 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 			</WorkPageContent>
 		</Page>
 	)
-	}</>
+
+
 };

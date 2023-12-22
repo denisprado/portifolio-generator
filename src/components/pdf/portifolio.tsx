@@ -15,7 +15,7 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 	if (!record) {
 		return
 	}
-	const styles = await useThemeStyles({ portfolio: record });
+	const styles = await useThemeStyles(record);
 
 	const image_1_src = record?.image_1_src
 	const image_2_src = record?.image_2_src
@@ -49,9 +49,9 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 								<Text style={styles?.h1}>{title}</Text>
 							</View>
 						</Section>
-						<Section style={styles}>
-							{/* <Image src={image_1_src} style={styles?.imageCover} /> */}
-						</Section>
+						{/* <Section style={styles}>
+							<Image src={image_1_src} style={styles?.imageCover} />
+						</Section> */}
 						<Section style={styles}>
 							<ContainerColumn style={styles} descriptionOrder={'initial'}>
 								<Column style={styles}>
@@ -92,16 +92,15 @@ const PortifolioPDF = async ({ record }: RecordType) => {
 
 				<Page size={"A4"} style={styles?.pageLoaded} orientation={orientation}>
 					<View style={styles?.pageContent}>
-						<Section style={styles}>
-							{/* <Image src={image_2_src} style={styles?.image} /> */}
-						</Section>
+						{/* <Section style={styles}>
+							<Image src={image_2_src && image_2_src} style={styles?.image} />
+						</Section> */}
 						<Section style={styles}>
 							<Column style={styles}>
 								<Text style={styles?.h3}>Contato</Text>
 								<Text style={styles?.p}>{contact}</Text>
 							</Column>
-							<Column style={styles}>
-							</Column>
+
 						</Section>
 					</View>
 				</Page>

@@ -1,6 +1,6 @@
 import { toDateTime } from './helpers';
 import { stripe } from './stripe';
-import { ConfigType } from '@/app/dashboard/portfolios/types';
+import { ConfigType } from '@/app/dashboard/types';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';

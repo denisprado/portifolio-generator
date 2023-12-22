@@ -1,10 +1,10 @@
-import { ThemeStyles, PageLayoutType } from '@/app/dashboard/portfolios/types';
+import { ConfigType, PageLayoutType } from '@/app/dashboard/types';
 import { supabaseClient } from '@/utils/supabase';
 import { StyleSheet } from '@react-pdf/renderer';
 
-export async function useThemeStyles({ portfolio }: ThemeStyles) {
+export async function useThemeStyles(register: ConfigType) {
 
-	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = portfolio
+	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = register
 	if (!color_theme_id || !typography_theme_id || !spacing_theme_id || !page_layout) {
 		return
 	}
@@ -60,7 +60,6 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 			backgroundColor: color_theme?.background_primary_color ?? '',
 			flexGrow: 1,
 			margin: 10,
-			display: 'none'
 		},
 		pageLoaded: {
 			flexDirection: `column`,
@@ -156,6 +155,7 @@ export async function useThemeStyles({ portfolio }: ThemeStyles) {
 	})
 
 	const styles = { ...page, ...image, ...textStyles, ...section, ...column }
+	console.log(styles)
 
 	return styles
 }

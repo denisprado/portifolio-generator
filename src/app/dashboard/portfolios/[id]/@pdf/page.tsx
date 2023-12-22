@@ -10,7 +10,7 @@ import { supabaseClient } from "@/utils/supabase"
 import { Document, Image, PDFViewer, Page, Text, View } from '@react-pdf/renderer'
 import { notFound } from "next/navigation"
 import { useEffect, useState } from "react"
-import { PortifolioType } from '../../types'
+import { PortifolioType } from '../../../types'
 
 export default function PdfView({ params: { id } }: { params: { id: string } }) {
 
@@ -26,7 +26,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		const fetchPortfolios = async () => {
 			if (id) {
 				supabaseClient.channel('room1')
-					.on('postgres_changes', { event: '*', schema: '*' }, (payload) => {
+					.on('postgres_changes', { event: '*', schema: '*', table: 'portfolio' }, (payload) => {
 						setPortfolio(payload.new as PortifolioType)
 					})
 					.subscribe()
@@ -48,7 +48,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 
 	useEffect(() => {
 		const fetchStyles = async () => {
-			const portStyles = await useThemeStyles({ portfolio: portfolio })
+			const portStyles = await useThemeStyles(portfolio)
 
 			setStyles(portStyles)
 		}
@@ -71,15 +71,12 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		page_layout } = portfolio
 
 	useEffect(() => {
-
 		if (work_id) {
-
 			const fetchWorks = async () => {
 				const { data: workData } = await supabaseClient.from('work').select().in('id', work_id)
 				if (!workData) {
 					return null
 				}
-
 				setWorks(workData)
 			}
 			fetchWorks()
@@ -87,15 +84,17 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 	}, [work_id])
 
 	if (!styles) {
+		console.log(styles)
 		return null
 	}
 
-
 	if (!works) {
+		console.log(works)
 		return null
 	}
 
 	if (id === NEW) {
+		console.log(id)
 		return null
 	}
 

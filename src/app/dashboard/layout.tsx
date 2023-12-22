@@ -29,7 +29,7 @@ export default function DashboardLayout({
 					<List className='w-full'>
 						{[
 							{ label: 'Portfolios', href: '/dashboard/portfolios' },
-							{ label: 'Trabalhos', href: '/dashboard/work' }
+							{ label: 'Trabalhos', href: '/dashboard/works' }
 						].map((item, index) => (
 							<ListItem
 								key={item.label}

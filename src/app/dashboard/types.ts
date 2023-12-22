@@ -16,11 +16,17 @@ export interface ThemeProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export type FieldId = keyof PortifolioType;
+export type WorkFieldId = keyof WorkType;
+export type PortfolioFieldId = keyof PortifolioType;
 
-export type inputFieldsTypes = {
+export type PortfolioInputFieldsTypes = {
   label: string;
-  fieldId: FieldId;
+  fieldId: PortfolioFieldId;
+  rows: number;
+}[];
+export type WorkInputFieldsTypes = {
+  label: string;
+  fieldId: WorkFieldId;
   rows: number;
 }[];
 
@@ -33,6 +39,12 @@ export type imageFieldsTypes = {
   labelButton: string;
 }[];
 
+export type WorkRadioFieldsTypes = {
+  label: string;
+  fieldName: keyof WorkType;
+  values: { value: string; label: string; default: boolean }[];
+};
+
 export type ConfigType = Tables<'config'>;
 
 export type PortifolioType = Tables<'portfolio'>;
@@ -40,6 +52,7 @@ export type PortifolioType = Tables<'portfolio'>;
 export type WorkType = Tables<'work'>;
 
 export type ThemeStyles = { portfolio: PortifolioType };
+export type WorkThemeStyles = { work: WorkType };
 
 export type SpacingTheme = Tables<'spacing_theme'>;
 export type ColorTheme = Tables<'color_theme'>;
