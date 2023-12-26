@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 
 const meta = {
-	title: 'Next.js Subscription Starter',
+	title: 'PortfolioArt',
 	description: 'Brought to you by Vercel, Stripe, and Supabase.',
 	cardImage: '/og.png',
 	robots: 'follow, index',

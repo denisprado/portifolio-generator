@@ -3,6 +3,9 @@ import { createWork, editWork } from '@/app/dashboard/works/actions';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
 	Box,
 	Button,
 	Card,
@@ -18,7 +21,6 @@ import FormLabel from '@mui/material/FormLabel';
 import Image from 'next/image';
 import {
 	ConfigType,
-	PortifolioType,
 	ThemeData,
 	ThemeProps,
 	WorkFieldId,
@@ -31,9 +33,10 @@ import {
 } from '../../../types';
 
 import { NEW, WORK } from '@/app/constants';
+import { TabsPanelRenderer } from '@/app/dashboard/tabsComponents';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-
 
 export const revalidate = 60;
 
@@ -42,6 +45,13 @@ const initialState = {
 };
 
 export function AddForm({ params: { id } }: { params: { id: string } }) {
+
+	const [tabValue, setTabValue] = React.useState(0);
+
+	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+		setTabValue(newValue);
+	};
+
 	const [configData, setConfigData] = useState<ConfigType>({
 		id: '',
 		created_at: null,
@@ -283,6 +293,25 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		)
 	}
 
+	function UploadImageSession({ imageFields }: { imageFields: imageFieldsTypes }) {
+		return (<Box sx={{
+			flexGrow: 1,
+			display: 'flex',
+			flexDirection: 'row',
+			gap: 2
+		}}>
+			{imageFields ? imageFields.map(({
+				file,
+				src,
+				labelButton
+			}) => imageUpload({
+				file,
+				src,
+				labelButton
+			})) : <p>Sem Imagem</p>}
+		</Box>);
+	}
+
 	function imageUpload({
 		file,
 		src,
@@ -318,13 +347,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			values
 		}: WorkRadioFieldsTypes
 	) {
-		console.log("🚀 ~ file: AddForm.tsx:321 ~ AddForm ~ values:", values)
-		console.log("🚀 ~ file: AddForm.tsx:321 ~ AddForm ~ fieldName:", fieldName)
-		console.log("🚀 ~ file: AddForm.tsx:321 ~ AddForm ~ label:", label)
-
 		const [{ value }] = values.filter((value) => value.default)
-		console.log("🚀 ~ file: AddForm.tsx:569 ~ AddForm ~ defaultValue:", value)
-
 		return (
 			<FormControl>
 				<FormGroup aria-labelledby={label} sx={{ paddingY: 2 }}>
@@ -368,6 +391,25 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		return formData;
 	}
 
+	function InputFieldsSession({ fields }: { fields: WorkInputFieldsTypes }) {
+		return (<Box sx={{
+			flexGrow: 1,
+			display: 'flex',
+			flexDirection: 'column',
+			gap: 2
+		}}>
+			{fields.map(({
+				label,
+				fieldId,
+				rows
+			}) => MuiTextField({
+				label,
+				fieldId,
+				rows
+			}))}
+		</Box>);
+	}
+
 	function MuiTextField(
 		{
 			label,
@@ -402,7 +444,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		);
 	}
 
-	function RadioSelection({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) {
+	function RadioFieldsSession({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) {
 		return (<div className='grid grid-cols-3'>
 			{RadioFields && RadioFields.map(radioField => <div className='col-span-1' key={radioField.fieldName}>
 				<RenderPageLayoutSelection fieldName={radioField.fieldName} label={radioField.label} values={radioField.values} />
@@ -499,10 +541,17 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		);
 	}
 
-	const inputFields: WorkInputFieldsTypes = [
+	const generalFields: WorkInputFieldsTypes = [
 		{ label: 'Título', fieldId: 'title', rows: 1 },
+	];
+
+	const page1Fields: WorkInputFieldsTypes = [
 		{ label: 'Descrição', fieldId: 'description_1', rows: 3 },
+		{ label: 'Descrição Técnica', fieldId: 'tech_description_1', rows: 3 },
+	];
+	const page2Fields: WorkInputFieldsTypes = [
 		{ label: 'Descrição', fieldId: 'description_2', rows: 3 },
+		{ label: 'Descrição Técnica', fieldId: 'tech_description_2', rows: 3 },
 	];
 
 	const rowColValues = [
@@ -537,13 +586,68 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	}
 
 	const radioFieldsPage1 = generateRadioPageFields(1)
-	// console.log("🚀 ~ file: AddForm.tsx:499 ~ AddForm ~ radioFieldsPage1:", radioFieldsPage1)
 	const radioFieldsPage2 = generateRadioPageFields(2)
-	// console.log("🚀 ~ file: AddForm.tsx:501 ~ AddForm ~ radioFieldsPage2:", radioFieldsPage2)
+	const page1ImageFields: imageFieldsTypes = [
+		{ file: 'image_1', src: 'image_1_src', labelButton: 'Imagem de Destaque' },
 
-	const imageFields: imageFieldsTypes = [
-		{ file: 'image_1', src: 'image_1_src', labelButton: 'Imagem Página 1' },
-		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem Página 2' }
+	];
+	const page2ImageFields: imageFieldsTypes = [
+		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem de Destaque' }
+	];
+
+	const tabsPage1 = [
+		{ label: 'Informações', content: <InputFieldsSession fields={page1Fields} /> },
+		{ label: 'Imagens', content: <UploadImageSession imageFields={page1ImageFields} /> },
+		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage1} /> },
+	];
+	const tabsPage2 = [
+		{ label: 'Informações', content: <InputFieldsSession fields={page2Fields} /> },
+		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
+		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage2} /> },
+	];
+
+
+	const InformationContentPanel = () => {
+
+		return (
+
+			<InputFieldsSession fields={generalFields}></InputFieldsSession>
+
+		)
+	}
+
+	const OptionsContentPanel = () => {
+		return (
+			<>
+				<RadioFieldsSession RadioFields={pageLayoutRadioFields}></RadioFieldsSession>
+
+				{['color', 'typography', 'spacing'].map((theme, index) =>
+					renderThemeSelection({
+						label: `Tema de ${theme === 'spacing'
+							? 'espaçamento'
+							: theme === 'typography'
+								? 'Tipografia'
+								: 'Cores'
+							}`,
+						fieldName: `${theme}_theme_id`,
+						themeData:
+							theme === 'color'
+								? colorThemeData
+								: theme === 'typography'
+									? typographyThemeData
+									: spacingThemeData,
+						handleChange: handleInputChange({ fieldName: `${theme}_theme_id` as keyof ConfigType })
+					})
+				)}
+			</>
+		)
+	}
+
+	const tabs = [
+		{ label: 'Sobre', content: <InformationContentPanel /> },
+		{ label: 'Página 1', content: <TabsPanelRenderer tabs={tabsPage1} initialTab={0} /> },
+		{ label: 'Página 2', content: <TabsPanelRenderer tabs={tabsPage2} initialTab={0} /> },
+		{ label: 'Opções', content: <OptionsContentPanel /> },
 	];
 
 	return !isLoading && initialWorkState.color_theme_id !== '' && id !== NEW ? (
@@ -551,65 +655,10 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			<input id="id" name="id" hidden defaultValue={id} />
 
 			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-				<Box
-					sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}
-				>
-					{/** Campos de texto*/}
-					<Box
-						sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2 }}
-					>
-						<Box
-							sx={{
-								flexGrow: 1,
-								display: 'flex',
-								flexDirection: 'column',
-								gap: 2
-							}}
-						>
-							{inputFields.map(({ label, fieldId, rows }) =>
-								MuiTextField({ label, fieldId, rows })
-							)}
-						</Box>
-					</Box>
-
-					<Box>
-						<Box
-							sx={{
-								flexGrow: 1,
-								display: 'flex',
-								flexDirection: 'row',
-								gap: 2
-							}}
-						>
-							{imageFields ? imageFields.map(({ file, src, labelButton }) =>
-								imageUpload({ file, src, labelButton })
-							) : <p>Sem Imagem</p>}
-						</Box>
-					</Box>
-
-					<RadioSelection RadioFields={pageLayoutRadioFields}></RadioSelection>
-					<RadioSelection RadioFields={radioFieldsPage1}></RadioSelection>
-					<RadioSelection RadioFields={radioFieldsPage2}></RadioSelection>
-
-					{['color', 'typography', 'spacing'].map((theme, index) =>
-						renderThemeSelection({
-							label: `Tema de ${theme === 'spacing'
-								? 'espaçamento'
-								: theme === 'typography'
-									? 'Tipografia'
-									: 'Cores'
-								}`,
-							fieldName: `${theme}_theme_id`,
-							themeData:
-								theme === 'color'
-									? colorThemeData
-									: theme === 'typography'
-										? typographyThemeData
-										: spacingThemeData,
-							handleChange: handleInputChange({ fieldName: `${theme}_theme_id` as keyof ConfigType })
-						})
-					)}
+				<Box>
+					<h1 className='text-4xl font-black mb-8'>{workValues['title']}</h1>
 				</Box>
+				<TabsPanelRenderer tabs={tabs} initialTab={0} />
 			</Box>
 			<SubmitButton />
 			<p aria-live="polite" className="sr-only" role="status">

@@ -548,6 +548,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				id="work_id"
 			></input>
 			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+				<h1 className='text-4xl font-black mb-8'>{portfolioValues['title']}</h1>
 				<Box
 					sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}
 				>
