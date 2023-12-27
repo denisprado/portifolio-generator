@@ -58,6 +58,7 @@ export const TabsPanelRenderer: React.FC<TabsPanelProps> = ({ tabs, initialTab }
 			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
 				{tabs.map((tab, index) => (
 					<div
+						key={index}
 						role="tabpanel"
 						hidden={tabValue !== index}
 						id={`simple-tabpanel-${index}`}
@@ -65,7 +66,6 @@ export const TabsPanelRenderer: React.FC<TabsPanelProps> = ({ tabs, initialTab }
 					>
 						{tabValue === index && (
 							<Box sx={{ p: 3 }}>
-
 								{tab.content}
 							</Box>
 						)}

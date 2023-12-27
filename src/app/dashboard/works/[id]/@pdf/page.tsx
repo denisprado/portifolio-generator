@@ -44,7 +44,6 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 		const fetchStyles = async () => {
 			const workStyles = await useThemeStyles(work)
 			setStyles(workStyles)
-			console.log(workStyles)
 		}
 		fetchStyles()
 	}, [work, id])

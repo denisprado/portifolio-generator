@@ -44,7 +44,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className='h-full'>
 			<body className="loading h-full">
-				<main>{children}</main>
+				<main className='h-full relative'>{children}</main>
 			</body>
 		</html>
 	);

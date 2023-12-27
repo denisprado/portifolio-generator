@@ -3,9 +3,6 @@ import { createWork, editWork } from '@/app/dashboard/works/actions';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
 	Box,
 	Button,
 	Card,
@@ -34,7 +31,6 @@ import {
 
 import { NEW, WORK } from '@/app/constants';
 import { TabsPanelRenderer } from '@/app/dashboard/tabsComponents';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
@@ -45,13 +41,6 @@ const initialState = {
 };
 
 export function AddForm({ params: { id } }: { params: { id: string } }) {
-
-	const [tabValue, setTabValue] = React.useState(0);
-
-	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-		setTabValue(newValue);
-	};
-
 	const [configData, setConfigData] = useState<ConfigType>({
 		id: '',
 		created_at: null,
@@ -129,6 +118,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	const [workValues, setWorkValues] = useState<WorkType>(
 		initialWorkState
 	);
+
 	useEffect(() => {
 		const fetchWorkValues = async () => {
 			const { data: workDetails } = await supabase
@@ -211,8 +201,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		});
 	}, [configData.id]);
 
-
-
 	const useThemeEffect = ({
 		tableName,
 		setData,
@@ -293,7 +281,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		)
 	}
 
-	function UploadImageSession({ imageFields }: { imageFields: imageFieldsTypes }) {
+	const UploadImageSession = ({ imageFields }: { imageFields: imageFieldsTypes }) => {
 		return (<Box sx={{
 			flexGrow: 1,
 			display: 'flex',
@@ -310,17 +298,19 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				labelButton
 			})) : <p>Sem Imagem</p>}
 		</Box>);
-	}
+	};
 
-	function imageUpload({
-		file,
-		src,
-		labelButton
-	}: {
-		file: imagesFiles;
-		src: imagesSrcs;
-		labelButton: string;
-	}): React.JSX.Element | null {
+	const imageUpload = (
+		{
+			file,
+			src,
+			labelButton
+		}: {
+			file: imagesFiles;
+			src: imagesSrcs;
+			labelButton: string;
+		}
+	): React.JSX.Element | null => {
 
 		return (
 			<Box sx={{ display: 'flex', flexDirection: 'column' }} key={src}>
@@ -338,15 +328,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				<ShowImageUploaded src={workValues[src as imagesSrcs]} />
 			</Box>
 		);
-	}
+	};
 
-	function RenderPageLayoutSelection(
+	const RenderPageLayoutSelection = (
 		{
 			label,
 			fieldName,
 			values
 		}: WorkRadioFieldsTypes
-	) {
+	) => {
 		const [{ value }] = values.filter((value) => value.default)
 		return (
 			<FormControl>
@@ -373,15 +363,15 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				</FormGroup>
 			</FormControl>
 		);
-	}
+	};
 
-	function objectToFormData(
+	const objectToFormData = (
 		{
 			obj
 		}: {
 			obj: { [s: string]: any } | ArrayLike<unknown>;
 		}
-	): FormData {
+	): FormData => {
 		const formData = new FormData();
 
 		Object.entries(obj).forEach(([key, value]) => {
@@ -389,9 +379,9 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		});
 
 		return formData;
-	}
+	};
 
-	function InputFieldsSession({ fields }: { fields: WorkInputFieldsTypes }) {
+	const InputFieldsSession = ({ fields }: { fields: WorkInputFieldsTypes }) => {
 		return (<Box sx={{
 			flexGrow: 1,
 			display: 'flex',
@@ -408,9 +398,9 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				rows
 			}))}
 		</Box>);
-	}
+	};
 
-	function MuiTextField(
+	const MuiTextField = (
 		{
 			label,
 			fieldId,
@@ -420,7 +410,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			fieldId: WorkFieldId;
 			rows: number;
 		}
-	): React.JSX.Element {
+	): React.JSX.Element => {
 		return (
 			<TextField
 				label={label}
@@ -442,27 +432,29 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				}}
 			/>
 		);
-	}
+	};
 
-	function RadioFieldsSession({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) {
+	const RadioFieldsSession = ({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) => {
 		return (<div className='grid grid-cols-3'>
 			{RadioFields && RadioFields.map(radioField => <div className='col-span-1' key={radioField.fieldName}>
 				<RenderPageLayoutSelection fieldName={radioField.fieldName} label={radioField.label} values={radioField.values} />
 			</div>)}
 		</div>);
-	}
+	};
 
-	function renderThemeSelection({
-		label,
-		fieldName,
-		themeData,
-		handleChange
-	}: {
-		label: string;
-		fieldName: string;
-		themeData: ThemeData[];
-		handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	}): React.JSX.Element {
+	const renderThemeSelection = (
+		{
+			label,
+			fieldName,
+			themeData,
+			handleChange
+		}: {
+			label: string;
+			fieldName: string;
+			themeData: ThemeData[];
+			handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+		}
+	): React.JSX.Element => {
 		return (
 			<FormControl key={fieldName}>
 				<FormGroup aria-labelledby={`${fieldName} ID`} sx={{ paddingY: 2 }}>
@@ -539,7 +531,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				</FormGroup>
 			</FormControl>
 		);
-	}
+	};
 
 	const generalFields: WorkInputFieldsTypes = [
 		{ label: 'Título', fieldId: 'title', rows: 1 },
@@ -587,6 +579,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	const radioFieldsPage1 = generateRadioPageFields(1)
 	const radioFieldsPage2 = generateRadioPageFields(2)
+
 	const page1ImageFields: imageFieldsTypes = [
 		{ file: 'image_1', src: 'image_1_src', labelButton: 'Imagem de Destaque' },
 
@@ -600,6 +593,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		{ label: 'Imagens', content: <UploadImageSession imageFields={page1ImageFields} /> },
 		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage1} /> },
 	];
+
 	const tabsPage2 = [
 		{ label: 'Informações', content: <InputFieldsSession fields={page2Fields} /> },
 		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
@@ -607,41 +601,31 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	];
 
 
-	const InformationContentPanel = () => {
+	const InformationContentPanel = () => <InputFieldsSession fields={generalFields}></InputFieldsSession>
 
-		return (
+	const OptionsContentPanel = () =>
+		<>
+			<RadioFieldsSession RadioFields={pageLayoutRadioFields}></RadioFieldsSession>
 
-			<InputFieldsSession fields={generalFields}></InputFieldsSession>
-
-		)
-	}
-
-	const OptionsContentPanel = () => {
-		return (
-			<>
-				<RadioFieldsSession RadioFields={pageLayoutRadioFields}></RadioFieldsSession>
-
-				{['color', 'typography', 'spacing'].map((theme, index) =>
-					renderThemeSelection({
-						label: `Tema de ${theme === 'spacing'
-							? 'espaçamento'
+			{['color', 'typography', 'spacing'].map((theme, index) =>
+				renderThemeSelection({
+					label: `Tema de ${theme === 'spacing'
+						? 'espaçamento'
+						: theme === 'typography'
+							? 'Tipografia'
+							: 'Cores'
+						}`,
+					fieldName: `${theme}_theme_id`,
+					themeData:
+						theme === 'color'
+							? colorThemeData
 							: theme === 'typography'
-								? 'Tipografia'
-								: 'Cores'
-							}`,
-						fieldName: `${theme}_theme_id`,
-						themeData:
-							theme === 'color'
-								? colorThemeData
-								: theme === 'typography'
-									? typographyThemeData
-									: spacingThemeData,
-						handleChange: handleInputChange({ fieldName: `${theme}_theme_id` as keyof ConfigType })
-					})
-				)}
-			</>
-		)
-	}
+								? typographyThemeData
+								: spacingThemeData,
+					handleChange: handleInputChange({ fieldName: `${theme}_theme_id` as keyof ConfigType })
+				})
+			)}
+		</>
 
 	const tabs = [
 		{ label: 'Sobre', content: <InformationContentPanel /> },
@@ -670,9 +654,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			<LoadingDots></LoadingDots>
 		</div>
 	);
-
-
-
 }
 
 function SubmitButton() {
