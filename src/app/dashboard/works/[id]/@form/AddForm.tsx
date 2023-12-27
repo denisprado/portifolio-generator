@@ -6,6 +6,7 @@ import {
 	Box,
 	Button,
 	Card,
+	FormControl,
 	FormControlLabel,
 	FormGroup,
 	Radio,
@@ -13,7 +14,6 @@ import {
 	TextField,
 	Typography
 } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Image from 'next/image';
 import {
@@ -412,25 +412,29 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		}
 	): React.JSX.Element => {
 		return (
-			<TextField
-				label={label}
-				variant="outlined"
-				type="text"
-				id={fieldId}
-				name={fieldId}
-				key={fieldId}
-				required
-				value={workValues[fieldId]}
-				onChange={handleInputChange({ fieldName: fieldId })}
-				autoFocus={focusedField === fieldId}
-				multiline={rows > 1}
-				rows={rows}
-				inputProps={{
-					onBlur: () => {
-						editForm(objectToFormData({ obj: workValues }));
-					}
-				}}
-			/>
+			<>
+				<label className="form-control w-full max-w-xs">
+					<div className="label">
+						<span className="label-text">{label}</span>
+					</div>
+					<input
+						className="input input-bordered w-full max-w-xs"
+						type="text"
+						id={fieldId}
+						name={fieldId}
+						key={fieldId}
+						required
+						value={workValues[fieldId] ?? ''}
+						onChange={handleInputChange({ fieldName: fieldId })}
+						autoFocus={focusedField === fieldId}
+						// rows={rows}
+
+						onBlur={() => editForm(objectToFormData({ obj: workValues }))}
+
+
+					/>
+				</label >
+			</>
 		);
 	};
 

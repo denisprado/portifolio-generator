@@ -1,6 +1,8 @@
 import { PropsWithChildren } from 'react';
-import 'styles/main.css';
+import 'styles/global.css';
+import { Inter } from 'next/font/google';
 
+const inter = Inter({ subsets: ['latin'] });
 const meta = {
 	title: 'PortfolioArt',
 	description: 'Brought to you by Vercel, Stripe, and Supabase.',
@@ -43,7 +45,7 @@ export default function RootLayout({
 }: PropsWithChildren) {
 	return (
 		<html lang="en" className='h-full'>
-			<body className="loading h-full">
+			<body className={`h-full ${inter.className}`}>
 				<main className='h-full relative'>{children}</main>
 			</body>
 		</html>

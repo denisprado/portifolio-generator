@@ -7,7 +7,8 @@ module.exports = {
 		'src/**/*.{ts,tsx}',
 		'app/**/*.{ts,tsx}',
 		'components/**/*.{ts,tsx}',
-		'pages/**/*.{ts,tsx}'
+		'pages/**/*.{ts,tsx}',
+		'./app/**/*.{js,ts,jsx,tsx,mdx}'
 	],
 	theme: {
 		extend: {
@@ -16,5 +17,6 @@ module.exports = {
 			}
 		}
 	},
-	plugins: []
+
+	plugins: [require('daisyui')],
 };
