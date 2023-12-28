@@ -4,6 +4,7 @@ import { SearchRounded } from "@mui/icons-material";
 import React, { InputHTMLAttributes, KeyboardEvent, RefObject, TextareaHTMLAttributes, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { ReactNode } from "react";
+import { Textarea } from 'react-daisyui'
 
 type InputWrapperProps = {
 	label: ReactNode;
@@ -64,7 +65,6 @@ const Input = ({
 				{...rest}
 				ref={inputRef}
 				value={value === null ? undefined : value}
-				multiple={true}
 				onKeyDown={handleKeyDown}
 				className={twMerge(
 					" input input-bordered duration-300 focus:outline-none text-base-content placeholder:text-base-content/30 w-full",
@@ -220,4 +220,4 @@ const Search = ({ className, onSearch, buttonClassName, enterButton, ...rest }: 
 Input.Search = Search;
 
 export const MemoInput = Input
-export const MemoTextArea = React.memo(Input.TextArea)
+export const MemoTextArea = Textarea

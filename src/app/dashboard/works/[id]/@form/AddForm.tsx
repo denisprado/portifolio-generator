@@ -33,6 +33,7 @@ import { Accordion, Tabs } from '@/app/dashboard/tabsComponents';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
+import { Textarea } from 'react-daisyui';
 
 export const revalidate = 60;
 
@@ -147,8 +148,6 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		({ fieldName }: { fieldName: keyof WorkType }) => (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
 			const { name, value } = e.target;
 
-
-
 			setFocusedField(name);
 
 			setWorkValues((workAtual) => {
@@ -178,6 +177,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					color_theme_id: color || '',
 					typography_theme_id: typography || ''
 				};
+
 				setShouldSubmitForm(true);
 
 				return updatedWork;
@@ -389,22 +389,23 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	};
 
 	const InputFieldsSession = ({ fields }: { fields: WorkInputFieldsTypes }) => {
-		return (<Box sx={{
-			flexGrow: 1,
-			display: 'flex',
-			flexDirection: 'column',
-			gap: 2
-		}}>
-			{fields.map(({
-				label,
-				fieldId,
-				rows
-			}) => MuiTextField({
-				label,
-				fieldId,
-				rows
-			}))}
-		</Box>);
+		return (
+			<Box sx={{
+				flexGrow: 1,
+				display: 'flex',
+				flexDirection: 'column',
+				gap: 2
+			}}>
+				{fields.map(({
+					label,
+					fieldId,
+					rows
+				}) => MuiTextField({
+					label,
+					fieldId,
+					rows
+				}))}
+			</Box>);
 	};
 
 	function MuiTextField({
@@ -414,6 +415,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		fieldId: WorkFieldId;
 		rows: number;
 	}): React.JSX.Element {
+
 		return (
 			<>
 				<label className="form-control w-full">
@@ -421,21 +423,20 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 						<span className="label-text">{label}</span>
 					</div>
 					{rows > 1 ?
-						<Input
+						<Textarea
 							id={fieldId}
+							key={`memo-text-area-${fieldId}`}
 							name={fieldId}
-							key={fieldId}
 							required
 							value={workValues[fieldId] ?? ''}
 							onChange={handleInputChange({ fieldName: fieldId })}
 							autoFocus={focusedField === fieldId}
-
 						/>
 						:
 						<Input
 							id={fieldId}
+							key={`memo-text-area-${fieldId}`}
 							name={fieldId}
-							key={fieldId}
 							required
 							value={workValues[fieldId] ?? ''}
 							onChange={handleInputChange({ fieldName: fieldId })}
@@ -476,6 +477,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 						aria-labelledby={fieldName}
 						name={fieldName}
 						id={fieldName}
+						key={`memo-text-area-${fieldName}`}
 						value={workValues[fieldName as keyof WorkType]}
 						onChange={handleChange}
 						sx={{ display: 'flex', gap: 4, flexDirection: 'row' }}
