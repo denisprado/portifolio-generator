@@ -8,7 +8,9 @@ module.exports = {
 		'app/**/*.{ts,tsx}',
 		'components/**/*.{ts,tsx}',
 		'pages/**/*.{ts,tsx}',
-		'./app/**/*.{js,ts,jsx,tsx,mdx}'
+		'./app/**/*.{js,ts,jsx,tsx,mdx}',
+		'node_modules/daisyui/dist/**/*.js',
+		'node_modules/react-daisyui/dist/**/*.js',
 	],
 	theme: {
 		extend: {

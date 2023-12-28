@@ -11,7 +11,8 @@ const nextConfig = {
 				pathname: '/storage/v1/object/public/images/**'
 			}
 		]
-	}
+	},
+	transpilePackages: ['react-daisyui'],
 };
 
 module.exports = nextConfig;

@@ -11,7 +11,6 @@ import {
 	FormGroup,
 	Radio,
 	RadioGroup,
-	TextField,
 	Typography
 } from '@mui/material';
 import FormLabel from '@mui/material/FormLabel';
@@ -30,9 +29,10 @@ import {
 } from '../../../types';
 
 import { NEW, WORK } from '@/app/constants';
-import { TabsPanelRenderer } from '@/app/dashboard/tabsComponents';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { Accordion, Tabs } from '@/app/dashboard/tabsComponents';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
 
 export const revalidate = 60;
 
@@ -143,10 +143,12 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		workValues.color_theme_id,
 		workValues.typography_theme_id]);
 
-	const handleInputChange =
-		({ fieldName }: { fieldName: keyof WorkType }) => (e: React.ChangeEvent<HTMLInputElement>) => {
-			const { name, value, files } = e.target;
-			console.log(fieldName, value, files && files[0])
+	const handleInputChange = useCallback(
+		({ fieldName }: { fieldName: keyof WorkType }) => (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+			const { name, value } = e.target;
+
+
+
 			setFocusedField(name);
 
 			setWorkValues((workAtual) => {
@@ -165,9 +167,13 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				if (!workAtual) {
 					return workValues;
 				}
+
+				const files = e.target instanceof HTMLInputElement && e.target.type === 'file' &&
+					e.target.files
+
 				const updatedWork: WorkType = {
 					...workAtual,
-					[name]: name.includes('image_') ? (files! ? files[0] : value || '') : value || '',
+					[name]: files ? (files! ? files[0] : value || '') : value || '',
 					spacing_theme_id: spacing || '',
 					color_theme_id: color || '',
 					typography_theme_id: typography || ''
@@ -176,7 +182,8 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 				return updatedWork;
 			});
-		};
+		},
+		[]);
 
 	// Use useEffect to handle the form submission
 	useEffect(() => {
@@ -400,43 +407,45 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		</Box>);
 	};
 
-	const MuiTextField = (
-		{
-			label,
-			fieldId,
-			rows
-		}: {
-			label: string;
-			fieldId: WorkFieldId;
-			rows: number;
-		}
-	): React.JSX.Element => {
+	function MuiTextField({
+		label, fieldId, rows
+	}: {
+		label: string;
+		fieldId: WorkFieldId;
+		rows: number;
+	}): React.JSX.Element {
 		return (
 			<>
-				<label className="form-control w-full max-w-xs">
+				<label className="form-control w-full">
 					<div className="label">
 						<span className="label-text">{label}</span>
 					</div>
-					<input
-						className="input input-bordered w-full max-w-xs"
-						type="text"
-						id={fieldId}
-						name={fieldId}
-						key={fieldId}
-						required
-						value={workValues[fieldId] ?? ''}
-						onChange={handleInputChange({ fieldName: fieldId })}
-						autoFocus={focusedField === fieldId}
-						// rows={rows}
+					{rows > 1 ?
+						<Input
+							id={fieldId}
+							name={fieldId}
+							key={fieldId}
+							required
+							value={workValues[fieldId] ?? ''}
+							onChange={handleInputChange({ fieldName: fieldId })}
+							autoFocus={focusedField === fieldId}
 
-						onBlur={() => editForm(objectToFormData({ obj: workValues }))}
-
-
-					/>
-				</label >
+						/>
+						:
+						<Input
+							id={fieldId}
+							name={fieldId}
+							key={fieldId}
+							required
+							value={workValues[fieldId] ?? ''}
+							onChange={handleInputChange({ fieldName: fieldId })}
+							autoFocus={focusedField === fieldId}
+						/>
+					}
+				</label>
 			</>
 		);
-	};
+	}
 
 	const RadioFieldsSession = ({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) => {
 		return (<div className='grid grid-cols-3'>
@@ -592,17 +601,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem de Destaque' }
 	];
 
-	const tabsPage1 = [
-		{ label: 'Informações', content: <InputFieldsSession fields={page1Fields} /> },
-		{ label: 'Imagens', content: <UploadImageSession imageFields={page1ImageFields} /> },
-		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage1} /> },
-	];
 
-	const tabsPage2 = [
-		{ label: 'Informações', content: <InputFieldsSession fields={page2Fields} /> },
-		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
-		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage2} /> },
-	];
 
 
 	const InformationContentPanel = () => <InputFieldsSession fields={generalFields}></InputFieldsSession>
@@ -631,10 +630,33 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 			)}
 		</>
 
+	const tabsPage1 = [
+		{ label: 'Informações', content: <InputFieldsSession fields={page1Fields} /> },
+		{ label: 'Imagens', content: <UploadImageSession imageFields={page1ImageFields} /> },
+		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage1} /> },
+	];
+
+
+	const [tabWork, setTabWork] = useState(0)
+	const [tabPage1, setTabPage1] = useState(0)
+	const [tabPage2, setTabPage2] = useState(0)
+
+	const tabsPage2 = [
+		{ label: 'Informações', content: <InputFieldsSession fields={page2Fields} /> },
+		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
+		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage2} /> },
+	];
+
 	const tabs = [
 		{ label: 'Sobre', content: <InformationContentPanel /> },
-		{ label: 'Página 1', content: <TabsPanelRenderer tabs={tabsPage1} initialTab={0} /> },
-		{ label: 'Página 2', content: <TabsPanelRenderer tabs={tabsPage2} initialTab={0} /> },
+		{
+			label: `Página 1`, content: <Tabs size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
+				tab={tabPage1} />
+		},
+		{
+			label: 'Página 2', content: <Tabs size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
+				tab={tabPage2} />
+		},
 		{ label: 'Opções', content: <OptionsContentPanel /> },
 	];
 
@@ -646,7 +668,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				<Box>
 					<h1 className='text-4xl font-black mb-8'>{workValues['title']}</h1>
 				</Box>
-				<TabsPanelRenderer tabs={tabs} initialTab={0} />
+				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
 			</Box>
 			<SubmitButton />
 			<p aria-live="polite" className="sr-only" role="status">

@@ -1,78 +1,59 @@
-import { Tab, Tabs } from '@mui/material';
-import Box from '@mui/material/Box';
-import * as React from 'react';
-import { useState } from 'react';
+'use client'
 
-interface TabPanelProps {
-	children?: React.ReactNode;
-	index: number;
-	value: number;
+import { ReactNode } from 'react';
+import { Accordion as DaisyAccordion, Tabs as DaisyTabs, type AccordionProps, type TabsProps } from 'react-daisyui';
+
+const { Tab, RadioTab } = DaisyTabs
+
+export function Tabs({
+	tabs,
+	tab,
+	setTab,
+	...props
+}: {
+	tabs?: { label: string, content: ReactNode }[]
+	tab: number
+	setTab(page: number): void
+} & TabsProps) {
+	const tabName = Math.random().toString()
+	return (
+		<DaisyTabs {...props}>
+			{(tabs ?? []).map((i, index) => (
+				<RadioTab
+					name={tabName}
+					label={i.label}
+					contentClassName="bg-base-100 border-base-300 rounded-box p-6"
+					key={index}
+					role="tab"
+					defaultChecked={index === tab}
+					onClick={() => setTab(index)}
+				>
+					{i.content}
+				</RadioTab>
+			))}
+		</DaisyTabs>
+	)
 }
 
-export function CustomTabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props;
 
+export function Accordion({
+	items,
+	...props
+}: {
+	items?: { label: string; content: React.ReactNode }[]
+} & AccordionProps) {
 	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-		>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					{children}
-				</Box>
-			)}
+		<div className="flex flex-col gap-4 h-full relative">
+			{(items ?? []).map((i, index) => (
+				<div className="bg-base-200">
+					<DaisyAccordion key={index} data-index={index + Math.random()} {...props} >
+						<DaisyAccordion.Title className="text-xl font-medium">
+							{i.label}
+						</DaisyAccordion.Title>
+						<DaisyAccordion.Content>{i.content}</DaisyAccordion.Content>
+					</DaisyAccordion>
+				</div>
+			))}
 		</div>
-	);
+	)
 }
-
-export function a11yProps(index: number) {
-	return {
-		id: `simple-tab-${index}`,
-		'aria-controls': `simple-tabpanel-${index}`,
-	};
-}
-
-interface TabsPanelProps {
-	tabs: { label: string; content: React.ReactNode }[];
-	initialTab: number;
-}
-
-export const TabsPanelRenderer: React.FC<TabsPanelProps> = ({ tabs, initialTab }) => {
-	const [tabValue, setTabValue] = useState(initialTab);
-
-	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-		setTabValue(newValue);
-	};
-
-	return (
-		<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-			<Tabs value={tabValue} onChange={handleChangeTab} aria-label="tabs">
-				{tabs.map((tab, index) => (
-					<Tab label={tab.label} key={index} />
-				))}
-			</Tabs>
-			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-				{tabs.map((tab, index) => (
-					<div
-						key={index}
-						role="tabpanel"
-						hidden={tabValue !== index}
-						id={`simple-tabpanel-${index}`}
-						aria-labelledby={`simple-tab-${index}`}
-					>
-						{tabValue === index && (
-							<Box sx={{ p: 3 }}>
-								{tab.content}
-							</Box>
-						)}
-					</div>
-
-				))}
-			</Box>
-		</Box>
-	);
-};
