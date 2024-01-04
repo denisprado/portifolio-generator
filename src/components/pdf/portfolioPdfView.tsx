@@ -14,7 +14,7 @@ import { useEffect, useState } from "react"
 
 
 export default function PortfolioPdfView({ id }: { id: string }) {
-	console.log(id)
+
 	if (!id) {
 		return null
 	}

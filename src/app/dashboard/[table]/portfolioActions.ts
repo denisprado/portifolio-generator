@@ -2,6 +2,7 @@
 
 import { getImageSrc } from '../imageActions';
 import { PortifolioType } from '../types';
+import { PORTFOLIO } from '@/app/constants';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -13,7 +14,7 @@ export async function create(data: PortifolioType) {
   const supabase = createClient(cookieStore);
   const { id, ...newData } = data;
   const { data: newPortfolio, error } = await supabase
-    .from('portfolio')
+    .from(PORTFOLIO)
     .insert(newData)
     .select()
     .single();
@@ -75,7 +76,7 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { data: dataOk, error } = await supabase
-      .from('portfolio')
+      .from(PORTFOLIO)
       .upsert({ ...data })
       .select()
       .single();
@@ -107,7 +108,7 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
 
   try {
     const { data: dataOk, error } = await supabase
-      .from('portfolio')
+      .from(PORTFOLIO)
       .delete()
       .eq('id', data.id);
 

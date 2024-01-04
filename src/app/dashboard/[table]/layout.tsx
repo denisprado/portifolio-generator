@@ -1,5 +1,4 @@
 'use client'
-import { useSelectedLayoutSegment } from "next/navigation"
 
 export default function Layout({
 	children // will be a page or nested layout

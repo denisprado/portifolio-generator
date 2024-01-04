@@ -1,14 +1,15 @@
 'use client'
 
-import { NEW } from '@/app/constants'
+import { NEW, WORK } from '@/app/constants'
+import { WorkType } from '@/app/dashboard/types'
 import { useThemeStyles } from "@/components/pdf/styles"
 import WorkPDF from '@/components/pdf/work'
 import { supabaseClient } from "@/utils/supabase"
 import { notFound } from "next/navigation"
 import { useEffect, useState } from "react"
-import { WorkType } from '../../../types'
 
-export default function PdfView({ params: { id } }: { params: { id: string } }) {
+
+export default function WorkPdfView({ id }: { id: string }) {
 
 	if (!id) {
 		return null
@@ -33,7 +34,7 @@ export default function PdfView({ params: { id } }: { params: { id: string } }) 
 	useEffect(() => {
 		const fetchWorks = async () => {
 			if (id !== 'new') {
-				const { data: work } = await supabaseClient.from('work').select().match({ id: id }).single()
+				const { data: work } = await supabaseClient.from(WORK).select().match({ id: id }).single()
 				setWork(work)
 			}
 		}

@@ -1,6 +1,6 @@
 'use client';
 
-import { create, editPortfolio } from '@/app/dashboard/portfolios/actions';
+import { create, editPortfolio } from '@/app/dashboard/[table]/portfolioActions';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
@@ -61,7 +61,7 @@ function SubmitButton() {
 	);
 }
 
-export function AddForm({ params: { id } }: { params: { id: string } }) {
+export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	const [configData, setConfigData] = useState<ConfigType>({
 		id: '',
 		created_at: null,

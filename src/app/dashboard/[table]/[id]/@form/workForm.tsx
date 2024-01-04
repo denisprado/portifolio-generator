@@ -1,5 +1,5 @@
-'use client';;
-import { createWork, editWork } from '@/app/dashboard/works/actions';
+'use client'
+
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
@@ -34,6 +34,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
 import { Textarea } from 'react-daisyui';
+import { editWork, createWork } from '../../workActions';
 
 export const revalidate = 60;
 
@@ -41,7 +42,7 @@ const initialState = {
 	message: ''
 };
 
-export function AddForm({ params: { id } }: { params: { id: string } }) {
+export function WorkForm({ params: { id } }: { params: { id: string } }) {
 	const [configData, setConfigData] = useState<ConfigType>({
 		id: '',
 		created_at: null,

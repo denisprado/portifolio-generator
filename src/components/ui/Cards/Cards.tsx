@@ -1,8 +1,9 @@
 'use client';
 
 import { PORTFOLIO, WORK } from '@/app/constants';
-import { deletePortfolio } from '@/app/dashboard/portfolios/actions';
-import { deleteWork } from '@/app/dashboard/works/actions';
+import { deletePortfolio } from '@/app/dashboard/[table]/portfolioActions';
+import { deleteWork } from '@/app/dashboard/[table]/workActions';
+
 import Card from '@/components/ui/Card/Card';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import { PencilIcon, TrashIcon, ViewColumnsIcon } from '@heroicons/react/24/solid';
@@ -45,7 +46,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 			<button
 				className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-56"
 				aria-label="new"
-				onClick={() => router.push(`/dashboard/${table}s/new`)}
+				onClick={() => router.push(`/dashboard/${table}/new`)}
 			>
 				Criar {table === WORK ? 'trabalho' : 'portfolio'}
 			</button>
@@ -75,13 +76,13 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 				<button className='btn btn-sm hover:text-primary'
 					aria-label={"view " + table}
 
-					onClick={() => router.push(`/dashboard/${table}s/${item.id}?type=view`)}
+					onClick={() => router.push(`/dashboard/${table}/${item.id}?type=view`)}
 				>Visualizar
 					<ViewColumnsIcon className='h-6 w-6' />
 				</button>
 				<button className='btn btn-sm hover:text-primary'
 					aria-label={"edit " + table}
-					onClick={() => router.push(`/dashboard/${table}s/${item.id}/?type=edit`)}
+					onClick={() => router.push(`/dashboard/${table}/${item.id}/?type=edit`)}
 				>Editar
 					<PencilIcon className='h-6 w-6' />
 				</button>
