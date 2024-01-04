@@ -1,7 +1,6 @@
 import { Document, PDFViewer } from '@react-pdf/renderer';
 import { WorkPagePdf } from './WorkPagePdf';
-import { Orientation } from './portifolio';
-
+import { Orientation } from 'types';
 
 const WorkPDF = ({ record, styles, page_layout }: any) => {
 	const orientation = page_layout !== undefined ? page_layout as Orientation : record?.page_layout as Orientation

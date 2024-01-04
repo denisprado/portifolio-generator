@@ -1,10 +1,7 @@
+'use client'
+
+import { useParams } from 'next/navigation'
 import * as React from 'react';
-import MuiCard from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea, CardActions } from '@mui/material';
-import Link from 'next/link';
 
 type CardType = {
 	title: string,
@@ -15,29 +12,21 @@ type CardType = {
 }
 
 export default function Card({ id, title, description, imageSrc, cardActions }: CardType) {
+	const params = useParams<{ id: string }>()
+	const { id: actualId } = params
 	return (
-		// <Link href={`/dashboard/portfolios/addForm/${id}`} className='btn'>
-		<MuiCard sx={{ maxWidth: 345 }}>
 
-			<CardMedia
-				component="img"
-				height="140"
-				image={imageSrc}
-				alt={title}
-			/>
-			<CardContent>
-				<Typography gutterBottom variant="h5" component="div">
-					{title}
-				</Typography>
-				<Typography variant="body2" color="text.secondary">
-					{description}
-				</Typography>
-			</CardContent>
-			<CardActions disableSpacing>
-				{cardActions}
-			</CardActions>
+		<div className="card w-56 bg-base-100 shadow-xl">
+			<figure><img src={imageSrc} alt={title} className={actualId === id ? 'grayscale-0' : 'grayscale'} /></figure>
+			<div className="card-body">
+				<h2 className="card-title">{title}</h2>
+				<p>{description}</p>
+				<div className="card-actions justify-end">
+					{cardActions}
+				</div>
+			</div>
+		</div>
 
-		</MuiCard>
 		// </Link>
 	);
 }

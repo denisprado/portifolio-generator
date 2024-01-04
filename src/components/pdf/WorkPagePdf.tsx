@@ -4,7 +4,7 @@ import { Column } from './components/column';
 import { ContainerColumn } from './components/columnSection';
 import { Section } from './components/section';
 import { WorkPageContent } from './components/workPageContent';
-import { Orientation } from './portifolio';
+import { Orientation } from 'types';
 
 
 export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any): any => {

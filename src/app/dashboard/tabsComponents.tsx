@@ -9,15 +9,17 @@ export function Tabs({
 	tabs,
 	tab,
 	setTab,
+	key,
 	...props
 }: {
 	tabs?: { label: string, content: ReactNode }[]
 	tab: number
 	setTab(page: number): void
+	key: string
 } & TabsProps) {
 	const tabName = Math.random().toString()
 	return (
-		<DaisyTabs {...props}>
+		<DaisyTabs {...props} key={key}>
 			{(tabs ?? []).map((i, index) => (
 				<RadioTab
 					name={tabName}

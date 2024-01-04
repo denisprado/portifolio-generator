@@ -146,9 +146,8 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	const handleInputChange = useCallback(
 		({ fieldName }: { fieldName: keyof WorkType }) => (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-			const { name, value } = e.target;
 
-			setFocusedField(name);
+			const { name, value } = e.target;
 
 			setWorkValues((workAtual) => {
 				const spacing =
@@ -179,7 +178,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				};
 
 				setShouldSubmitForm(true);
-
+				setFocusedField(name);
 				return updatedWork;
 			});
 		},
@@ -289,12 +288,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	}
 
 	const UploadImageSession = ({ imageFields }: { imageFields: imageFieldsTypes }) => {
-		return (<Box sx={{
-			flexGrow: 1,
-			display: 'flex',
-			flexDirection: 'row',
-			gap: 2
-		}}>
+		return (<div className='flex flex-col flex-1 gap-2'>
 			{imageFields ? imageFields.map(({
 				file,
 				src,
@@ -304,7 +298,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 				src,
 				labelButton
 			})) : <p>Sem Imagem</p>}
-		</Box>);
+		</div>);
 	};
 
 	const imageUpload = (
@@ -320,7 +314,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 	): React.JSX.Element | null => {
 
 		return (
-			<Box sx={{ display: 'flex', flexDirection: 'column' }} key={src}>
+			<div className='flex flex-col' key={src}>
 				<Button variant="contained" component="label" className="w-full my-4">
 					{labelButton}
 					<input
@@ -333,7 +327,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					/>
 				</Button>
 				<ShowImageUploaded src={workValues[src as imagesSrcs]} />
-			</Box>
+			</div>
 		);
 	};
 
@@ -390,12 +384,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	const InputFieldsSession = ({ fields }: { fields: WorkInputFieldsTypes }) => {
 		return (
-			<Box sx={{
-				flexGrow: 1,
-				display: 'flex',
-				flexDirection: 'column',
-				gap: 2
-			}}>
+			<div className="flex flex-col gap-2">
 				{fields.map(({
 					label,
 					fieldId,
@@ -405,7 +394,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 					fieldId,
 					rows
 				}))}
-			</Box>);
+			</div>);
 	};
 
 	function MuiTextField({
@@ -423,7 +412,7 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 						<span className="label-text">{label}</span>
 					</div>
 					{rows > 1 ?
-						<Textarea
+						<Input
 							id={fieldId}
 							key={`memo-text-area-${fieldId}`}
 							name={fieldId}
@@ -492,12 +481,8 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 								}}
 								key={theme.id}
 							>
-								<Box
-									sx={{
-										display: 'flex',
-										flexDirection: 'row',
-										backgroundColor: 'transparent'
-									}}
+								<div
+									className='flex flex-row bg-transparent'
 								>
 									<FormControlLabel
 										value={theme.id}
@@ -507,39 +492,26 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 									/>
 									{fieldName === 'color_theme_id' && (
 										<>
-											<Box
-												sx={{
-													flexDirection: 'row',
-													backgroundColor: theme.background_primary_color,
-													width: '64px',
-													height: '64px',
-													display: 'flex',
-													justifyContent: 'center',
-													alignItems: 'center'
-												}}
+											<div style={{ backgroundColor: theme.background_primary_color }}
+												className='flex flex-row w-16 h-16 justify-center items-center'
 											>
 												<Typography sx={{ color: theme.text_primary_color }}>
 													{theme.title}
 												</Typography>
-											</Box>
-											<Box
-												sx={{
-													flexDirection: 'row',
+											</div>
+											<div
+												style={{
 													backgroundColor: theme.background_secondary_color,
-													width: '64px',
-													height: '64px',
-													display: 'flex',
-													justifyContent: 'center',
-													alignItems: 'center'
 												}}
+												className='flex flex-row w-16 h-16 justify-center items-center'
 											>
 												<Typography sx={{ color: theme.text_secondary_color }}>
 													{theme.title}
 												</Typography>
-											</Box>
+											</div>
 										</>
 									)}
-								</Box>
+								</div>
 							</Card>
 						))}
 					</RadioGroup>
@@ -651,12 +623,13 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 
 	const tabs = [
 		{ label: 'Sobre', content: <InformationContentPanel /> },
+
 		{
-			label: `Página 1`, content: <Tabs size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
+			label: `Página 1`, content: <Tabs key={"page1"} size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
 				tab={tabPage1} />
 		},
 		{
-			label: 'Página 2', content: <Tabs size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
+			label: 'Página 2', content: <Tabs key={"page2"} size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
 				tab={tabPage2} />
 		},
 		{ label: 'Opções', content: <OptionsContentPanel /> },
@@ -666,12 +639,12 @@ export function AddForm({ params: { id } }: { params: { id: string } }) {
 		<form action={editForm} id="workForm">
 			<input id="id" name="id" hidden defaultValue={id} />
 
-			<Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-				<Box>
-					<h1 className='text-4xl font-black mb-8'>{workValues['title']}</h1>
-				</Box>
-				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
-			</Box>
+			<div className='flex flex-col gap-2 flex-1'>
+
+				<span className='badge badge-neutral'>Trabalho</span><h1 className='text-4xl font-black mb-8'> {workValues['title']}</h1>
+
+				<Tabs key={"work"} tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
+			</div>
 			<SubmitButton />
 			<p aria-live="polite" className="sr-only" role="status">
 				{id && editState?.message}
