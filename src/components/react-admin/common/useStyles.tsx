@@ -1,10 +1,10 @@
 import { useThemeStyles } from '@/components/pdf/styles';
-import { PortifolioType } from '@/app/dashboard/types';
+import { PortfolioType } from '@/app/dashboard/types';
 
 import { useEffect, useState } from 'react';
 
 export type RecordType = {
-	record: PortifolioType
+	record: PortfolioType
 }
 const useStyles = async ({ record }: RecordType) => {
 	const [styles, setStyles] = useState({})

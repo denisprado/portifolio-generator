@@ -1,10 +1,10 @@
-import { PortifolioType } from '@/app/dashboard/types';
+import { PortfolioType } from '@/app/dashboard/types';
 import { Identifier, RaRecord, useGetOne } from 'react-admin';
 
 
 // import { Container } from './styles';
 type RecordType = {
-	record: PortifolioType
+	record: PortfolioType
 }
 
 const useThemes = ({ record }: RecordType) => {

@@ -1,12 +1,12 @@
 import { useThemeStyles } from '@/components/pdf/styles';
-import { PortifolioType } from '@/app/dashboard/types';
+import { PortfolioType } from '@/app/dashboard/types';
 import { useRecordContext } from 'react-admin';
 
 
 
 
 export const Aside = async () => {
-	const record = useRecordContext() as PortifolioType
+	const record = useRecordContext() as PortfolioType
 
 	const styles = useThemeStyles(record);
 
