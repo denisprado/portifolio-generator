@@ -14,14 +14,14 @@ export async function create(data: PortifolioType) {
   const supabase = createClient(cookieStore);
   const { id, ...newData } = data;
   const { data: newPortfolio, error } = await supabase
-    .from(PORTFOLIO)
+    .from('portfolio')
     .insert(newData)
     .select()
     .single();
   console.log('newPortfolio', newData, error);
   newPortfolio &&
     newPortfolio.id &&
-    redirect(`/dashboard/portfolios/${newPortfolio.id}`);
+    redirect(`/dashboard/portfolio/${newPortfolio.id}`);
 }
 // Define um tipo personalizado para representar arquivos
 
@@ -76,14 +76,12 @@ export async function editPortfolio(prevState: any, formData: FormData) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     const { data: dataOk, error } = await supabase
-      .from(PORTFOLIO)
+      .from('portfolio')
       .upsert({ ...data })
       .select()
       .single();
 
-    console.log('editPortfolio', data, error);
-
-    revalidatePath(`/dashboard/portfolios/${formData.get('id')}`, 'page'); // Update cached posts
+    revalidatePath(`/dashboard/portfolio/${formData.get('id')}`, 'page'); // Update cached posts
     return {
       id: dataOk?.id,
       image_1_src: dataOk?.image_1_src,
@@ -108,13 +106,11 @@ export async function deletePortfolio(prevState: any, formData: FormData) {
 
   try {
     const { data: dataOk, error } = await supabase
-      .from(PORTFOLIO)
+      .from('portfolio')
       .delete()
       .eq('id', data.id);
 
-    revalidatePath(`/dashboard/portfolios`, 'page');
-    const router = useRouter();
-    router.refresh();
+    revalidatePath(`/dashboard/portfolio`, 'page');
   } catch (e) {
     console.log(e);
     return { message: 'Failed to delete portfolio' };

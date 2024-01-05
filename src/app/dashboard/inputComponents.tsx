@@ -32,7 +32,7 @@ type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "value"> & {
 	status?: "error" | "warning" | "success" | "";
 	onPressEnter?: (value: any, event: KeyboardEvent<HTMLInputElement>) => void;
 	inputRef?: RefObject<HTMLInputElement>;
-	value?: string | number | null;
+	value: string | number | string[] | null;
 	validate?: (value: any) => boolean;
 	inputClassName?: string;
 	invalidMessage?: string;

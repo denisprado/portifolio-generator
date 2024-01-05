@@ -17,13 +17,14 @@ export interface ThemeProps {
 }
 
 export type WorkFieldId = keyof WorkType;
-export type PortfolioFieldId = keyof PortifolioType;
+export type PortfolioFieldId = keyof PortfolioType;
 
 export type PortfolioInputFieldsTypes = {
   label: string;
   fieldId: PortfolioFieldId;
   rows: number;
 }[];
+
 export type WorkInputFieldsTypes = {
   label: string;
   fieldId: WorkFieldId;
@@ -39,7 +40,7 @@ export type imageFieldsTypes = {
   labelButton: string;
 }[];
 
-export type WorkRadioFieldsTypes = {
+export type RadioFieldsTypes = {
   label: string;
   fieldName: keyof WorkType;
   values: { value: string; label: string; default: boolean }[];
@@ -47,11 +48,11 @@ export type WorkRadioFieldsTypes = {
 
 export type ConfigType = Tables<'config'>;
 
-export type PortifolioType = Tables<'portfolio'>;
+export type PortfolioType = Tables<'portfolio'>;
 
 export type WorkType = Tables<'work'>;
 
-export type ThemeStyles = { portfolio: PortifolioType };
+export type ThemeStyles = { portfolio: PortfolioType };
 export type WorkThemeStyles = { work: WorkType };
 
 export type SpacingTheme = Tables<'spacing_theme'>;

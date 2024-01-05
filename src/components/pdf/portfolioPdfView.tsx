@@ -1,7 +1,7 @@
 'use client'
 
 import { NEW } from '@/app/constants'
-import { PortifolioType } from '@/app/dashboard/types'
+import { PortfolioType } from '@/app/dashboard/types'
 import { WorkPagePdf } from "@/components/pdf/WorkPagePdf"
 import { Column } from "@/components/pdf/components/column"
 import { ContainerColumn } from "@/components/pdf/components/columnSection"
@@ -28,7 +28,7 @@ export default function PortfolioPdfView({ id }: { id: string }) {
 			if (id) {
 				supabaseClient.channel('room1')
 					.on('postgres_changes', { event: '*', schema: '*', table: 'portfolio' }, (payload) => {
-						setPortfolio(payload.new as PortifolioType)
+						setPortfolio(payload.new as PortfolioType)
 					})
 					.subscribe()
 			}

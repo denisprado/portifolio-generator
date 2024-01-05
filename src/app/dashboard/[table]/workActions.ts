@@ -1,7 +1,7 @@
 'use server';
 
 import { getImageSrc } from '../imageActions';
-import { PortifolioType, WorkType, imagesFiles, imagesSrcs } from '../types';
+import { PortfolioType, WorkType, imagesFiles, imagesSrcs } from '../types';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -18,7 +18,7 @@ export async function createWork(data: WorkType) {
     .select()
     .single();
   console.log('newWork', newData, error);
-  newWork && newWork.id && redirect(`/dashboard/works/${newWork.id}`);
+  newWork && newWork.id && redirect(`/dashboard/work/${newWork.id}`);
 }
 // Define um tipo personalizado para representar arquivos
 
@@ -93,7 +93,7 @@ export async function editWork(prevState: any, formData: FormData) {
 
     console.log('editWork', data, error);
 
-    revalidatePath(`/dashboard/works/${formData.get('id')}`, 'page'); // Update cached posts
+    revalidatePath(`/dashboard/work/${formData.get('id')}`, 'page'); // Update cached posts
     return {
       id: dataOk?.id,
       image_1_src: dataOk?.image_1_src,
@@ -121,8 +121,10 @@ export async function deleteWork(prevState: any, formData: FormData) {
       .from('work')
       .delete()
       .eq('id', data.id);
-    console.log(error && 'Error:', error);
-    revalidatePath(`/dashboard/works`, 'page');
+
+    revalidatePath(`/dashboard/work`, 'page');
+    dataOk && redirect('/dashboard/work');
+    return { message: 'ok' };
   } catch (e) {
     console.log(e);
     return { message: 'Failed to delete work' };

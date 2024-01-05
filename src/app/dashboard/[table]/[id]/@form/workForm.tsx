@@ -3,7 +3,6 @@
 import LoadingDots from '@/components/ui/LoadingDots';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
-	Box,
 	Button,
 	Card,
 	FormControl,
@@ -21,20 +20,19 @@ import {
 	ThemeProps,
 	WorkFieldId,
 	WorkInputFieldsTypes,
-	WorkRadioFieldsTypes,
+	RadioFieldsTypes,
 	WorkType,
 	imageFieldsTypes,
 	imagesFiles,
-	imagesSrcs
+	imagesSrcs,
 } from '../../../types';
 
 import { NEW, WORK } from '@/app/constants';
-import { Accordion, Tabs } from '@/app/dashboard/tabsComponents';
+import { MemoInput as Input } from '@/app/dashboard/inputComponents';
+import { Tabs } from '@/app/dashboard/tabsComponents';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
-import { Textarea } from 'react-daisyui';
-import { editWork, createWork } from '../../workActions';
+import { createWork, editWork } from '../../workActions';
 
 export const revalidate = 60;
 
@@ -337,7 +335,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 			label,
 			fieldName,
 			values
-		}: WorkRadioFieldsTypes
+		}: RadioFieldsTypes
 	) => {
 		const [{ value }] = values.filter((value) => value.default)
 		return (
@@ -438,7 +436,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		);
 	}
 
-	const RadioFieldsSession = ({ RadioFields }: { RadioFields: WorkRadioFieldsTypes[] }) => {
+	const RadioFieldsSession = ({ RadioFields }: { RadioFields: RadioFieldsTypes[] }) => {
 		return (<div className='grid grid-cols-3'>
 			{RadioFields && RadioFields.map(radioField => <div className='col-span-1' key={radioField.fieldName}>
 				<RenderPageLayoutSelection fieldName={radioField.fieldName} label={radioField.label} values={radioField.values} />
@@ -549,11 +547,11 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		{ value: 'row', label: 'Final', default: false },
 	];
 
-	const pageLayoutRadioFields: WorkRadioFieldsTypes[] = [
+	const pageLayoutRadioFields: RadioFieldsTypes[] = [
 		{ label: 'Orientação da Página', fieldName: `page_layout` as keyof WorkType, values: portraitLandscapValues },
 	]
 
-	const generateRadioPageFields = (i: number): WorkRadioFieldsTypes[] => {
+	const generateRadioPageFields = (i: number): RadioFieldsTypes[] => {
 		const page = i.toString()
 		const radioFieldsPage = [
 			{ label: 'Ordem da descrição', fieldName: `description_${page}_order` as keyof WorkType, values: initialFinalValues },
@@ -646,7 +644,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 
 				<Tabs key={"work"} tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
 			</div>
-			<SubmitButton />
+
 			<p aria-live="polite" className="sr-only" role="status">
 				{id && editState?.message}
 			</p>

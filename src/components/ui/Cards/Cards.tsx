@@ -21,7 +21,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	const initialState = {
 		message: ''
 	};
-	const [deteleState, deleteFormAction] = useFormState(
+	const [deleteState, deleteFormAction] = useFormState(
 		table === PORTFOLIO ? deletePortfolio : deleteWork,
 		initialState
 	);
@@ -32,16 +32,16 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	useEffect(() => {
 		const fetchTables = async () => {
 			const { data: items } = await supabase.from(table).select('*');
-
+			console.log(deleteState?.message)
 			setItems(items);
 			setShouldUpdatePotfolios(false)
 		};
 		shouldUpdateTables && fetchTables();
-	}, [shouldUpdateTables]);
+	}, [shouldUpdateTables, deleteState?.message]);
+
 	const router = useRouter();
 
 	return (
-
 		<div className='flex flex-col gap-4'>
 			<button
 				className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-56"
@@ -71,6 +71,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	);
 
 	function getCardCations(item: any) {
+		console.log("foi")
 		return (
 			<div className="flex w-full flex-row flex-wrap gap-1">
 				<button className='btn btn-sm hover:text-primary'
@@ -88,7 +89,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 				</button>
 
 				<form action={deleteFormAction}>
-					<input type="hidden" value={items.id} name={'id'} id={'id'} onClick={() => setShouldUpdatePotfolios(true)} />
+					<input type="hidden" value={item.id} name={'id'} id={'id'} onClick={() => setShouldUpdatePotfolios(true)} />
 					<button className='btn btn-sm btn-error btn-outline hover:text-white' aria-label={"delete" + table} type="submit" >
 						Excluir <TrashIcon className='h-6 w-6' />
 					</button>
