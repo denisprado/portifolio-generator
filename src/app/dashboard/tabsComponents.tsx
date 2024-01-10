@@ -5,21 +5,19 @@ import { Accordion as DaisyAccordion, Tabs as DaisyTabs, type AccordionProps, ty
 
 const { Tab, RadioTab } = DaisyTabs
 
-export function Tabs({
+export const Tabs = ({
 	tabs,
 	tab,
 	setTab,
-	key,
 	...props
 }: {
 	tabs?: { label: string, content: ReactNode }[]
 	tab: number
 	setTab(page: number): void
-	key: string
-} & TabsProps) {
-	const tabName = Math.random().toString()
+} & TabsProps) => {
+	const tabName = "tab"
 	return (
-		<DaisyTabs {...props} key={key}>
+		<DaisyTabs {...props}>
 			{(tabs ?? []).map((i, index) => (
 				<RadioTab
 					name={tabName}

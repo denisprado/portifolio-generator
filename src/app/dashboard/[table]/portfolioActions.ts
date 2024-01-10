@@ -2,11 +2,10 @@
 
 import { getImageSrc } from '../imageActions';
 import { PortfolioType } from '../types';
-import { PORTFOLIO } from '@/app/constants';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { redirect, useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export async function create(data: PortfolioType) {

@@ -574,9 +574,6 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem de Destaque' }
 	];
 
-
-
-
 	const InformationContentPanel = () => <InputFieldsSession fields={generalFields}></InputFieldsSession>
 
 	const OptionsContentPanel = () =>
@@ -624,11 +621,11 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		{ label: 'Sobre', content: <InformationContentPanel /> },
 
 		{
-			label: `Página 1`, content: <Tabs key={"page1"} size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
+			label: `Página 1`, content: <Tabs size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
 				tab={tabPage1} />
 		},
 		{
-			label: 'Página 2', content: <Tabs key={"page2"} size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
+			label: 'Página 2', content: <Tabs size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
 				tab={tabPage2} />
 		},
 		{ label: 'Opções', content: <OptionsContentPanel /> },
@@ -642,7 +639,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 
 				<span className='badge badge-neutral'>Trabalho</span><h1 className='text-4xl font-black mb-8'> {workValues['title']}</h1>
 
-				<Tabs key={"work"} tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
+				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
 			</div>
 
 			<p aria-live="polite" className="sr-only" role="status">

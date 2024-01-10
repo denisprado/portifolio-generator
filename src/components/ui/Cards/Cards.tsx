@@ -6,7 +6,7 @@ import { deleteWork } from '@/app/dashboard/[table]/workActions';
 
 import Card from '@/components/ui/Card/Card';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
-import { PencilIcon, TrashIcon, ViewColumnsIcon } from '@heroicons/react/24/solid';
+import { EyeIcon, PencilIcon, TrashIcon, ViewColumnsIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -44,7 +44,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	return (
 		<div className='flex flex-col gap-4'>
 			<button
-				className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-56"
+				className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-64"
 				aria-label="new"
 				onClick={() => router.push(`/dashboard/${table}/new`)}
 			>
@@ -71,7 +71,6 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	);
 
 	function getCardCations(item: any) {
-		console.log("foi")
 		return (
 			<div className="flex w-full flex-row flex-wrap gap-1">
 				<button className='btn btn-sm hover:text-primary'
@@ -79,7 +78,7 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 
 					onClick={() => router.push(`/dashboard/${table}/${item.id}?type=view`)}
 				>Visualizar
-					<ViewColumnsIcon className='h-6 w-6' />
+					<EyeIcon className='h-6 w-6' />
 				</button>
 				<button className='btn btn-sm hover:text-primary'
 					aria-label={"edit " + table}
