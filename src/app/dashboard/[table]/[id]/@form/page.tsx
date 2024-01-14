@@ -32,7 +32,7 @@ export default async function Form({
 	}
 
 	return (
-		<div className="w-full col-span-7">
+		<div className="w-full col-span-6 p-8">
 			<SelectedForm params={{ id: id }} />
 		</div>
 	);

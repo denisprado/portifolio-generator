@@ -14,16 +14,9 @@ export default function DashboardLayout({
 
 	return (
 
-		<div className="h-full border-2">
-			<div className="flex flex-col gap-2 h-full p-4">
-				<div className={'p-5'}>
-					<h1 className='text-lg'><strong>Portfolio</strong><em>Art</em></h1>
-				</div>
-				<Drawer items={[{ label: 'Portfolios', href: '/dashboard/portfolio' },
-				{ label: 'Trabalhos', href: '/dashboard/work' }]} >
-					{children}
-				</Drawer>
-
+		<div className="h-full">
+			<div className="flex flex-col h-full">
+				{children}
 			</div>
 		</div>
 	);

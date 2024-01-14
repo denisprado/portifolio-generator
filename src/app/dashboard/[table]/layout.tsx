@@ -7,7 +7,7 @@ export default function Layout({
 }) {
 
 	return (
-		<div className='grid grid-cols-12 gap-4 '>
+		<div className='grid grid-cols-12'>
 			<div className='col-span-12'>
 				{children}
 			</div>

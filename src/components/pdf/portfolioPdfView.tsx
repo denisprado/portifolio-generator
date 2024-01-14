@@ -100,13 +100,13 @@ export default function PortfolioPdfView({ id }: { id: string }) {
 	}
 
 	return (
-		<PDFViewer style={styles?.viewer}>
+		<PDFViewer style={styles?.viewer} showToolbar={false} >
 
-			<Document style={{ margin: 0, width: "210mm", height: '297mm' }}>
+			<Document style={{ backgroundColor: 'red', padding: 15, overflow: 'hidden' }} >
 
 				{/* Página 1 - Capa */}
 
-				<Page size={"A4"} style={styles?.pageLoaded} orientation={page_layout}>
+				<Page style={styles?.pageLoaded} orientation={page_layout}>
 					<View style={styles?.pageContent}>
 						<Section style={styles}>
 							<View style={{ padding: '10mm', paddingBottom: '0' }}>

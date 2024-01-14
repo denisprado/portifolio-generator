@@ -67,7 +67,7 @@ const Input = ({
 				value={value === null ? undefined : value}
 				onKeyDown={handleKeyDown}
 				className={twMerge(
-					" input input-bordered duration-300 focus:outline-none text-base-content placeholder:text-base-content/30 w-full",
+					" input input-bordered duration-300 focus:outline-none text-base-content placeholder:text-base-content/30 w-full bg-[#EFF2F9]",
 					statusClass,
 					inputClassName
 				)}

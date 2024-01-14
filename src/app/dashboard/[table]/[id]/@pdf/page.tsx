@@ -10,7 +10,7 @@ const componentMap = {
 };
 
 export default function PdfView({ params }: { params: { table: 'work' | 'portfolio', id: string } }) {
-	console.log(params)
+
 	const { table, id } = params
 
 	if (!table) {

@@ -42,18 +42,26 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	const router = useRouter();
 
 	return (
-		<div className='flex flex-col gap-4'>
-			<button
-				className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-64"
-				aria-label="new"
-				onClick={() => router.push(`/dashboard/${table}/new`)}
-			>
-				Criar {table === WORK ? 'trabalho' : 'portfolio'}
-			</button>
-			<div className='flex flex-row gap-4 flex-wrap'>
+		<div className='flex flex-col gap-4 container max-w-5xl'>
+			<div className='w-full flex justify-between pt-8 mb-8 border-b'>
+				<div className='h-full flex flex-col'>
 
+					<h2 className='text-lg font-bold'>Portfolios & Obras</h2>
+					<div role="tablist" className="tabs tabs-bordered">
+						<a role="tab" className={`tab ${table === PORTFOLIO && 'tab-active'}`} href='portfolio'>Portfolios</a>
+						<a role="tab" className={`tab ${table === WORK && 'tab-active'}`} href='work'>Obras</a>
+					</div>
+				</div>
+				<button
+					className="btn btn-primary btn-xs sm:btn-sm md:btn-md  max-w-64"
+					aria-label="new"
+					onClick={() => router.push(`/dashboard/${table}/new`)}
+				>
+					Criar {table === WORK ? 'trabalho' : 'portfolio'}
+				</button>
+			</div>
+			<div className='grid grid-cols-12 gap-6 flex-wrap'>
 				{items?.map((item: any) => (
-
 					<Card
 						key={item.id}
 						id={item.id}
@@ -62,7 +70,6 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 						imageSrc={item.image_1_src}
 						cardActions={getCardCations(item)}
 					/>
-
 				))}
 			</div>
 

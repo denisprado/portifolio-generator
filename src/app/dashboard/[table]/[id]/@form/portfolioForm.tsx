@@ -29,7 +29,7 @@ import {
 } from '../../../types';
 
 import { NEW, PORTFOLIO } from '@/app/constants';
-import { MemoInput as Input } from '@/app/dashboard/inputComponents';
+import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
 import { Tabs } from '@/app/dashboard/tabsComponents';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -42,6 +42,32 @@ const initialState = {
 	message: ''
 };
 
+
+
+
+function SessionLabel({ label }: { label: React.ReactNode }) {
+	return (<div className="mt-10">
+		<h2 className='text-lg font-extrabold'>{label}</h2>
+	</div>);
+}
+
+const TextAreaInput = ({ labelText, id, name, required, value, onChange, autoFocus }: { labelText: string, id: string, name: keyof PortfolioType, required: boolean, value: any, onChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void, autoFocus: boolean }) => (
+	<label className="form-control w-full max-w-6xl">
+		<div className="label">
+			<span className="label-text">{labelText}</span>
+		</div>
+		<MemoTextArea
+			id={id}
+			key={`memo-text-area-${name}`}
+			name={name}
+			required={required}
+			value={value ?? ''}
+			onChange={onChange}
+			autoFocus={autoFocus}
+			className='bg-[#EFF2F9] h-48'
+		/>
+	</label>
+);
 
 
 export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
@@ -259,36 +285,23 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 		worksSelecteds ? worksSelecteds.includes(id) : false;
 
 	function workCard(work: any): React.JSX.Element {
+		const border = workIsChecked(work.id) ? 'border-2 border-primary' : ''
 		return (
-			<Card sx={{ display: 'flex' }} key={work.id}>
-				<div className='flex flex-col'>
-					<div className='flex-1'>
-						<Typography component="div" variant="h5">
-							{work.title}
-						</Typography>
-						<Typography
-							variant="subtitle1"
-							color="text.secondary"
-							component="div"
-						>
-							{work.description}
-						</Typography>
+			<div className={`card xl:card-side bg-base-100 shadow-xl ${border}`}>
+				<figure><img src={work.image_1_src} alt={work.title} /></figure>
+				<div className="card-body">
+					<h2 className="card-title">{work.title}</h2>
+					<p>{work.description}</p>
+					<div className="card-actions justify-end">
 						<Checkbox
 							checked={workIsChecked(work.id)}
 							onChange={() => handleCheckboxChange(work.id)}
-
 							value={work.id}
 							required
 						/>
 					</div>
 				</div>
-				<Image
-					height={150}
-					width={150}
-					src={work.image_1_src}
-					alt={work.title}
-				/>
-			</Card>
+			</div>
 		);
 	}
 
@@ -362,29 +375,33 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 			return null
 		}
 		return (
-			<Image
-				key={src}
-				className={'rounded-sm'}
-				src={src}
-				width={125}
-				height={250}
-				alt={''}
-			/>
+			<div className='border border-dashed border-primary p-4 rounded-md'>
+
+				<Image
+					key={src}
+					className={'rounded-sm'}
+					src={src}
+					width={250}
+					height={500}
+					alt={''}
+				/>
+			</div>
 		)
 	}
 
 	const UploadImageSession = ({ imageFields }: { imageFields: imageFieldsTypes }) => {
-		return (<div className='flex flex-col flex-1 gap-2'>
-			{imageFields ? imageFields.map(({
-				file,
-				src,
-				labelButton
-			}) => imageUpload({
-				file,
-				src,
-				labelButton
-			})) : <p>Sem Imagem</p>}
-		</div>);
+		return (
+			<div className='flex flex-col flex-1 gap-2'>
+				{imageFields ? imageFields.map(({
+					file,
+					src,
+					labelButton
+				}) => imageUpload({
+					file,
+					src,
+					labelButton
+				})) : <p>Sem Imagem</p>}
+			</div>);
 	};
 
 	const imageUpload = (
@@ -400,18 +417,20 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	): React.JSX.Element | null => {
 
 		return (
-			<div className='flex flex-col' key={src}>
-				<Button variant="contained" component="label" className="w-full my-4">
-					{labelButton}
+			<div className='flex flex-col gap-4' key={src} >
+				<label className="form-control w-full max-w-xs">
+					<div className="label">
+						<span className="label-text">{labelButton}</span>
+					</div>
 					<input
+						className="file-input file-input-bordered file-input-primary w-full max-w-xs"
 						type="file"
-						hidden
 						id={file}
 						name={file}
 						accept="image/*"
 						onChange={handleInputChange({ fieldName: file })}
 					/>
-				</Button>
+				</label>
 				<ShowImageUploaded src={portfolioValues[src as imagesSrcs]} />
 			</div>
 		);
@@ -467,61 +486,6 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 
 		return formData;
 	};
-
-	const InputFieldsSession = ({ fields }: { fields: PortfolioInputFieldsTypes }) => {
-		return (
-			<div className="flex flex-col gap-2">
-				{fields.map(({
-					label,
-					fieldId,
-					rows
-				}) => MuiTextField({
-					label,
-					fieldId,
-					rows
-				}))}
-			</div>);
-	};
-
-	function MuiTextField({
-		label, fieldId, rows
-	}: {
-		label: string;
-		fieldId: PortfolioFieldId;
-		rows: number;
-	}): React.JSX.Element {
-
-		return (
-			<>
-				<label className="form-control w-full">
-					<div className="label">
-						<span className="label-text">{label}</span>
-					</div>
-					{rows > 1 ?
-						<Input
-							id={fieldId}
-							key={`memo-text-area-${fieldId}`}
-							name={fieldId}
-							required
-							value={portfolioValues[fieldId] ?? ''}
-							onChange={handleInputChange({ fieldName: fieldId })}
-							autoFocus={focusedField === fieldId}
-						/>
-						:
-						<Input
-							id={fieldId}
-							key={`memo-text-area-${fieldId}`}
-							name={fieldId}
-							required
-							value={portfolioValues[fieldId] ?? ''}
-							onChange={handleInputChange({ fieldName: fieldId })}
-							autoFocus={focusedField === fieldId}
-						/>
-					}
-				</label>
-			</>
-		);
-	}
 
 	const RadioFieldsSession = ({ RadioFields }: { RadioFields: RadioFieldsTypes[] }) => {
 		return (<div className='grid grid-cols-3'>
@@ -608,10 +572,7 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 
 	const generalFields: PortfolioInputFieldsTypes = [
 		{ label: 'Título', fieldId: 'title', rows: 1 },
-		{ label: 'Descrição', fieldId: 'description', rows: 3 },
-		{ label: 'Bio', fieldId: 'bio', rows: 3 },
-		{ label: 'CV', fieldId: 'cv', rows: 3 },
-		{ label: 'Contato', fieldId: 'contact', rows: 3 },
+
 	];
 
 	const page1Fields: PortfolioInputFieldsTypes = [
@@ -647,10 +608,6 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	];
 
 
-
-
-	const InformationContentPanel = () => <InputFieldsSession fields={generalFields}></InputFieldsSession>
-
 	const OptionsContentPanel = () =>
 		<>
 			<RadioFieldsSession RadioFields={pageLayoutRadioFields}></RadioFieldsSession>
@@ -677,18 +634,13 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 
 	const RenderWorkCards = () => {
 		return (
-			<>
-				<FormLabel id="works_id">Trabalhos neste portfolio</FormLabel>
-				<FormGroup
-					aria-labelledby="Works"
-					sx={{ display: 'flex', gap: 4, flexDirection: 'row', paddingY: 2 }}
-				>
-					{works &&
-						works.map((work: any) => {
-							return workCard(work);
-						})}
-				</FormGroup>
-			</>
+			<div className='grid grid-cols-2 gap-4'>
+				{works &&
+					works.map((work: any) => {
+						return workCard(work);
+					})}
+
+			</div>
 		);
 	}
 
@@ -699,40 +651,82 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	];
 
 
-	const [tabPortfolio, setTabPortfolio] = useState(0)
 	const [tabPage1, setTabPage1] = useState(0)
-	const [tabPage2, setTabPage2] = useState(0)
-
-	const tabsPage2 = [
-		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
-
-	];
-
-	const tabs = [
-		{ label: 'Sobre', content: <InformationContentPanel /> },
-
-		{
-			label: `Imagens`, content: <Tabs key={"page1"} size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
-				tab={tabPage1} />
-		},
-		{
-			label: `Trabalhos`, content: <RenderWorkCards />
-		},
-
-		{ label: 'Opções', content: <OptionsContentPanel /> },
-	];
-
 
 
 	return !isLoading && initialPortfolioState.color_theme_id !== '' && id !== NEW ? (
 		<form action={editForm} id="portfolioForm">
 			<input id="id" name="id" hidden defaultValue={id} />
+			<div className='flex flex-col gap-2 flex-1 p-16 pt-8'>
+				<span className='badge badge-neutral badge-lg mb-8'>Portfolio</span><h1 className='text-4xl font-black'> {portfolioValues['title']}</h1>
+				<div className="divider"></div>
+				<SessionLabel label={"Informações do Portfolio"}></SessionLabel>
+				<label className="form-control w-full max-w-6xl">
+					<div className="label">
+						<span className="label-text">Título</span>
+					</div>
+					<Input
+						placeholder='title'
+						id="title"
+						name="title"
+						required
+						value={portfolioValues['title']}
+						onChange={handleInputChange({ fieldName: 'title' })}
+						autoFocus={focusedField === 'title'}
+					/>
+				</label>
+				<div className='grid grid-cols-2 gap-4 gap-x-8'>
 
-			<div className='flex flex-col gap-2 flex-1'>
+					<TextAreaInput
+						labelText="Descrição"
+						id="description"
+						name="description"
+						required
+						value={portfolioValues['description']}
+						onChange={handleInputChange({ fieldName: 'description' })}
+						autoFocus={focusedField === 'description'}
+					/>
 
-				<span className='badge badge-neutral'>Portfolio</span><h1 className='text-4xl font-black mb-8'> {portfolioValues['title']}</h1>
+					<TextAreaInput
+						labelText="Bio"
+						id="bio"
+						name="bio"
+						required
+						value={portfolioValues['bio']}
+						onChange={handleInputChange({ fieldName: 'bio' })}
+						autoFocus={focusedField === 'bio'}
+					/>
 
-				<Tabs key={"portfolio"} tabs={tabs} setTab={setTabPortfolio} tab={tabPortfolio} size='lg' variant='lifted' />
+					<TextAreaInput
+						labelText="Currículum Vitae"
+						id="cv"
+						name="cv"
+						required
+						value={portfolioValues['cv']}
+						onChange={handleInputChange({ fieldName: 'cv' })}
+						autoFocus={focusedField === 'cv'}
+					/>
+
+					<TextAreaInput
+						labelText="Contato"
+						id="contact"
+						name="contact"
+						required
+						value={portfolioValues['contact']}
+						onChange={handleInputChange({ fieldName: 'contact' })}
+						autoFocus={focusedField === 'contact'}
+					/>
+				</div>
+				<SessionLabel label={"Imagens do Portfolio"}></SessionLabel>
+				<div className="flex w-full">
+					<UploadImageSession imageFields={page1ImageFields} />
+					<div className="divider divider-horizontal"></div>
+					<UploadImageSession imageFields={page2ImageFields} />
+				</div>
+				<SessionLabel label={"Trabalhos do Portfolio"}></SessionLabel>
+				<RenderWorkCards />
+				<SessionLabel label={"Opções"}></SessionLabel>
+				<OptionsContentPanel />
 
 			</div>
 
@@ -747,18 +741,3 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	);
 }
 
-function SubmitButton() {
-	const { pending } = useFormStatus();
-	return (
-		<Button
-			component="a"
-			href="#"
-			className="w-full my-4 text-blue-800"
-			type="submit"
-			variant="contained"
-			aria-disabled={pending}
-		>
-			Salvar
-		</Button>
-	);
-}

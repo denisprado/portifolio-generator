@@ -1,7 +1,8 @@
 import { ConfigType, PageLayoutType } from '@/app/dashboard/types';
 import { supabaseClient } from '@/utils/supabase';
 import { StyleSheet } from '@react-pdf/renderer';
-
+export const documentWidthAbsolute = 210 * 3.779
+export const documentHeightAbsolute = 297 * 3.779
 export async function useThemeStyles(register: ConfigType) {
 
 	const { color_theme_id, typography_theme_id, spacing_theme_id, page_layout } = register
@@ -44,8 +45,8 @@ export async function useThemeStyles(register: ConfigType) {
 		height: pageSetup[pageLayout].height - imageSetup[pageLayout].height - (2 * imageMargin) - (2 * margin)
 	}
 
-	const pageWidthAbsolute = ((100 / 12) * 9) / 2
-	const pageHeightAbsolute = 88
+	const pageWidthAbsolute = 50
+	const pageHeightAbsolute = 100
 
 	const page = StyleSheet.create({
 		viewer: {
@@ -53,20 +54,25 @@ export async function useThemeStyles(register: ConfigType) {
 			width: `${pageWidthAbsolute}vw`,
 			marginHorizontal: margin,
 			marginVertical: margin,
+			paddingTop: 55,
+			paddingLeft: 170,
+			paddingRight: 170,
+			backgroundColor: '#656E83',
+			overflow: 'hidden'
+		},
+		// page: {
+		// 	flexDirection: `column`,
+		// 	backgroundColor: color_theme?.background_primary_color ?? '',
+		// 	flexGrow: 1,
 
-		},
-		page: {
-			flexDirection: `column`,
-			backgroundColor: color_theme?.background_primary_color ?? '',
-			flexGrow: 1,
-			margin: 10,
-		},
+		// },
 		pageLoaded: {
 			flexDirection: `column`,
-			backgroundColor: color_theme?.background_primary_color ?? '',
 			flexGrow: 1,
 			margin: 0,
-			display: 'flex'
+			display: 'flex',
+			backgroundColor: color_theme?.background_primary_color ?? '',
+			overflow: 'hidden'
 		},
 		pageContent: {
 			display: 'flex',

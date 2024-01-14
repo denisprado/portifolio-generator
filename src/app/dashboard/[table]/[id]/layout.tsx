@@ -11,13 +11,13 @@ export default function Layout(props: {
 	const type = searchParams.get('type')
 
 	return (
-		<div className='grid grid-cols-12 gap-4 p-8'>
+		<div className='grid grid-cols-12'>
 			{type === 'view' ? <div className='col-span-6'>
 				{props.view}
 			</div> : <div className='col-span-6'>
 				{props.form}
 			</div>}
-			<div className="col-span-6 bg-white relative px-4 ">
+			<div className="col-span-6 bg-white relative ">
 				<div className="fixed ">
 					{props.pdf}
 				</div>

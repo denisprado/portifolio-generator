@@ -5,6 +5,7 @@ import { ContainerColumn } from './components/columnSection';
 import { Section } from './components/section';
 import { WorkPageContent } from './components/workPageContent';
 import { Orientation } from 'types';
+import { documentWidthAbsolute, documentHeightAbsolute } from './styles';
 
 
 export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any): any => {
@@ -50,7 +51,8 @@ export const WorkPagePdf = ({ record, page_layout_from_portifolio, styles }: any
 	if (!pages) return <></>
 
 	return pages.map((page, i) =>
-		<Page size={"A4"} style={styles.pageLoaded} orientation={orientation} key={i}>
+
+		<Page style={styles.pageLoaded} orientation={orientation} key={i} >
 			<WorkPageContent style={styles} imageOrder={page?.image_order}>
 
 				{page.image && <Section style={styles}>
