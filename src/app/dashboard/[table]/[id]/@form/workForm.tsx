@@ -492,46 +492,54 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 					autoFocus={focusedField === 'title'}
 				/>
 				<SessionLabel label={"Página 1"}></SessionLabel>
-				<TextAreaInput
-					labelText="Descrição"
-					id="description"
-					name="description"
-					required
-					value={workValues['description_1']}
-					onChange={handleInputChange({ fieldName: 'description_1' })}
-					autoFocus={focusedField === 'description_1'}
-				/>
-				<TextAreaInput
-					labelText="Descrição Técnica"
-					id="tech_description_1"
-					name="tech_description_1"
-					required
-					value={workValues['tech_description_1']}
-					onChange={handleInputChange({ fieldName: 'tech_description_1' })}
-					autoFocus={focusedField === 'tech_description_1'}
-				/>
+				<div className='grid grid-cols-2 gap-4 gap-x-8'>
+					<TextAreaInput
+						labelText="Descrição"
+						id="description"
+						name="description"
+						required
+						value={workValues['description_1']}
+						onChange={handleInputChange({ fieldName: 'description_1' })}
+						autoFocus={focusedField === 'description_1'}
+					/>
+					<TextAreaInput
+						labelText="Descrição Técnica"
+						id="tech_description_1"
+						name="tech_description_1"
+						required
+						value={workValues['tech_description_1']}
+						onChange={handleInputChange({ fieldName: 'tech_description_1' })}
+						autoFocus={focusedField === 'tech_description_1'}
+					/>
+				</div>
 				<UploadImageSession imageFields={page1ImageFields} />  <RadioFieldsSession RadioFields={radioFieldsPage1} />
 				<SessionLabel label={"Página 2"}></SessionLabel>
-				<TextAreaInput
-					labelText="Descrição"
-					id="description_2"
-					name="description_2"
-					required
-					value={workValues['description_2']}
-					onChange={handleInputChange({ fieldName: 'description_2' })}
-					autoFocus={focusedField === 'description_2'}
-				/>
-				<TextAreaInput
-					labelText="Descrição Técnica"
-					id="tech_description_2"
-					name="tech_description_2"
-					required
-					value={workValues['tech_description_2']}
-					onChange={handleInputChange({ fieldName: 'tech_description_2' })}
-					autoFocus={focusedField === 'tech_description_2'}
-				/>
+				<div className='grid grid-cols-2 gap-4 gap-x-8'>
+
+					<TextAreaInput
+						labelText="Descrição"
+						id="description_2"
+						name="description_2"
+						required
+						value={workValues['description_2']}
+						onChange={handleInputChange({ fieldName: 'description_2' })}
+						autoFocus={focusedField === 'description_2'}
+					/>
+					<TextAreaInput
+						labelText="Descrição Técnica"
+						id="tech_description_2"
+						name="tech_description_2"
+						required
+						value={workValues['tech_description_2']}
+						onChange={handleInputChange({ fieldName: 'tech_description_2' })}
+						autoFocus={focusedField === 'tech_description_2'}
+					/>
+				</div>
+
+
 				<UploadImageSession imageFields={page2ImageFields} />  <RadioFieldsSession RadioFields={radioFieldsPage2} />
 				<SessionLabel label={"Opções"}></SessionLabel>
+
 				<OptionsContentPanel />
 				{/* 
 				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' /> */}
