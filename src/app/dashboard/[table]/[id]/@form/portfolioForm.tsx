@@ -1,9 +1,13 @@
 'use client'
 
+import { NEW, PORTFOLIO } from '@/app/constants';
+import { MemoInput as Input } from '@/app/dashboard/inputComponents';
 import LoadingDots from '@/components/ui/LoadingDots';
+import SessionLabel from '@/components/ui/SessionLabel/SessionLabel';
+import { TextAreaInput } from '@/components/ui/TextArea/textArea';
+import UploadImageSession from '@/components/ui/UploadImageSession/uploadImageSession';
 import { supabaseClient as supabase } from '@/utils/supabase/client';
 import {
-	Button,
 	Card,
 	FormControl,
 	FormControlLabel,
@@ -13,62 +17,27 @@ import {
 	Typography
 } from '@mui/material';
 import FormLabel from '@mui/material/FormLabel';
-import Image from 'next/image';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { Checkbox } from 'react-daisyui';
+import { useFormState } from 'react-dom';
 import {
 	ConfigType,
-	ThemeData,
-	ThemeProps,
-	PortfolioFieldId,
 	PortfolioInputFieldsTypes,
 	PortfolioType,
-	imageFieldsTypes,
-	imagesFiles,
-	imagesSrcs,
 	RadioFieldsTypes,
-	WorkType
+	ThemeData,
+	ThemeProps,
+	WorkType,
+	imageFieldsTypes,
+	imagesSrcs
 } from '../../../types';
-
-import { NEW, PORTFOLIO } from '@/app/constants';
-import { MemoInput as Input, MemoTextArea } from '@/app/dashboard/inputComponents';
-import { Tabs } from '@/app/dashboard/tabsComponents';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
 import { create, editPortfolio } from '../../portfolioActions';
-import { Checkbox } from 'react-daisyui';
 
 export const revalidate = 60;
 
 const initialState = {
 	message: ''
 };
-
-
-
-
-function SessionLabel({ label }: { label: React.ReactNode }) {
-	return (<div className="mt-10">
-		<h2 className='text-lg font-extrabold'>{label}</h2>
-	</div>);
-}
-
-const TextAreaInput = ({ labelText, id, name, required, value, onChange, autoFocus }: { labelText: string, id: string, name: keyof PortfolioType, required: boolean, value: any, onChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void, autoFocus: boolean }) => (
-	<label className="form-control w-full max-w-6xl">
-		<div className="label">
-			<span className="label-text">{labelText}</span>
-		</div>
-		<MemoTextArea
-			id={id}
-			key={`memo-text-area-${name}`}
-			name={name}
-			required={required}
-			value={value ?? ''}
-			onChange={onChange}
-			autoFocus={autoFocus}
-			className='bg-[#EFF2F9] h-48'
-		/>
-	</label>
-);
-
 
 export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 	const [configData, setConfigData] = useState<ConfigType>({
@@ -370,71 +339,7 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW && editFormAction(formData);
 	};
 
-	const ShowImageUploaded = ({ src }: { src: string | null }): React.JSX.Element | null => {
-		if (!src) {
-			return null
-		}
-		return (
-			<div className='border border-dashed border-primary p-4 rounded-md'>
 
-				<Image
-					key={src}
-					className={'rounded-sm'}
-					src={src}
-					width={250}
-					height={500}
-					alt={''}
-				/>
-			</div>
-		)
-	}
-
-	const UploadImageSession = ({ imageFields }: { imageFields: imageFieldsTypes }) => {
-		return (
-			<div className='flex flex-col flex-1 gap-2'>
-				{imageFields ? imageFields.map(({
-					file,
-					src,
-					labelButton
-				}) => imageUpload({
-					file,
-					src,
-					labelButton
-				})) : <p>Sem Imagem</p>}
-			</div>);
-	};
-
-	const imageUpload = (
-		{
-			file,
-			src,
-			labelButton
-		}: {
-			file: imagesFiles;
-			src: imagesSrcs;
-			labelButton: string;
-		}
-	): React.JSX.Element | null => {
-
-		return (
-			<div className='flex flex-col gap-4' key={src} >
-				<label className="form-control w-full max-w-xs">
-					<div className="label">
-						<span className="label-text">{labelButton}</span>
-					</div>
-					<input
-						className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-						type="file"
-						id={file}
-						name={file}
-						accept="image/*"
-						onChange={handleInputChange({ fieldName: file })}
-					/>
-				</label>
-				<ShowImageUploaded src={portfolioValues[src as imagesSrcs]} />
-			</div>
-		);
-	};
 
 	const RenderPageLayoutSelection = (
 		{
@@ -600,11 +505,11 @@ export function PortfolioForm({ params: { id } }: { params: { id: string } }) {
 
 
 	const page1ImageFields: imageFieldsTypes = [
-		{ file: 'image_1', src: 'image_1_src', labelButton: 'Imagem de Capa' },
+		{ file: 'image_1', src: portfolioValues['image_1_src' as imagesSrcs]!!, labelButton: 'Imagem de Capa', handleInputChange: handleInputChange({ fieldName: 'image_1' }) },
 
 	];
 	const page2ImageFields: imageFieldsTypes = [
-		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem de Contra Capa' }
+		{ file: 'image_2', src: portfolioValues['image_2_src' as imagesSrcs]!!, labelButton: 'Imagem de Contra Capa', handleInputChange: handleInputChange({ fieldName: 'image_2' }) }
 	];
 
 

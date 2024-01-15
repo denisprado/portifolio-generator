@@ -33,6 +33,9 @@ import { Tabs } from '@/app/dashboard/tabsComponents';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createWork, editWork } from '../../workActions';
+import UploadImageSession from '@/components/ui/UploadImageSession/uploadImageSession';
+import SessionLabel from '@/components/ui/SessionLabel/SessionLabel';
+import { TextAreaInput } from '@/components/ui/TextArea/textArea';
 
 export const revalidate = 60;
 
@@ -270,65 +273,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		id !== NEW && editFormAction(formData);
 	};
 
-	const ShowImageUploaded = ({ src }: { src: string | null }): React.JSX.Element | null => {
-		if (!src) {
-			return null
-		}
-		return (
-			<Image
-				key={src}
-				className={'rounded-sm'}
-				src={src}
-				width={125}
-				height={250}
-				alt={''}
-			/>
-		)
-	}
 
-	const UploadImageSession = ({ imageFields }: { imageFields: imageFieldsTypes }) => {
-		return (<div className='flex flex-col flex-1 gap-2'>
-			{imageFields ? imageFields.map(({
-				file,
-				src,
-				labelButton
-			}) => imageUpload({
-				file,
-				src,
-				labelButton
-			})) : <p>Sem Imagem</p>}
-		</div>);
-	};
-
-	const imageUpload = (
-		{
-			file,
-			src,
-			labelButton
-		}: {
-			file: imagesFiles;
-			src: imagesSrcs;
-			labelButton: string;
-		}
-	): React.JSX.Element | null => {
-
-		return (
-			<div className='flex flex-col' key={src}>
-				<Button variant="contained" component="label" className="w-full my-4">
-					{labelButton}
-					<input
-						type="file"
-						hidden
-						id={file}
-						name={file}
-						accept="image/*"
-						onChange={handleInputChange({ fieldName: file })}
-					/>
-				</Button>
-				<ShowImageUploaded src={workValues[src as imagesSrcs]} />
-			</div>
-		);
-	};
 
 	const RenderPageLayoutSelection = (
 		{
@@ -380,61 +325,6 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 
 		return formData;
 	};
-
-	const InputFieldsSession = ({ fields }: { fields: WorkInputFieldsTypes }) => {
-		return (
-			<div className="flex flex-col gap-2">
-				{fields.map(({
-					label,
-					fieldId,
-					rows
-				}) => MuiTextField({
-					label,
-					fieldId,
-					rows
-				}))}
-			</div>);
-	};
-
-	function MuiTextField({
-		label, fieldId, rows
-	}: {
-		label: string;
-		fieldId: WorkFieldId;
-		rows: number;
-	}): React.JSX.Element {
-
-		return (
-			<>
-				<label className="form-control w-full">
-					<div className="label">
-						<span className="label-text">{label}</span>
-					</div>
-					{rows > 1 ?
-						<Input
-							id={fieldId}
-							key={`memo-text-area-${fieldId}`}
-							name={fieldId}
-							required
-							value={workValues[fieldId] ?? ''}
-							onChange={handleInputChange({ fieldName: fieldId })}
-							autoFocus={focusedField === fieldId}
-						/>
-						:
-						<Input
-							id={fieldId}
-							key={`memo-text-area-${fieldId}`}
-							name={fieldId}
-							required
-							value={workValues[fieldId] ?? ''}
-							onChange={handleInputChange({ fieldName: fieldId })}
-							autoFocus={focusedField === fieldId}
-						/>
-					}
-				</label>
-			</>
-		);
-	}
 
 	const RadioFieldsSession = ({ RadioFields }: { RadioFields: RadioFieldsTypes[] }) => {
 		return (<div className='grid grid-cols-3'>
@@ -519,19 +409,6 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 		);
 	};
 
-	const generalFields: WorkInputFieldsTypes = [
-		{ label: 'Título', fieldId: 'title', rows: 1 },
-	];
-
-	const page1Fields: WorkInputFieldsTypes = [
-		{ label: 'Descrição', fieldId: 'description_1', rows: 3 },
-		{ label: 'Descrição Técnica', fieldId: 'tech_description_1', rows: 3 },
-	];
-	const page2Fields: WorkInputFieldsTypes = [
-		{ label: 'Descrição', fieldId: 'description_2', rows: 3 },
-		{ label: 'Descrição Técnica', fieldId: 'tech_description_2', rows: 3 },
-	];
-
 	const rowColValues = [
 		{ value: 'column', label: 'Vertical', default: true },
 		{ value: 'row', label: 'Horizontal', default: false },
@@ -567,14 +444,11 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 	const radioFieldsPage2 = generateRadioPageFields(2)
 
 	const page1ImageFields: imageFieldsTypes = [
-		{ file: 'image_1', src: 'image_1_src', labelButton: 'Imagem de Destaque' },
-
+		{ file: 'image_1', src: workValues['image_1_src' as imagesSrcs]!!, labelButton: 'Imagem de Destaque', handleInputChange: handleInputChange({ fieldName: 'image_1' }) },
 	];
 	const page2ImageFields: imageFieldsTypes = [
-		{ file: 'image_2', src: 'image_2_src', labelButton: 'Imagem de Destaque' }
+		{ file: 'image_2', src: workValues['image_2_src' as imagesSrcs]!!, labelButton: 'Imagem de Destaque', handleInputChange: handleInputChange({ fieldName: 'image_2' }) }
 	];
-
-	const InformationContentPanel = () => <InputFieldsSession fields={generalFields}></InputFieldsSession>
 
 	const OptionsContentPanel = () =>
 		<>
@@ -600,46 +474,67 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 			)}
 		</>
 
-	const tabsPage1 = [
-		{ label: 'Informações', content: <InputFieldsSession fields={page1Fields} /> },
-		{ label: 'Imagens', content: <UploadImageSession imageFields={page1ImageFields} /> },
-		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage1} /> },
-	];
-
-
-	const [tabWork, setTabWork] = useState(0)
-	const [tabPage1, setTabPage1] = useState(0)
-	const [tabPage2, setTabPage2] = useState(0)
-
-	const tabsPage2 = [
-		{ label: 'Informações', content: <InputFieldsSession fields={page2Fields} /> },
-		{ label: 'Imagens', content: <UploadImageSession imageFields={page2ImageFields} /> },
-		{ label: 'Opções', content: <RadioFieldsSession RadioFields={radioFieldsPage2} /> },
-	];
-
-	const tabs = [
-		{ label: 'Sobre', content: <InformationContentPanel /> },
-
-		{
-			label: `Página 1`, content: <Tabs size='lg' variant='lifted' tabs={tabsPage1} setTab={setTabPage1}
-				tab={tabPage1} />
-		},
-		{
-			label: 'Página 2', content: <Tabs size='lg' variant='lifted' tabs={tabsPage2} setTab={setTabPage2}
-				tab={tabPage2} />
-		},
-		{ label: 'Opções', content: <OptionsContentPanel /> },
-	];
-
 	return !isLoading && initialWorkState.color_theme_id !== '' && id !== NEW ? (
 		<form action={editForm} id="workForm">
 			<input id="id" name="id" hidden defaultValue={id} />
 
-			<div className='flex flex-col gap-2 flex-1'>
-
-				<span className='badge badge-neutral'>Trabalho</span><h1 className='text-4xl font-black mb-8'> {workValues['title']}</h1>
-
-				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' />
+			<div className='flex flex-col gap-2 flex-1 p-16 pt-8'>
+				<span className='badge badge-neutral badge-lg mb-8'>Obra</span><h1 className='text-4xl font-black'> {workValues['title']}</h1>
+				<div className="divider"></div>
+				<SessionLabel label={"Informações da Obra"}></SessionLabel>
+				<Input
+					placeholder='title'
+					id="title"
+					name="title"
+					required
+					value={workValues['title']}
+					onChange={handleInputChange({ fieldName: 'title' })}
+					autoFocus={focusedField === 'title'}
+				/>
+				<SessionLabel label={"Página 1"}></SessionLabel>
+				<TextAreaInput
+					labelText="Descrição"
+					id="description"
+					name="description"
+					required
+					value={workValues['description_1']}
+					onChange={handleInputChange({ fieldName: 'description_1' })}
+					autoFocus={focusedField === 'description_1'}
+				/>
+				<TextAreaInput
+					labelText="Descrição Técnica"
+					id="tech_description_1"
+					name="tech_description_1"
+					required
+					value={workValues['tech_description_1']}
+					onChange={handleInputChange({ fieldName: 'tech_description_1' })}
+					autoFocus={focusedField === 'tech_description_1'}
+				/>
+				<UploadImageSession imageFields={page1ImageFields} />  <RadioFieldsSession RadioFields={radioFieldsPage1} />
+				<SessionLabel label={"Página 2"}></SessionLabel>
+				<TextAreaInput
+					labelText="Descrição"
+					id="description_2"
+					name="description_2"
+					required
+					value={workValues['description_2']}
+					onChange={handleInputChange({ fieldName: 'description_2' })}
+					autoFocus={focusedField === 'description_2'}
+				/>
+				<TextAreaInput
+					labelText="Descrição Técnica"
+					id="tech_description_2"
+					name="tech_description_2"
+					required
+					value={workValues['tech_description_2']}
+					onChange={handleInputChange({ fieldName: 'tech_description_2' })}
+					autoFocus={focusedField === 'tech_description_2'}
+				/>
+				<UploadImageSession imageFields={page2ImageFields} />  <RadioFieldsSession RadioFields={radioFieldsPage2} />
+				<SessionLabel label={"Opções"}></SessionLabel>
+				<OptionsContentPanel />
+				{/* 
+				<Tabs tabs={tabs} setTab={setTabWork} tab={tabWork} size='lg' variant='lifted' /> */}
 			</div>
 
 			<p aria-live="polite" className="sr-only" role="status">

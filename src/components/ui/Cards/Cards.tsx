@@ -80,13 +80,13 @@ export default function Cards({ table }: { table: 'work' | 'portfolio' }) {
 	function getCardCations(item: any) {
 		return (
 			<div className="flex w-full flex-row flex-wrap gap-1">
-				<button className='btn btn-sm hover:text-primary'
+				{/* <button className='btn btn-sm hover:text-primary'
 					aria-label={"view " + table}
 
 					onClick={() => router.push(`/dashboard/${table}/${item.id}?type=view`)}
 				>Visualizar
 					<EyeIcon className='h-6 w-6' />
-				</button>
+				</button> */}
 				<button className='btn btn-sm hover:text-primary'
 					aria-label={"edit " + table}
 					onClick={() => router.push(`/dashboard/${table}/${item.id}/?type=edit`)}

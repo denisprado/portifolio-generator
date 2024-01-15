@@ -36,8 +36,13 @@ export type imagesSrcs = 'image_1_src' | 'image_2_src';
 
 export type imageFieldsTypes = {
   file: imagesFiles;
-  src: imagesSrcs;
+  src: string;
   labelButton: string;
+  handleInputChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
 }[];
 
 export type RadioFieldsTypes = {
