@@ -495,8 +495,8 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 				<div className='grid grid-cols-2 gap-4 gap-x-8'>
 					<TextAreaInput
 						labelText="Descrição"
-						id="description"
-						name="description"
+						id="description_1"
+						name="description_1"
 						required
 						value={workValues['description_1']}
 						onChange={handleInputChange({ fieldName: 'description_1' })}
@@ -538,7 +538,7 @@ export function WorkForm({ params: { id } }: { params: { id: string } }) {
 
 
 				<UploadImageSession imageFields={page2ImageFields} />  <RadioFieldsSession RadioFields={radioFieldsPage2} />
-				<SessionLabel label={"Opções"}></SessionLabel>
+				<SessionLabel label={"Opções desta Obra"}></SessionLabel>
 
 				<OptionsContentPanel />
 				{/* 
